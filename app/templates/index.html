@@ -10,21 +10,21 @@
 	<meta name="author" content="Brice Walker">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="fa/css/font-awesome.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-    <link rel="manifest" href="icons/site.webmanifest">
-    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="icons/favicon.ico">
+    <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/mainpage.css') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
     <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
     <meta name="application-name" content="Hey, Jetson!">
     <meta name="msapplication-TileColor" content="#00a300">
-    <meta name="msapplication-config" content="icons/browserconfig.xml">
+    <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
     <meta name="theme-color" content="#ffffff">
 </head>
 
@@ -60,7 +60,7 @@
                         <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference on the Nvidia Jetson.</h2>
                     </div>
                     <div class="mdl-card__media">
-                        <img class="article-image" src="images/raw.png" border="0" alt="">
+                        <img class="article-image" src="{{ url_for('static', filename='images/raw.png') }}" border="0" alt="">
                     </div>
                     <div class="mdl-card__supporting-text">
                         <strong>Includes:</strong>
@@ -68,25 +68,25 @@
                     </div>
                     <div class="mdl-grid portfolio-copy">
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Introduction</h3>
-                        <div class="mdl-cell mdl-cell--6-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--6-col">
                             <p>
                                 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
                             </p>
                         </div>
                         <div class="mdl-cell mdl-cell--6-col">
-                            <img class="article-image" src=" images/JTX2.png" border="0" alt="">
+                            <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
                         </div>
                         <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">View full project on nbviewer</a></h4>
                         <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://github.com/bricewalker/Hey-Jetson">View full project on Github</a></h4>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Demo</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 This website allows you to demo real time speech recognition inference using a Reccurent Neural Network. Server The network was trained on an Nvidia GTX 1070 and deployed for inference on an Nvidia Jetson server.
                             </p>
                         </div>
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Select Instance for Inference</h3>
                             <h6>Select the data partition you would like to use:</h6>
-                            <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                            <div class="mdl-cell mdl-cell--12-col">
                             <div>
                             <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
                             <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
@@ -99,7 +99,7 @@
                             </div>
                             </div>
                             <div><h6>Select the individual instance you would like to run inference on:</h6></div>
-                            <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                            <div class="mdl-cell mdl-cell--12-col">
                             <form action="#">
                             <div class="mdl-textfield mdl-js-textfield">
                             <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
@@ -108,8 +108,12 @@
                             </div>
                             </form>
                             </div>
-                            <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            <div class="mdl-cell mdl-cell--12-col"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                             Make Predictions</button></div>
+                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
+                            <div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
+                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
+                            <div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
                     </div>
                 </div>
             </div>

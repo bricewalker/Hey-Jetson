@@ -2,33 +2,33 @@
 
 <html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-   	<title>Hey, Jetson!</title>
-	<meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
-	<meta name="author" content="Brice Walker">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="fa/css/font-awesome.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-    <link rel="manifest" href="icons/site.webmanifest">
-    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="icons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
-    <meta name="application-name" content="Hey, Jetson!">
-    <meta name="msapplication-TileColor" content="#00a300">
-    <meta name="msapplication-config" content="icons/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+           <title>Hey, Jetson!</title>
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="author" content="Brice Walker">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
+        <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/mainpage.css') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ url_for('static', filename='icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+        <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
+        <meta name="application-name" content="Hey, Jetson!">
+        <meta name="msapplication-TileColor" content="#00a300">
+        <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
+        <meta name="theme-color" content="#ffffff">
+    </head>
 
 <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -63,19 +63,19 @@
                         <h2 class="mdl-card__title-text">Contact</h2>
                     </div>
                     <div class="mdl-card__media">
-                        <img class="article-image" src=" images/raw.png" border="0" alt="">
+                        <img class="article-image" src="{{ url_for('static', filename='images/raw.png') }}" border="0" alt="">
                     </div>
                     <div class="mdl-grid portfolio-copy">
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Brice Walker</h3>
                         <div class="mdl-cell mdl-cell--4-col">
-                                <img class="article-image" src=" images/profilepic.jpg" border="0" alt="">
+                                <img class="article-image" src="{{ url_for('static', filename='images/profilepic.jpg') }}" border="0" alt="">
                         </div>
-                        <div class="mdl-cell mdl-cell--8-col mdl-card__supporting-text no-padding ">
+                        <div class="mdl-cell mdl-cell--8-col">
                             <p>
                                 My name is Brice, and I’m a visionary social data scientist committed to revolutionizing through undeniably intelligent and groundbreaking systems change designs. I am the premier trail blazer who fights for and inspires empirically enlightened resolutions with integrity and bravery.
                             </p>
                         </div>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding ">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 My pursuit of analytics and effective system management grew from my career in mental health and my own drive for knowledge. As an individual with lived experience in the mental health system, I pursued a career that would enable me to enact systems change and advocate for evidence based and ethical practices in the treatment of individuals with mental health and addictions problems. As I grew in my career, I began to see major discrepancies between the large scale epidemiological science and what was happening on the ground. The further I dove into this world, the more dysfunctional it appeared. I encountered systemic issues in the institutions I navigated that supported archaic and inefficient practices that were not supported by the literature. I saw data science as an outlet for identifying and enabling evidence based practices that were supported by the data.
                             </p>

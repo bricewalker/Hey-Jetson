@@ -51,14 +51,12 @@ import keras.losses
 from keras.backend.tensorflow_backend import set_session
 from keras.engine import InputSpec
 import tensorflow as tf 
-import tensorflow.contrib.eager as tfe
 from tensorflow.python.framework import graph_io
 from tensorflow.python.tools import freeze_graph
 from tensorflow.core.protobuf import saver_pb2
 from tensorflow.python.training import saver as saver_lib
 
 # Visualization
-import IPython.display as ipd
 import librosa.display
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
@@ -66,11 +64,6 @@ import seaborn as sns
 import plotly.offline as py
 import plotly.graph_objs as go
 import plotly.tools as tls
-
-color = sns.color_palette()
-sns.set_style('darkgrid')
-py.init_notebook_mode(connected=True)
-%matplotlib inline
 
 # Setting Random Seeds
 np.random.seed(95)

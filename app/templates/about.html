@@ -1,32 +1,32 @@
 
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-   	<title>Hey, Jetson!</title>
-	<meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
-	<meta name="author" content="Brice Walker">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
-    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link rel="stylesheet" href="fa/css/font-awesome.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
-    <link rel="manifest" href="icons/site.webmanifest">
-    <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
-    <link rel="shortcut icon" href="icons/favicon.ico">
-    <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
-    <meta name="application-name" content="Hey, Jetson!">
-    <meta name="msapplication-TileColor" content="#00a300">
-    <meta name="msapplication-config" content="icons/browserconfig.xml">
-    <meta name="theme-color" content="#ffffff">
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+           <title>Hey, Jetson!</title>
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="author" content="Brice Walker">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
+        <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/mainpage.css') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ url_for('static', filename='icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+        <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
+        <meta name="application-name" content="Hey, Jetson!">
+        <meta name="msapplication-TileColor" content="#00a300">
+        <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
+        <meta name="theme-color" content="#ffffff">
+    </head>
 
 <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
@@ -60,7 +60,7 @@
                         <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference on the Nvidia Jetson.</h2>
                     </div>
                     <div class="mdl-card__media">
-                        <img class="article-image" src="images/raw.png" border="0" alt="">
+                        <img class="article-image" src="{{ url_for('static', filename='images/raw.png') }}" border="0" alt="">
                     </div>
                     <div class="mdl-card__supporting-text">
                         <strong>Includes:</strong>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="mdl-grid portfolio-copy">
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Automatic Speech Recognition</h3>
-                        <div class="mdl-cell mdl-cell--6-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--6-col">
                             <p>
                                 Speech recognition models are based on a statistical optimization problem called the fundamental equation of speech recognition. Given a sequence of observations, we look for the most likely word sequence. So, using Bayes Theory, we are looking for the word sequence which maximizes the posterior probability of the word given the observation. The speech recognition problem is a search over this model for the best word sequence.
 
@@ -81,19 +81,19 @@
                         <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">View full project on nbviewer</a></h4>
                         <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://github.com/bricewalker/Hey-Jetson">View full project on Github</a></h4>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Statement</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 My goal is to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson with an accuracy of >80% and latency of <200ms.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Dataset</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 The primary dataset used is the <a href="http://www.openslr.org/12/">LibriSpeech ASR corpus</a> which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of audio files was used for testing the models to reduce training and model building time. The final model was trained on a 360 hour (23G) subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project. Some issues identified with this data set are the age of some of the works (the Declaration of Independence probably doesn't relate well to modern spoken english), the fact that there is much overlap in words spoken between the books, a lack of 'white noise' and other non-voice noises to help the model differentiate spoken words from background noise, and the fact that this does not include conversational english.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Feature Extraction and Engineering</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 There are 3 primary methods for extracting features for speech recognition. This includes using raw audio forms, spectrograms, and mfcc's. For this project, I will be creating a character level sequencing model. This allows me to train a model on a data set with a limited vocabulary that can generalize to more unique/rare words better. The downsides are that these models are more computationally expensive, more difficult to interpret/understand, and they are more succeptible to the problems of vanishing or exploding gradients as the sequences can be quite long.
                                 <br>
@@ -103,17 +103,17 @@
                             <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
                             <h4>Spectrograms</h4>
                             <div class="mdl-cell mdl-cell--12-col">
-                                    <img class="article-image" src=" images/spectrogram.png" border="0" alt="">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrogram.png') }}" border="0" alt="">
                             </div>
                             <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
                             <h4>Mel-Frequency Cepstrum Coefficients</h4>
                             <div class="mdl-cell mdl-cell--12-col">
-                                    <img class="article-image" src=" images/mfcc.png" border="0" alt="">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/mfcc.png') }}" border="0" alt="">
                             </div>
                             <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Recurrent Neural Networks</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                                 <p>The two most common tools for automatic speech recognition are Hidden Markov Models (HMM's), and Deep Neural Networks. For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. Though the most effective and sophisticated models implement "hybrid" systems or DNN-HMM, this is beyond the scope of this project. While HMM's using weighted finite state transducers are still considered the most powerful speech recognition tools, they were ignored for this program due to their complexity and increased computing requirements. HMM's also require the development of an extensive vocabulary of phonemes and graphemes that could not be produced under the time constraints of this project.</p>
 
                                 <p>Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron recieves an input as well as its own output form the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forword propogation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilitites for each possible character.</p>
@@ -123,52 +123,52 @@
                                 <p>In this notebook, I have created several end to end RNN's for ASR. I have addressed the common issues with RNN's; exploding gradients, and vanishing gradients through gradient clipping, and the use of GRU, and LSTM cells respectively.</p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Loss Function</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 The loss function I am using is a custom implementation of Connectionist Temporal Classification (CTC), which is a special case of sequential objective functions that addresses some of the modeling burden in cross-entropy that forces the model to link every frame of input data to a label. CTC's label set includes a "blank" symbol in its alphabet so if a frame of data doesn’t contain any utterance, the CTC system can output "blank" indicating that there isn't enough information to classify an output. This also has the added benefits of allowing us to have inputs/outputs of varying length as short files can be padded with the "blank" character, and allowing us to model words using a character level classification system. This function only observes the sequence of labels along a path, ignoring the alignment of the labels to the acoustic data.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Long-Short Term Memory Cells</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 My RNN explores the use of layers of Long-Short Term Memory Cells and Gated Recurrent Units. LSTM's include forget and output gates, which allow more control over the cell's memory by allowing separate control of what is forgotten and what is passed through to the next hidden layer of cells. This will also make it easier to implement 'peepholes' later, which allow the cell to look at both the previous output state and hidden state when making this determination. GRU's are a simplified type of Long-Short Term Memory Recurrent Neuron with fewer parameters than typical LSTM's. These work via a memory update gate and provide most of the performance of traditional LSTM's at a fraction of the computing costs.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Time Distributed Dense Layers</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 The ASR model explores the addition of layers of normal Dense neurons to every temporal slice of an input.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Batch Normalization</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 This model also uses batch normalization, which normalizes the activations of the layers with a mean close to 0 and standard deviation close to 1.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">CNN's</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 The deep neural network in this project also explores the use of Convolutional Neural Network for early pattern detection, as well as the use of dilated convolutional networks which introduces gap into the CNN's kernels, so that the receptive field has to encircle areas rather than simply slide over the window in a systematic way. This means that the convolutional layer can pick up on the global context of what it is looking at while still only having as many weights/inputs as the standard form.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Bidirectional Layers</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 This model explores connecting two hidden layers of opposite directions to the same output, making their future input information reachable from the current state. To put it simply, this creates two layers of neurons; 1 that goes through the sequence forward in time and 1 that goes through it backward through time. This allows the output layer to get information from past and future states meaning that it will have knowledge of the letters located before and after the current utterance. This can lead to great improvements in performance but comes at a cost of increased latency.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Dropout</h3>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 I also employ randomized dropout of inputs to the aggregate model to prevent the model from over fitting.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance</h3>
                         <div class="mdl-cell mdl-cell--12-col">
-                                <img class="article-image" src=" images/performance.png" border="0" alt="">
+                                <img class="article-image" src="{{ url_for('static', filename='images/performance.png') }}" border="0" alt="">
                         </div>
-                        <div class="mdl-cell mdl-cell--12-col mdl-card__supporting-text no-padding">
+                        <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
                             </p>
