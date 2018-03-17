@@ -97,37 +97,7 @@
                                 This website allows you to demo real time speech recognition inference using a Reccurent Neural Network. Server The network was trained on an Nvidia GTX 1070 and deployed for inference on an Nvidia Jetson server.
                             </p>
                         </div>
-                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Select Instance for Inference</h3>
-                            <h6>Select the data partition you would like to use:</h6>
-                            <div class="mdl-cell mdl-cell--12-col">
-                            <div>
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-1">
-                            <input type="radio" id="option-1" class="mdl-radio__button" name="options" value="1" checked>
-                            <span class="mdl-radio__label">Validation Set</span>
-                            </label>
-                            <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="option-2">
-                            <input type="radio" id="option-2" class="mdl-radio__button" name="options" value="2">
-                            <span class="mdl-radio__label">Test Set</span>
-                            </label>
-                            </div>
-                            </div>
-                            <div><h6>Select the individual instance you would like to run inference on:</h6></div>
-                            <div class="mdl-cell mdl-cell--12-col">
-                            <form action="#">
-                            <div class="mdl-textfield mdl-js-textfield">
-                            <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sample2">
-                            <label class="mdl-textfield__label" for="sample2">Instance #</label>
-                            <span class="mdl-textfield__error">Input is not a number! Must be between 0 - 1000.</span>
-                            </div>
-                            </form>
-                            </div>
-                            <div class="mdl-cell mdl-cell--12-col"><button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            Make Predictions</button></div>
-                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
-                            <div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
-                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
-                            <div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
-                            <div class="mdl-cell mdl-cell--12-col">{% block body %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block body %}{% endblock %}</div>
                     </div>
                 </div>
             </div>
