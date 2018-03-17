@@ -28,9 +28,6 @@ import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 from scipy import signal
 
-# Dimensionality Reduction
-from sklearn.decomposition import PCA
-
 # Neural Network
 import keras
 from keras.utils.generic_utils import get_custom_objects

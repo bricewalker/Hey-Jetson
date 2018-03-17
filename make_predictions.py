@@ -28,9 +28,6 @@ import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 from scipy import signal
 
-# Dimensionality Reduction
-from sklearn.decomposition import PCA
-
 # Neural Network
 import keras
 from keras.utils.generic_utils import get_custom_objects
@@ -471,8 +468,6 @@ def train_model(input_to_softmax,
                 verbose=1,
                 sort_by_duration=False,
                 max_duration=10.0):
-# keras.optimizers.Nadam(lr=0.002, beta_1=0.9, beta_2=0.999, epsilon=None, schedule_decay=0.004)
-# Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=1, clipvalue=0.5)
     
     # Obtain batches of data
     audio_gen = AudioGenerator(minibatch_size=minibatch_size, 
@@ -505,207 +500,11 @@ def train_model(input_to_softmax,
         pickle.dump(hist.history, f)
 
 # Creating a TensorFlow session
-from keras.backend.tensorflow_backend import set_session
-config = tf.ConfigProto()
-config.gpu_options.per_process_gpu_memory_fraction = 1.0
-set_session(tf.Session(config=config))
-#tf.reset_default_graph()
-
-def regular_rnn_model(input_dim, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Recurrent layer
-    simp_rnn = GRU(output_dim, return_sequences=True, 
-                 implementation=2, name='rnn')(input_data)
-    # Softmax Activation Layer
-    y_pred = Activation('softmax', name='softmax')(simp_rnn)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: x
-    return model
-
-model_0 = regular_rnn_model(input_dim=161) # 161 for Spectrogram/13 for MFCC
-
-def rnn_tdd_model(input_dim, units, activation, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Recurrent layer
-    simp_rnn = LSTM(units, activation=activation,
-        return_sequences=True, implementation=2, name='rnn')(input_data)
-    bn_rnn = BatchNormalization()(simp_rnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: x
-    return model
-
-model_1 = rnn_tdd_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                            units=200,
-                            activation='relu')
-
-def cnn_rnn_td_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, units, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Convolutional layer
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
-                     padding=conv_border_mode,
-                     activation=activation,
-                     name='conv1d')(input_data)
-    # Batch normalization
-    bn_cnn = BatchNormalization(name='bn_conv1d')(conv_1d)
-    # Recurrent layer
-    simp_rnn = GRU(units, activation=activation,
-        return_sequences=True, implementation=2, name='rnn')(bn_cnn)
-    # Batch Normalization
-    bn_rnn = BatchNormalization()(simp_rnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, conv_border_mode, conv_stride)
-    return model
-
-model_2 = cnn_rnn_td_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                           filters=200,
-                           kernel_size=11, 
-                           conv_stride=2,
-                           conv_border_mode='valid',
-                           activation='relu',
-                           units=200)
-
-def deep_rnn_tdd_model(input_dim, units, recur_layers, activation, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    #  1st Recurrent layer
-    simp_rnn = GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name='rnn_0')(input_data)
-    # Batch normalization 
-    bn_rnn = BatchNormalization()(simp_rnn)
-    # Loop for additional layers
-    for i in range(recur_layers - 1):
-        name = 'rnn_' + str(i + 1)
-        simp_rnn = GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name=name)(bn_rnn)
-        bn_rnn = BatchNormalization()(simp_rnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: x
-    return model
-
-model_3 = deep_rnn_tdd_model(input_dim=161, units=200, recur_layers=2, activation='relu') # 161 for Spectrogram/13 for MFCC
-
-def brnn_tdd_model(input_dim, units, activation, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Bidirectional recurrent layer
-    brnn = Bidirectional(LSTM(units, activation=activation, 
-        return_sequences=True, implementation=2, name='brnn'))(input_data)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(brnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: x
-    return model
-
-model_4 = brnn_tdd_model(input_dim=161, units=200, activation='relu') # 161 for Spectrogram/13 for MFCC
-
-def cnn_deep_brnn_tdd_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, recur_layers, units, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Convolutional layer
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
-                     padding=conv_border_mode,
-                     activation=activation,
-                     name='conv1d')(input_data)
-    # Batch normalization
-    bn_cnn = BatchNormalization()(conv_1d)
-    # Bidirectional recurrent layer
-    brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, name='brnn'))(bn_cnn)
-    # Batch normalization 
-    bn_rnn = BatchNormalization()(brnn)
-    # Loop for additional layers
-    for i in range(recur_layers - 1):
-        name = 'brnn_' + str(i + 1)
-        brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name=name))(bn_rnn)
-        bn_rnn = BatchNormalization()(brnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, conv_border_mode, conv_stride)
-    return model
-
-model_5 = cnn_deep_brnn_tdd_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                                  filters=200,
-                                  activation='relu',
-                                  kernel_size=11, 
-                                  conv_stride=2,
-                                  conv_border_mode='valid',
-                                  recur_layers=2,
-                                  units=200)
-
-def cnn_deep_brnn_dropout_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, recur_layers, units, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Convolutional layer
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
-                     padding=conv_border_mode,
-                     activation=activation,
-                     name='conv1d')(input_data)
-    # Batch normalization
-    bn_cnn = BatchNormalization()(conv_1d)
-    # Bidirectional recurrent layer
-    brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, recurrent_dropout=0.01, name='brnn'))(bn_cnn)
-    # Batch normalization 
-    bn_rnn = BatchNormalization()(brnn)
-    # Loop for additional layers
-    for i in range(recur_layers - 1):
-        name = 'brnn_' + str(i + 1)
-        brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name=name))(bn_rnn)
-        bn_rnn = BatchNormalization()(brnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, conv_border_mode, conv_stride)
-    return model
-
-model_6 = cnn_deep_brnn_dropout_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                                      filters=200,
-                                      activation='relu',
-                                      kernel_size=11, 
-                                      conv_stride=2,
-                                      conv_border_mode='valid',
-                                      recur_layers=2,
-                                      units=200)
+#from keras.backend.tensorflow_backend import set_session
+#config = tf.ConfigProto()
+#config.gpu_options.per_process_gpu_memory_fraction = 1.0
+#set_session(tf.Session(config=config))
+# tf.reset_default_graph()
 
 def cnn_deep_brnn_dilated_model(input_dim, filters, activation, kernel_size, conv_stride,
     conv_border_mode, recur_layers, dilation_rate, units, conv_layers, output_dim=29):
@@ -792,15 +591,15 @@ def keras_model(input_dim, filters, activation, dilation_rate, kernel_size, conv
     return model
 
 model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                                      filters=200,
-                                      activation='relu',
-                                      kernel_size=11, 
-                                      conv_stride=1,
-                                      conv_border_mode='causal',
-                                      recur_layers=7,
-                                      conv_layers=3,
-                                      dilation_rate=2,
-                                      units=200)
+                      filters=200,
+                      activation='relu',
+                      kernel_size=11, 
+                      conv_stride=1,
+                      conv_border_mode='causal',
+                      recur_layers=7,
+                      conv_layers=3,
+                      dilation_rate=2,
+                      units=200)
 
 def get_predictions(index, partition, input_to_softmax, model_path):
 
@@ -829,45 +628,6 @@ def get_predictions(index, partition, input_to_softmax, model_path):
                 prediction, output_length)[0][0])+1).flatten().tolist()
     
     # Display ground truth transcription and predicted transcripted.
-    print('-'*80)
     print('True transcription:\n' + '\n' + transcription)
-    print('-'*80)
     print('Predicted transcription:\n' + '\n' + ''.join(int_seq_to_text(pred_ints)))
-    print('-'*80)
     print(int_seq_to_text(pred_ints))
-
-def get_tf_predictions(index, partition, input_to_softmax, model_path):
-
-    # Load the train and test data
-    data_gen = AudioGenerator(spectrogram = spectrogram)
-    data_gen.load_train_data()
-    data_gen.load_validation_data()
-    data_gen.load_test_data()
-    
-    # Obtain ground truth transcriptions and audio features 
-    if partition == 'validation':
-        transcription = data_gen.valid_texts[index]
-        audio_path = data_gen.valid_audio_paths[index]
-        data_point = data_gen.normalize(data_gen.featurize(audio_path))
-    elif partition == 'test':
-        transcription = data_gen.test_texts[index]
-        audio_path = data_gen.test_audio_paths[index]
-        data_point = data_gen.normalize(data_gen.featurize(audio_path))
-    else:
-        raise Exception('Invalid partition!  Must be "test", or "validation"')
-        
-    # Obtain predictions
-    input_to_softmax.load_weights(model_path)
-    prediction = input_to_softmax.predict(np.expand_dims(data_point, axis=0))
-    output_length = [input_to_softmax.output_length(data_point.shape[0])] 
-    pred_ints = (K.eval(K.ctc_decode(
-                prediction, output_length)[0][0])+1).flatten().tolist()
-    
-    # Display ground truth transcription and predicted transcripted.
-    print('-'*80)
-    print('True transcription:\n' + '\n' + transcription)
-    print('-'*80)
-    print('Predicted transcription:\n' + '\n' + ''.join(int_seq_to_text(pred_ints)))
-    print('-'*80)
-    print(int_seq_to_text(pred_ints))
-    
