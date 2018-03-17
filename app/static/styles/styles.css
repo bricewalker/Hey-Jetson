@@ -1,6 +1,5 @@
 .portfolio-header {
   position: relative;
-  background-image: url(images/header-bg.jpg);
 }
 
 .portfolio-header .mdl-layout__header-row {
@@ -34,13 +33,6 @@
   min-height: auto;
 }
 
-.portfolio-logo {
-  background: url(images/logo.png) 50% no-repeat;
-  background-size: cover;
-  height: 140px;
-  width: 140px;
-  margin: auto auto 10px;
-}
 
 .is-compact .portfolio-logo {
   height: 40px;
@@ -178,7 +170,6 @@ img.article-image {
 }
 
 footer {
-  background-image: url(images/footer-background.png);
   background-size: cover;
 }
 

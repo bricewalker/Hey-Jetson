@@ -14,7 +14,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-        <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/mainpage.css') }}">
+        <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/font-awesome.min.css') }}">
         <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
         <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
         <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
@@ -76,11 +76,23 @@
                             </p>
                         </div>
                         <div class="mdl-cell mdl-cell--6-col">
-                            <img class="article-image" src=" images/JTX2.png" border="0" alt="">
+                            <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
                         </div>
-                        <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">View full project on nbviewer</a></h4>
-                        <h4 class="mdl-cell mdl-cell--6-col mdl-typography--headline"><a href="https://github.com/bricewalker/Hey-Jetson">View full project on Github</a></h4>
-                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Statement</h3>
+                        <div class="mdl-cell mdl-cell--6-col">
+                        <!-- Accent-colored raised button with ripple -->
+                        <a href="https://github.com/bricewalker/Hey-Jetson">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            View full project on Github
+                        </button>
+                        </a>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                        <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            View full project on nbviewer
+                        </button>
+                        </a>
+                        </div>
                         <div class="mdl-cell mdl-cell--12-col">
                             <p>
                                 My goal is to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson with an accuracy of >80% and latency of <200ms.
@@ -176,7 +188,14 @@
                                 The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
                             </p>
                         </div>
-                        <h4 class="mdl-cell mdl-cell--12-col mdl-typography--headline"><a href="https://github.com/bricewalker/Hey-Jetson">Download the code and contribute or run the model yourself!</a></h4>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <!-- Accent-colored raised button with ripple -->
+                            <a href="https://github.com/bricewalker/Hey-Jetson">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                Download the code and contribute or run the model yourself!
+                            </button>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
