@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, session, redirect
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 from flask_wtf import FlaskForm
@@ -10,27 +10,30 @@ import make_predictions
 
 class InferenceForm(FlaskForm):
     """Flask wtf Form to collect user input data"""
-    partition = SelectField('The data partition you would like to use:', choices=[('test', 'test'), ('validation', 'validation')], coerce=str)
-    instance_number = IntegerField('The individual instance you would like to run:', validators=[Required()])
+    partition = SelectField('Select data partition:', choices=[('test', 'test'), ('validation', 'validation')], coerce=str)
+    instance_number = IntegerField('Enter individual instance number:', validators=[Required()])
     submit = SubmitField('Submit')
 
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @app.route('/index', methods=['GET', 'POST', 'PUT'])
 @app.route('/index.html', methods=['GET', 'POST', 'PUT'])
 def index():
-    print(session)
     form = InferenceForm()
+    truth_transcription = None
+    prediction_transcription = None
     if form.validate_on_submit():
-        session['partition'] = form.partition.data
-        session['instance_number'] = form.instance_number.data
-        session['truth_transcription'] = make_predictions.get_ground_truth(index=session['instance_number'], partition=session['partition'], input_to_softmax='make_predictions.model_6', model_path='./results/model_6.h5')
-        session['prediction_transcription'] = make_predictions.get_prediction(index=session['instance_number'], partition=session['partition'], input_to_softmax='make_predictions.model_6', model_path='./results/model_6.h5')
+        partition = form.partition.data
+        instance_number = form.instance_number.data
+        print(instance_number)
+        print(partition)
+        truth_transcription = make_predictions.get_ground_truth(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_6, model_path='./results/model_6.h5')
+        prediction_transcription = make_predictions.get_prediction(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_6, model_path='./results/model_6.h5')
+        print(truth_transcription)
+        print(prediction_transcription)
+    
+    return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription)
 
-        return redirect(url_for('index'))
-
-    return render_template('index.html', title='Hey, Jetson!', form=form, **session, partition=session.get('partition'),
-        instance_number=session.get('instance_number'), truth_transcription=session.get('truth_transcription'), prediction_transcription=session.get('prediction_transcription'))
-
+# partition=partition, instance_number=instance_number, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription
 # truth_transcription=truth_transcription, prediction_transcription=prediction_transcription
 @app.route('/about')
 @app.route('/about.html')

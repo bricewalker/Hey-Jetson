@@ -1,21 +1,10 @@
 {% extends "home.html" %}
 
 {% block body %}
-	{% if prediction_transcription is defined %}
-    <div class="mdl-cell mdl-cell--12-col">
-    	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
-    <div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
-    	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
-    <div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
-    </div>
-
-	{% else %}
-    <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Please Fill out the form below to run inference:</h3>
-	{% endif %}
-
-{% block page_content %}
+	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Inference Engine</h2>
 	<div class="mdl-cell mdl-cell--12-col">
-		<form method="POST">
+		<form method="POST" action="/">
+			{{ form.csrf_token }}
 			{{ form.partition.label }} {{ form.partition() }}
 			<br>
 			{{ form.instance_number.label }} {{ form.instance_number() }}
@@ -24,4 +13,10 @@
 		</form>
 	</div>
 {% endblock %}
+
+{% block page_content %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
+	<div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
+	<div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
 {% endblock %}
