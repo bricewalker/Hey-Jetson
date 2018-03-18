@@ -2,7 +2,7 @@
 ## Automatic Speech Recognition Inference
 ### By Brice Walker
 
-[View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb))
+[View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb)
 
 ![audio](app/static/images/raw.png)
 
