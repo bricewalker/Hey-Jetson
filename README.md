@@ -4,6 +4,8 @@
 
 [View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb))
 
+![audio](app/static/images/raw.png)
+
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
 ## Outline
@@ -27,8 +29,11 @@ flac_to_wav.sh converts all flac files to .wav format and create_desc_json.py wi
 
 For this script to work, you will need to obtain the libav package.
 Use the following steps for each OS:
-Linux: sudo apt-get install libav-tools
-Mac: brew install libav
+
+Linux: ```sudo apt-get install libav-tools```
+
+Mac: ```brew install libav```
+
 Windows: Browse to the Libav website
 Scroll down to "Windows Nightly and Release Builds" and click on the appropriate link for your system (32-bit or 64-bit).
 Click nightly-gpl.
@@ -98,10 +103,13 @@ This project explores the following methods of feature extraction for acoustic m
 
 ### Raw Audio Waves
 This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]
+![raw](app/static/images/raw.png)
 ### Spectrograms 
 This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the verticle axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.
+![spectrogram](app/static/images/spectrogram.png)
 ### MFCC's
 Similar to the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.
+![mfcc](app/static/images/mfcc.png)
 
 <a id='rnn'></a>
 ## Recurrent Neural Networks
@@ -139,6 +147,8 @@ I also employ randomized dropout of inputs to the aggregate model to prevent the
 Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
 
 The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
+
+![performance](app/static/images/performance.png)
 
 <a id='inference'></a>
 ## Inference
