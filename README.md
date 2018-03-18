@@ -2,7 +2,7 @@
 ## Automatic Speech Recognition Inference
 ### By Brice Walker
 
-[View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb)
+[View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb))
 
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
@@ -142,4 +142,4 @@ The best performing model is considered the one that gives the highest probabili
 
 <a id='inference'></a>
 ## Inference
-Finally, I demonstrate exporting the model as a frozen tensorflow graph for quick local inference on mobile platforms like the Nvidia Jetson.
+Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions.
