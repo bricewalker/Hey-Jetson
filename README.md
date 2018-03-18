@@ -85,11 +85,20 @@ Speech recognition can be broken into two parts; the acoustic model, that descri
 My goal is to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson with an accuracy of >80% and latency of <200ms.
 
 <a id='libraries'></a>
-## Libraries
-The (Deep)Machine learning libraries used in this project include:
+## Tools
+The tools used in this project include:
 
+- Python
+- Jupyter Notebook
 - Keras
 - TensorFlow
+- Flask
+- HTML
+- CSS
+- JavaScript
+- Jetpack
+- Ubuntu
+- L4T
 
 <a id='data'></a>
 ## Dataset
@@ -103,12 +112,17 @@ This project explores the following methods of feature extraction for acoustic m
 
 ### Raw Audio Waves
 This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]
+
 ![raw](app/static/images/raw.png)
+
 ### Spectrograms 
 This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the verticle axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.
+
 ![spectrogram](app/static/images/spectrogram.png)
+
 ### MFCC's
 Similar to the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.
+
 ![mfcc](app/static/images/mfcc.png)
 
 <a id='rnn'></a>
