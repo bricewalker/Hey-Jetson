@@ -55,7 +55,7 @@ Run flac_to_wav.sh from the directory containing the dataset. This might take a 
 flac_to_wav.sh
 ```
 
-Now navigate to your code repo and run create_desc_json.py, specifying the path to the dataset and the names for the corpus files:
+Now navigate to your code repo and run create_desc_json.py, specifying the path to the dataset and the names for the corpus files, the commands should look like this:
 
 ```
 python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-100\ train_corpus.json
@@ -63,15 +63,15 @@ python create_desc_json.py C:\Users\brice\LibriSpeech\dev-clean\ valid_corpus.js
 python create_desc_json.py C:\Users\brice\LibriSpeech\test-clean\ test_corpus.json
 ```
 
-And then for training the final model:
+And then for training the final model, be sure to download both the train-clean-100, and train-clean-360 datasets and combine them into one folder, named train-clean-460 within the LibriSpeech directory, then run the command. It should like like so:
 
 ```
-python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-360\ train_corpus.json
+python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-460\ train_corpus.json
 ```
 
 Then run the following a command line in the repo directory:
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 <a id='intro'></a>
@@ -106,7 +106,7 @@ The tools used in this project include:
 
 <a id='data'></a>
 ## Dataset
-The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of audio files was used for testing the models to reduce training and model building time. The final model was trained on a 360 hour (23G) subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project. Some issues identified with this data set are the age of some of the works (the Declaration of Independence probably doesn't relate well to modern spoken english), the fact that there is much overlap in words spoken between the books, a lack of 'white noise' and other non-voice noises to help the model differentiate spoken words from background noise, and the fact that this does not include conversational english.
+The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project. Some issues identified with this data set are the age of some of the works (the Declaration of Independence probably doesn't relate well to modern spoken english), the fact that there is much overlap in words spoken between the books, a lack of 'white noise' and other non-voice noises to help the model differentiate spoken words from background noise, and the fact that this does not include conversational english.
 
 <a id='features'></a>
 ## Feature Extraction/Engineering

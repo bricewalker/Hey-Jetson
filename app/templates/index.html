@@ -20,3 +20,21 @@
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
 	<div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
 {% endblock %}
+
+{% if raw_plot != None %}
+{% block waveform %}
+	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
+	<div class="mdl-cell mdl-cell--12-col">{{ raw_shape }}</div>
+{% endblock %}
+
+{% block spectrogram %}
+	<img src="data:image/png;base64, {{ spectrogram_plot }}" alt="spectrogram">
+	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
+{% endblock %}
+
+{%else%}
+
+{% block nothing %}
+{% endblock %}
+
+{% endif %}
