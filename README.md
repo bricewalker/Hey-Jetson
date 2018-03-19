@@ -20,7 +20,7 @@ This project builds a scalable speech recognition platform in Keras/Tensorflow f
 
 <a id='start'></a>
 ## Getting Started
-
+#### Preparing the dataset
 Download the data set from the [LibriSpeech ASR corpus](http://www.openslr.org/12/).
 
 The dataset is prepared using a set of scripts borrowed from [Baidu Research's Deep Speech GitHub Repo](https://github.com/baidu-research/ba-dls-deepspeech).
@@ -51,9 +51,7 @@ Run :
 
 Run flac_to_wav.sh from the directory containing the dataset. This might take a while depending on your machine:
 
-```
-flac_to_wav.sh
-```
+```flac_to_wav.sh```
 
 Now navigate to your code repo and run create_desc_json.py, specifying the path to the dataset and the names for the corpus files, the commands should look like this:
 
@@ -73,6 +71,31 @@ Then run the following a command line in the repo directory:
 ```
 pip install -r requirements.txt
 ```
+#### Training the model
+You can then run the train_model script to train the full RNN:
+```
+python train_model.py
+```
+#### Running the inference server
+It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run:
+```
+python -m venv venv
+```
+Then activate the environment with:
+
+Unix/Linux: ```source venv/bin/activate```
+
+Windows: ```venv\Scripts\activate.bat```
+
+Then you can run: ```pip install -r requirements.txt``` to install all required libraries into the virtual environment.
+
+Now export the path as an environment variable:
+
+Unix/Linux: ```export FLASK_APP=inference.py```
+
+Windows: ```export FLASK_APP=inference.py```
+
+Finally, run initialize the web app with: ```flask run```
 
 <a id='intro'></a>
 ## Introduction
