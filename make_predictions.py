@@ -506,94 +506,6 @@ def train_model(input_to_softmax,
 #set_session(tf.Session(config=config))
 # tf.reset_default_graph()
 
-def cnn_deep_brnn_dropout_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, recur_layers, units, output_dim=29):
-    # Input
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    # Convolutional layer
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
-                     padding=conv_border_mode,
-                     activation=activation,
-                     name='conv1d')(input_data)
-    # Batch normalization
-    bn_cnn = BatchNormalization()(conv_1d)
-    # Bidirectional recurrent layer
-    brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, recurrent_dropout=0.01, name='brnn'))(bn_cnn)
-    # Batch normalization 
-    bn_rnn = BatchNormalization()(brnn)
-    # Loop for additional layers
-    for i in range(recur_layers - 1):
-        name = 'brnn_' + str(i + 1)
-        brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name=name))(bn_rnn)
-        bn_rnn = BatchNormalization()(brnn)
-    # TimeDistributed Dense layer
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    # Softmax activation layer
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    # Specifying the model
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, conv_border_mode, conv_stride)
-    return model
-
-model_6 = cnn_deep_brnn_dropout_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                                      filters=200,
-                                      activation='relu',
-                                      kernel_size=11, 
-                                      conv_stride=2,
-                                      conv_border_mode='valid',
-                                      recur_layers=2,
-                                      units=200)
-
-def cnn_deep_brnn_dilated_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, recur_layers, dilation_rate, units, conv_layers, output_dim=29):
-    input_data = Input(name='the_input', shape=(None, input_dim))
-    conv_1d = Conv1D(filters, kernel_size, 
-                     strides=conv_stride, 
-                     padding=conv_border_mode,
-                     activation=activation,
-                     name='conv1d')(input_data)
-    # Batch normalization
-    bn_cnn = BatchNormalization()(conv_1d)
-    for i in range(conv_layers - 1):
-        conv_1d = Conv1D(filters, kernel_size,
-                         padding='causal',
-                         activation='relu',
-                         dilation_rate=2**i,
-                         name="conv_1d_"+str(i))(bn_cnn)
-        bn_cnn = BatchNormalization()(conv_1d)
-   # Bidirectional recurrent layer
-    brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name='brnn'))(bn_cnn)
-    # Batch normalization 
-    bn_rnn = BatchNormalization()(brnn)
-    # Loop for additional layers
-    for i in range(recur_layers - 1):
-        name = 'brnn_' + str(i + 1)
-        brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, name=name))(bn_rnn)
-        bn_rnn = BatchNormalization()(brnn)
-    time_dense = TimeDistributed(Dense(output_dim))(bn_rnn)
-    y_pred = Activation('softmax', name='softmax')(time_dense)
-    model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, 'causal', 1)
-    return model
-
-model_7 = cnn_deep_brnn_dilated_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                                      filters=200,
-                                      activation='relu',
-                                      kernel_size=11, 
-                                      conv_stride=1,
-                                      conv_border_mode='causal',
-                                      recur_layers=2,
-                                      conv_layers=2,
-                                      dilation_rate=2,
-                                      units=200)
-
 def keras_model(input_dim, filters, activation, dilation_rate, kernel_size, conv_stride,
     conv_border_mode, recur_layers, units, conv_layers, output_dim=29):
     input_data = Input(name='the_input', shape=(None, input_dim))
@@ -615,7 +527,7 @@ def keras_model(input_dim, filters, activation, dilation_rate, kernel_size, conv
         bn_cnn = BatchNormalization()(conv_1d)
    # Bidirectional recurrent layer
     brnn = Bidirectional(GRU(units, activation=activation, 
-        return_sequences=True, implementation=2, recurrent_dropout=0.1, name='brnn'))(bn_cnn)
+        return_sequences=True, implementation=2, name='brnn'))(bn_cnn)
     # Batch normalization 
     bn_rnn = BatchNormalization()(brnn)
     # Loop for additional recurrent layers
@@ -632,7 +544,7 @@ def keras_model(input_dim, filters, activation, dilation_rate, kernel_size, conv
         x, kernel_size, 'causal', 1)
     return model
 
-model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
+final_keras = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                       filters=200,
                       activation='relu',
                       kernel_size=11, 

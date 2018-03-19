@@ -26,15 +26,13 @@ def index():
         instance_number = form.instance_number.data
         print(instance_number)
         print(partition)
-        truth_transcription = make_predictions.get_ground_truth(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_6, model_path='./results/model_6.h5')
-        prediction_transcription = make_predictions.get_prediction(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_6, model_path='./results/model_6.h5')
+        truth_transcription = make_predictions.get_ground_truth(index=instance_number, partition=partition, input_to_softmax=make_predictions.final_keras, model_path='./results/final_keras.h5')
+        prediction_transcription = make_predictions.get_prediction(index=instance_number, partition=partition, input_to_softmax=make_predictions.final_keras, model_path='./results/final_keras.h5')
         print(truth_transcription)
         print(prediction_transcription)
     
     return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription)
 
-# partition=partition, instance_number=instance_number, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription
-# truth_transcription=truth_transcription, prediction_transcription=prediction_transcription
 @app.route('/about')
 @app.route('/about.html')
 def about():
