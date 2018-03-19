@@ -34,16 +34,7 @@ Linux: ```sudo apt-get install libav-tools```
 
 Mac: ```brew install libav```
 
-Windows: Browse to the [Libav Website](https://libav.org/download/).
-
-Scroll down to "Windows Nightly and Release Builds" and click on the appropriate link for your system (32-bit or 64-bit).
-Click nightly-gpl.
-
-Download most recent archive file.
-
-Extract the file. Move the usr directory to your C: drive.
-
-Run :
+Windows: Browse to the [Libav Website](https://libav.org/download/). Scroll down to "Windows Nightly and Release Builds" and click on the appropriate link for your system (32-bit or 64-bit). Click nightly-gpl. Download the most recent archive file, and extract it. Move the usr directory to your C: drive and run:
 
 ```rename C:\usr avconv```
 <br>
