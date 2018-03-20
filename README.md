@@ -123,7 +123,7 @@ The tools used in this project include:
 
 <a id='data'></a>
 ## Dataset
-The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project.
+The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of 10-15 second audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project.
 
 <a id='features'></a>
 ## Feature Extraction/Engineering

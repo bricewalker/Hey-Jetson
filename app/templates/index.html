@@ -27,7 +27,7 @@
 
 {% block waveform %}
 {% if raw_plot != None %}
-	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File</h3>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File:</h3>
 	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
 	<div class="mdl-cell mdl-cell--12-col">{{ raw_shape }}</div>
 {%else%}
