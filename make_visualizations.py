@@ -377,7 +377,7 @@ def vis_audio_features(index, partition):
         vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
         vis_text = audio_gen.valid_texts[index]
         vis_raw_audio, _ = librosa.load(vis_audio_path)
-        return vis_text, vis_raw_audio, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path
+        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
     
     elif partition == 'test':
         audio_gen = AudioGenerator(spectrogram=True)

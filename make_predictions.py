@@ -340,6 +340,7 @@ class AudioGenerator():
     def normalize(self, feature, eps=1e-14):
     # Scale the data
         return (feature - self.feats_mean) / (self.feats_std + eps)
+
 def spectrogram(samples, fft_length=256, sample_rate=2, hop_length=128):
 # Create a spectrogram from audio signals
     assert not np.iscomplexobj(samples), "You shall not pass in complex numbers"
@@ -405,6 +406,28 @@ def vis_train_features(index):
     print('There are %d total training examples.' % len(audio_gen.train_audio_paths))
     # Return labels for plotting
     return vis_text, vis_raw_audio, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path
+
+def vis_audio_features(index, partition):
+# Function for visualizing a single audio file based on index chosen
+    if partition == 'validation':
+        audio_gen = AudioGenerator(spectrogram=True)
+        audio_gen.load_validation_data()
+        vis_audio_path = audio_gen.valid_audio_paths[index]
+        vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+        vis_text = audio_gen.valid_texts[index]
+        vis_raw_audio, _ = librosa.load(vis_audio_path)
+        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
+    
+    elif partition == 'test':
+        audio_gen = AudioGenerator(spectrogram=True)
+        audio_gen.load_test_data()
+        vis_audio_path = audio_gen.test_audio_paths[index]
+        vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+        vis_text = audio_gen.test_texts[index]
+        vis_raw_audio, _ = librosa.load(vis_audio_path)
+        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
+    else:
+        raise Exception('Invalid partition!  Must be "test", or "validation"')
 
 # Custom CTC loss function (discussed below)
 def ctc_lambda_func(args):
@@ -612,5 +635,4 @@ def get_prediction(index, partition, input_to_softmax, model_path):
     
     # Display predicted transcripted.
     prediction_transcription = ''.join(int_seq_to_text(pred_ints))
-
     return prediction_transcription

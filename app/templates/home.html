@@ -31,10 +31,8 @@
 <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
                 <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-                        <span class="mdl-layout__site_title">Speech Inference Engine</span>
                     <div class="mdl-layout__header-row portfolio-logo-row">
                         <span class="mdl-layout__title">
-                            <div class="portfolio-logo"></div>
                             <span class="mdl-layout__title">Hey, Jetson!</span>
                         </span>
                     </div>
@@ -59,9 +57,6 @@
                     <div class="mdl-card__title">
                         <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference on the Nvidia Jetson.</h2>
                     </div>
-                    <div class="mdl-card__media">
-                        <img class="article-image" src="{{ url_for('static', filename='images/raw.png') }}" border="0" alt="">
-                    </div>
                     <div class="mdl-card__supporting-text">
                         <strong>Includes:</strong>
                         <span>Python, Flask, Tensorflow, Keras, Nvidia Jetson, Jetpack, Ubuntu, L4T, HTML, CSS, JavaScript, Anaconda, Jupyter Notebook, Cudnn</span>
@@ -70,14 +65,13 @@
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Introduction</h3>
                         <div class="mdl-cell mdl-cell--6-col">
                             <p>
-                                This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
+                                This server runs a live demo of a scalable automatic speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This end to end sequencing model uses a recurrent neural network trained on an Nvidia GTX1070. Use the inference engine below to test out the model.
                             </p>
                         </div>
                         <div class="mdl-cell mdl-cell--6-col">
                             <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
                         </div>
                         <div class="mdl-cell mdl-cell--6-col">
-                        <!-- Accent-colored raised button with ripple -->
                         <a href="https://github.com/bricewalker/Hey-Jetson">
                         <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                             View full project on Github
@@ -91,20 +85,13 @@
                         </button>
                         </a>
                         </div>
-                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Demo</h3>
-                        <div class="mdl-cell mdl-cell--12-col">
-                            <p>
-                                This website allows you to demo real time speech recognition inference using a Reccurent Neural Network. Server The network was trained on an Nvidia GTX 1070 and deployed for inference on an Nvidia Jetson server.
-                            </p>
-                        </div>
-                        <div class="mdl-cell mdl-cell--12-col">{% block body %}{% endblock %}</div>
-                        <div class="mdl-cell mdl-cell--12-col">{% block page_content %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block usr_input %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block transcriptions %}{% endblock %}</div>
                         <div>
-                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File</h3>
                         <div class="mdl-cell mdl-cell--12-col">{% block waveform %}{% endblock %}</div>
                         <div class="mdl-cell mdl-cell--12-col">{% block spectrogram %}{% endblock %}</div>
                         </div>
-                    </div>
+                        </div>
                 </div>
             </div>
             <footer class="mdl-mini-footer">

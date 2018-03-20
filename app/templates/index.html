@@ -1,6 +1,6 @@
 {% extends "home.html" %}
 
-{% block body %}
+{% block usr_input %}
 	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Inference Engine</h2>
 	<div class="mdl-cell mdl-cell--12-col">
 		<form method="POST" action="/">
@@ -14,27 +14,32 @@
 	</div>
 {% endblock %}
 
-{% block page_content %}
+{% block transcriptions %}
+{% if truth_transcription != None %}
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
 	<div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
 	<div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
+{%else%}
+	<div class="mdl-cell mdl-cell--12-col"></div>
+{% endif %}
 {% endblock %}
 
-{% if raw_plot != None %}
 {% block waveform %}
+{% if raw_plot != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File</h3>
 	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
 	<div class="mdl-cell mdl-cell--12-col">{{ raw_shape }}</div>
+{%else%}
+<div class="mdl-cell mdl-cell--12-col"></div>
+{% endif %}
 {% endblock %}
 
 {% block spectrogram %}
+{% if spectrogram_plot != None %}
 	<img src="data:image/png;base64, {{ spectrogram_plot }}" alt="spectrogram">
 	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
-{% endblock %}
-
 {%else%}
-
-{% block nothing %}
-{% endblock %}
-
+<div class="mdl-cell mdl-cell--12-col"></div>
 {% endif %}
+{% endblock %}
