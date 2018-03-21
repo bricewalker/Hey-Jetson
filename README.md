@@ -176,4 +176,4 @@ The best performing model is considered the one that gives the highest probabili
 
 <a id='inference'></a>
 ## Inference
-Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions on the test and validation datasets.
+Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions on the datasets.
