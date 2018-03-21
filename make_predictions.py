@@ -63,7 +63,7 @@ RNG_SEED = 95
 # Suppressing some of Tensorflow's warnings
 tf.logging.set_verbosity(tf.logging.ERROR)
 
-# Function for shuffling data
+# Function for shuffling data which is important as neural networks make multiple passes through the data
 def shuffle_dataset(audio_paths, durations, texts):
     p = np.random.permutation(len(audio_paths))
     audio_paths = [audio_paths[i] for i in p] 
@@ -180,8 +180,7 @@ class AudioGenerator():
             cur_index = self.test_valid_index
             texts = self.test_texts
         else:
-            raise Exception("Invalid partition. "
-                "Must be train/val")
+            raise Exception("Invalid partition. Must be train/validation/test")
 
         features = [self.normalize(self.featurize(a)) for a in 
             audio_paths[cur_index:cur_index+self.minibatch_size]]
@@ -220,7 +219,7 @@ class AudioGenerator():
         return (inputs, outputs)
 
     def shuffle_dataset_by_partition(self, partition):
-    # Shuffle the data
+    # More shuffling
         if partition == 'train':
             self.train_audio_paths, self.train_durations, self.train_texts = shuffle_dataset(
                 self.train_audio_paths, self.train_durations, self.train_texts)
@@ -232,7 +231,7 @@ class AudioGenerator():
                 "Must be train/val")
 
     def sort_dataset_by_duration(self, partition):
-    # Sort the data
+    # Extra shuffling
         if partition == 'train':
             self.train_audio_paths, self.train_durations, self.train_texts = sort_dataset(
                 self.train_audio_paths, self.train_durations, self.train_texts)
@@ -286,7 +285,9 @@ class AudioGenerator():
 
     def load_test_data(self, desc_file='test_corpus.json'):
         self.load_metadata_from_desc_file(desc_file, 'test')
-    
+        if self.sort_by_duration:
+            self.sort_dataset_by_duration('test')
+            
     def load_metadata_from_desc_file(self, desc_file, partition):
     # Get metadata from json corpus
         audio_paths, durations, texts = [], [], []
@@ -316,10 +317,10 @@ class AudioGenerator():
             self.test_texts = texts
         else:
             raise Exception("Invalid partition. "
-             "Must be train/val/test")
+             "Must be train/validation/test")
             
     def fit_train(self, k_samples=100):
-    # Estimate descriptive stats for training set based on sample of 100
+    # Estimate descriptive stats for training set based on sample of 100 instances
         k_samples = min(k_samples, len(self.train_audio_paths))
         samples = self.rng.sample(self.train_audio_paths, k_samples)
         feats = [self.featurize(s) for s in samples]
@@ -338,7 +339,7 @@ class AudioGenerator():
             return mfcc(sig, rate, numcep=self.mfcc_dim)
 
     def normalize(self, feature, eps=1e-14):
-    # Scale the data
+    # Scale the data for the neural network and to reduce the size of the gradients
         return (feature - self.feats_mean) / (self.feats_std + eps)
 
 def spectrogram(samples, fft_length=256, sample_rate=2, hop_length=128):
@@ -447,22 +448,7 @@ def add_ctc_loss(input_to_softmax):
         outputs=loss_out)
     return model
 
-# Functions for modifying CNN layers for sequence problems 
-def conv_output_length(input_length, filter_size, border_mode, stride,
-                       dilation=1):
-# Compute the length of conv output seq after 1D convolution across time
-    if input_length is None:
-        return None
-    assert border_mode in {'same', 'valid', 'causal'}
-    dilated_filter_size = filter_size + (filter_size - 1) * (dilation - 1)
-    if border_mode == 'same':
-        output_length = input_length
-    elif border_mode == 'valid':
-        output_length = input_length - dilated_filter_size + 1
-    elif border_mode == 'causal':
-        output_length = input_length
-    return (output_length + stride - 1) // stride
-
+# Function for modifying CNN layers for sequence problems 
 def cnn_output_length(input_length, filter_size, border_mode, stride,
                        dilation=1):
 # Compute the length of cnn output seq after 1D convolution across time
@@ -483,10 +469,10 @@ def train_model(input_to_softmax,
                 save_model_path,
                 train_json='train_corpus.json',
                 valid_json='valid_corpus.json',
-                minibatch_size=20,
+                minibatch_size=16,
                 spectrogram=True,
                 mfcc_dim=13,
-                optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=1, clipvalue=0.5),
+                optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=1, clipvalue=.5),
                 epochs=30,
                 verbose=1,
                 sort_by_duration=False,
@@ -512,25 +498,28 @@ def train_model(input_to_softmax,
     # Make  initial results/ directory for saving model pickles
     if not os.path.exists('results'):
         os.makedirs('results')
-    # Add checkpoints
+    # Add callbacks
     checkpointer = ModelCheckpoint(filepath='results/'+save_model_path, verbose=0)
+    terminator = callbacks.TerminateOnNaN()
+    time_machine = callbacks.History()
+    logger = callbacks.CSVLogger('training.log')
     # Fit/train model
     hist = model.fit_generator(generator=audio_gen.next_train(), steps_per_epoch=steps_per_epoch,
         epochs=epochs, validation_data=audio_gen.next_valid(), validation_steps=validation_steps,
-        callbacks=[checkpointer], verbose=verbose)
+        callbacks=[checkpointer, terminator, time_machine], verbose=verbose)
     # Save model loss
     with open('results/'+pickle_path, 'wb') as f:
         pickle.dump(hist.history, f)
 
 # Creating a TensorFlow session
-#from keras.backend.tensorflow_backend import set_session
-#config = tf.ConfigProto()
-#config.gpu_options.per_process_gpu_memory_fraction = 1.0
-#set_session(tf.Session(config=config))
-# tf.reset_default_graph()
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 1.0
+set_session(tf.Session(config=config))
+#tf.reset_default_graph()
 
-def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
-    conv_border_mode, recur_layers, units, output_dim=29):
+# Defining the final model in Keras
+def keras_model(input_dim, filters, activation, kernel_size, conv_stride, conv_border_mode, recur_layers, units, output_dim=29):
     # Input
     input_data = Input(name='the_input', shape=(None, input_dim))
     # Convolutional layer
@@ -572,52 +561,42 @@ final_keras = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                           units=200)
 
 def get_ground_truth(index, partition, input_to_softmax, model_path):
-    
-    # Load the train and test data
+    # Load the validation and test data
     data_gen = AudioGenerator(spectrogram = spectrogram)
     data_gen.load_validation_data()
     data_gen.load_test_data()
-    
+    data_gen.load_train_data()
     # Obtain ground truth transcriptions and audio features 
     if partition == 'validation':
         transcription = data_gen.valid_texts[index]
-        audio_path = data_gen.valid_audio_paths[index]
-        data_point = data_gen.normalize(data_gen.featurize(audio_path))
     elif partition == 'test':
         transcription = data_gen.test_texts[index]
-        audio_path = data_gen.test_audio_paths[index]
-        data_point = data_gen.normalize(data_gen.featurize(audio_path))
+    elif partition == 'train':
+        transcription = data_gen.train_texts[index]
     else:
-        raise Exception('Invalid partition!  Must be "test", or "validation"')
-        
-    # Obtain predictions
-    input_to_softmax.load_weights(model_path)
-    prediction = input_to_softmax.predict(np.expand_dims(data_point, axis=0))
-    output_length = [input_to_softmax.output_length(data_point.shape[0])] 
-    pred_ints = (K.eval(K.ctc_decode(
-                prediction, output_length)[0][0])+1).flatten().tolist()
+        raise Exception('Invalid partition!  Must be "train", test", or "validation"')
     
     # Display ground truth transcription
     return transcription
 
 def get_prediction(index, partition, input_to_softmax, model_path):
-    
-    # Load the train and test data
+    # Load the validation and test data
     data_gen = AudioGenerator(spectrogram = spectrogram)
     data_gen.load_validation_data()
     data_gen.load_test_data()
-    
+    data_gen.load_train_data()
     # Obtain ground truth transcriptions and audio features 
     if partition == 'validation':
-        transcription = data_gen.valid_texts[index]
         audio_path = data_gen.valid_audio_paths[index]
         data_point = data_gen.normalize(data_gen.featurize(audio_path))
     elif partition == 'test':
-        transcription = data_gen.test_texts[index]
         audio_path = data_gen.test_audio_paths[index]
         data_point = data_gen.normalize(data_gen.featurize(audio_path))
+    elif partition == 'train':
+        audio_path = data_gen.train_audio_paths[index]
+        data_point = data_gen.normalize(data_gen.featurize(audio_path))
     else:
-        raise Exception('Invalid partition!  Must be "test", or "validation"')
+        raise Exception('Invalid partition!  Must be "train", test", or "validation"')
         
     # Obtain predictions
     input_to_softmax.load_weights(model_path)

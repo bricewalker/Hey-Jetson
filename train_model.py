@@ -549,8 +549,8 @@ def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
     y_pred = Activation('softmax', name='softmax')(time_dense)
     # Specifying the model
     model = Model(inputs=input_data, outputs=y_pred)
-    model.output_length = lambda x: cnn_output_length(
-        x, kernel_size, conv_border_mode, conv_stride)
+    model.output_length = Lambda(lambda x: cnn_output_length(
+        x, kernel_size, conv_border_mode, conv_stride))
     print(model.summary())
     return model
 
