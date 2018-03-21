@@ -2,6 +2,11 @@
 
 {% block usr_input %}
 	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Inference Engine</h2>
+	<div class="mdl-cell mdl-cell--12-col">Select an instance to run inference on. Valid indexes are:
+		<br>Train set: 0-25150
+		<br>Validation set: 0-2022
+		<br>Test set: 0-1878
+	</div>
 	<div class="mdl-cell mdl-cell--12-col">
 		<form method="POST" action="/">
 			{{ form.csrf_token }}

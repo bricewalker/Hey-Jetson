@@ -121,7 +121,6 @@ def index():
 
         truth_transcription = make_predictions.get_ground_truth(index=instance_number, partition=partition, input_to_softmax=make_predictions.final_keras, model_path='./results/final_keras.h5')
         prediction_transcription = make_predictions.get_prediction(index=instance_number, partition=partition, input_to_softmax=make_predictions.final_keras, model_path='./results/final_keras.h5')
-        print(prediction_transcription)
 
         vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path = make_predictions.vis_audio_features(index=instance_number, partition=partition)
 
