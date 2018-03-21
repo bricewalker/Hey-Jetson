@@ -2,7 +2,9 @@
 ## Automatic Speech Recognition Inference
 ### By Brice Walker
 
-[View full project on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb)
+[Check out the inference engine at heyjetson.com](https://heyjetson.com)
+
+[View full notebook on nbviewer](https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb)
 
 ![audio](app/static/images/raw.png)
 
@@ -15,7 +17,7 @@ This project includes a flask web server for applied speech inference.
 ## Outline
 - [Getting started](#start)
 - [Introduction](#intro)
-- [Libraries](#libraries)
+- [Tools](#tools)
 - [Dataset](#data)
 - [Feature Extraction/Engineering](#features)
 - [Recurrent Neural Networks](#rnn)
@@ -44,9 +46,7 @@ Windows: Browse to the [Libav Website](https://libav.org/download/). Scroll down
 <br>
 ```set PATH=C:\avconv\bin;%PATH%```
 
-Run flac_to_wav.sh from the directory containing the dataset. This might take a while depending on your machine:
-
-```flac_to_wav.sh```
+Run flac_to_wav.sh from the directory containing the dataset. This might take a while depending on your machine: ```flac_to_wav.sh```
 
 Now navigate to your code repo and run create_desc_json.py, specifying the path to the dataset and the names for the corpus files, the commands should look like this:
 
@@ -56,26 +56,19 @@ python create_desc_json.py C:\Users\brice\LibriSpeech\dev-clean\ valid_corpus.js
 python create_desc_json.py C:\Users\brice\LibriSpeech\test-clean\ test_corpus.json
 ```
 
-And then for training the final model, be sure to download both the train-clean-100, and train-clean-360 datasets and combine them into one folder, named train-clean-460 within the LibriSpeech directory, then run the command. It should like like so:
+And then for training the final model, be sure to download both the train-clean-100, and train-clean-360 datasets and combine them into one folder, named 'train-clean-460' within the LibriSpeech directory, then run the command. It should look something like this:
 
-```
-python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-460\ train_corpus.json
-```
+```python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-460\ train_corpus.json```
 
-Then run the following command in the repo directory:
-```
-pip install -r requirements.txt
-```
+Then run the following command in the repo directory: ```pip install -r requirements.txt```
 #### Training the model
-You can then run the train_model script to train the full RNN:
-```
-python train_model.py
-```
+You can then run the train_model script to train the full RNN: ```python train_model.py```
+
+Optionally, you can run the provided notebook in Jupyter for a walk through of the modeling process.
+
 #### Running the inference server
-It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run:
-```
-python -m venv venv
-```
+It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run: ```python -m venv venv```
+
 Then activate the environment with:
 
 Unix/Linux: ```source venv/bin/activate```
@@ -132,7 +125,7 @@ There are 3 primary methods for extracting features for speech recognition. This
 This project explores the following methods of feature extraction for acoustic modeling:
 
 ### Raw Audio Waves
-This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]
+This method uses the raw wave forms of the audio files and is a 1D vector of the amplitude where X = [x1, x2, x3...].
 
 ![raw](app/static/images/raw.png)
 
