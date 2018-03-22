@@ -98,7 +98,7 @@ Speech recognition models are based on a statistical optimization problem called
 Speech recognition can be broken into two parts; the acoustic model, that describes the distribution over acoustic observations, O, given the word sequence, W; and the language model based solely on the word sequence which assigns a probability to every possible word sequence. This sequence to sequence model combines both the acoustic and language models into one neural network, though pretrained acoustic models are available from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/) if you would like to speed up training.
 
 ### Problem Statement
-My goal was to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson.
+My goal was to build a character-level ASR system using a recurrent neural network in tensorflow that can run inference on an Nvidia Jetson with a word error rate of <20%.
 
 <a id='libraries'></a>
 ## Tools
