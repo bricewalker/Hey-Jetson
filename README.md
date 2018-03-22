@@ -10,7 +10,7 @@
 
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
-The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours.
+The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is about 19%.
 
 This project includes a flask web server for applied speech inference.
 
@@ -85,6 +85,8 @@ Windows: ```set FLASK_APP=inference.py```
 
 Finally, initialize the web app with: ```flask run```
 
+Now you can access the inference engine in your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) or [http://localhost:5000](http://localhost:5000).
+
 <a id='intro'></a>
 ## Introduction
 
@@ -96,7 +98,7 @@ Speech recognition models are based on a statistical optimization problem called
 Speech recognition can be broken into two parts; the acoustic model, that describes the distribution over acoustic observations, O, given the word sequence, W; and the language model based solely on the word sequence which assigns a probability to every possible word sequence. This sequence to sequence model combines both the acoustic and language models into one neural network, though pretrained acoustic models are available from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/) if you would like to speed up training.
 
 ### Problem Statement
-My goal is to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson with a character error rate of <50% and latency of <200ms.
+My goal was to build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson.
 
 <a id='libraries'></a>
 ## Tools
@@ -171,6 +173,8 @@ I also employ randomized dropout of inputs to the aggregate model to prevent the
 Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
 
 The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
+
+The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is about 19%.
 
 ![performance](app/static/images/performance.png)
 

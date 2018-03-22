@@ -91,7 +91,7 @@
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Statment</h3>
                         <div class="mdl-cell mdl-cell--12-col">
                             <p>
-                                The goal of this project was build a character-level ASR system using RNN's in tensorflow that can run inference on an Nvidia Jetson with a character error rate of <50% and latency of <200ms.
+                                My goal was to build a character-level ASR system using a recurrent neural network in tensorflow that can run inference on an Nvidia Jetson with a word error rate of <20%.
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">The Data</h3>
@@ -175,7 +175,7 @@
                                 Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
                             </p>
                             <p>
-                                The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
+                                The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is about 99%.
                             </p>
                         </div>
                         <div class="mdl-cell mdl-cell--12-col">

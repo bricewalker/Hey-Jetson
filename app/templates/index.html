@@ -20,11 +20,16 @@
 {% endblock %}
 
 {% block transcriptions %}
-{% if truth_transcription != None %}
+{% if prediction_transcription != None %}
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
 	<div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
 	<div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance Measures:</h3>
+	<div class="mdl-cell mdl-cell--12-col">Cosine Similarity: {{ similarity }}</div>
+	<div class="mdl-cell mdl-cell--12-col">This is a measure where a score of 1 means that the two strings are exactly equal and a score of 0 means the prediction transcription contains none of the words in the ground truth label.</div>
+	<div class="mdl-cell mdl-cell--12-col">Word Error Rate: {{ error_rate }} %</div>
+	<div class="mdl-cell mdl-cell--12-col">Word error rate is defined as (substitutions + deletions + insertions) / # of words in the ground truth transcription.</div>
 {%else%}
 	<div class="mdl-cell mdl-cell--12-col"></div>
 {% endif %}

@@ -35,6 +35,10 @@ import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 from scipy import signal
 
+# Model metrics
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 # Visualization
 import IPython.display as ipd
 import librosa.display
@@ -52,7 +56,6 @@ from flask import Flask, render_template, send_file, make_response, request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 import base64
-
 
 color = sns.color_palette()
 sns.set_style('darkgrid')
@@ -82,6 +85,8 @@ def index():
     raw_shape = None
     spectrogram_plot = None
     spectrogram_shape = None
+    error_rate = None
+    similarity = None
 
     def plot_raw_audio(vis_raw_audio):
         # Plot the raw audio signal
@@ -115,6 +120,28 @@ def index():
         spectrogram_plot = base64.b64encode(figfile2.getvalue())
         return spectrogram_plot.decode('utf8')
 
+    def wer_calc(ref, pred):
+        # Calcualte word error rate
+        d = np.zeros((len(ref) + 1) * (len(pred) + 1), dtype=np.uint16)
+        d = d.reshape((len(ref) + 1, len(pred) + 1))
+        for i in range(len(ref) + 1):
+            for j in range(len(pred) + 1):
+                if i == 0:
+                    d[0][j] = j
+                elif j == 0:
+                    d[i][0] = i
+        for i in range(1, len(ref) + 1):
+            for j in range(1, len(pred) + 1):
+                if ref[i - 1] == pred[j - 1]:
+                    d[i][j] = d[i - 1][j - 1]
+                else:
+                    substitution = d[i - 1][j - 1] + 1
+                    insertion = d[i][j - 1] + 1
+                    deletion = d[i - 1][j] + 1
+                    d[i][j] = min(substitution, insertion, deletion)
+        result = float(d[len(ref)][len(pred)]) / len(ref) * 100
+        return result
+
     if form.validate_on_submit():
         partition = form.partition.data
         instance_number = form.instance_number.data
@@ -129,9 +156,16 @@ def index():
 
         spectrogram_plot = plot_spectrogram_feature(vis_spectrogram_feature)
         spectrogram_shape = 'The shape of the spectrogram of the chosen audio file: ' + str(vis_spectrogram_feature.shape)
+
+        cv = CountVectorizer()
+        ground_truth_vec = cv.fit_transform([truth_transcription])
+        pred_transcription_vec = cv.transform([prediction_transcription])
+        similarity = cosine_similarity(ground_truth_vec, pred_transcription_vec)
+
+        error_rate = wer_calc(truth_transcription, prediction_transcription)
     
     return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription, raw_plot=raw_plot, raw_shape=raw_shape,
-    spectrogram_plot=spectrogram_plot, spectrogram_shape=spectrogram_shape)
+    spectrogram_plot=spectrogram_plot, spectrogram_shape=spectrogram_shape, error_rate=error_rate, similarity=similarity)
     
 @app.route('/about')
 @app.route('/about.html')
