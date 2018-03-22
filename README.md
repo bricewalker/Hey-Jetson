@@ -10,7 +10,7 @@
 
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
-The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is about 19%.
+The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is around 19%.
 
 This project includes a flask web server for applied speech inference.
 
@@ -64,7 +64,9 @@ Then run the following command in the repo directory: ```pip install -r requirem
 #### Training the model
 You can then run the train_model script to train the full RNN: ```python train_model.py```
 
-Optionally, you can run the provided notebook in Jupyter for a walk through of the modeling process.
+Optionally, you can run through the provided notebook in Jupyter for a walk through of the modeling process and an in depth exploration of speech recognition.
+
+> Note: it is recommended that you train the model using a GPU as it will take a very long time on a CPU.
 
 #### Running the inference server
 It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run: ```python -m venv venv```
