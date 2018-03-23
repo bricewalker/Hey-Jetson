@@ -572,14 +572,14 @@ def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
         x, kernel_size, conv_border_mode, conv_stride)
     return model
 
-final_keras = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
-                          filters=200,
-                          activation='relu',
-                          kernel_size=11, 
-                          conv_stride=2,
-                          conv_border_mode='valid',
-                          recur_layers=2,
-                          units=200)
+model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
+                      filters=256,
+                      activation='relu',
+                      kernel_size=11, 
+                      conv_stride=2,
+                      conv_border_mode='valid',
+                      recur_layers=2,
+                      units=256)
 
 def get_ground_truth(index, partition, input_to_softmax, model_path):
     

@@ -10,9 +10,9 @@
 
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
-The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is around 19%.
+The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is around 18%.
 
-This project includes a flask web server for applied speech inference.
+This project also includes a flask web server for deploying an applied speech inference engine.
 
 ## Outline
 - [Getting started](#start)
@@ -66,7 +66,11 @@ You can then run the train_model script to train the full RNN: ```python train_m
 
 Optionally, you can run through the provided notebook in Jupyter for a walk through of the modeling process and an in depth exploration of speech recognition.
 
-> Note: it is recommended that you train the model using a GPU as it will take a very long time on a CPU.
+> Note: it is recommended that you train the model using a GPU as it will take a very long time on a CPU. To do so, you would need to run:
+```pip uninstall tensorflow``` , and then ```pip install tensorflow-gpu``` and ```pip uninstall keras```, and then ```pip install keras-gpu``` in order to take advantage of your graphics card.
+
+#### Preparing the Jetson
+In order to prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on a Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn). You will then need to:
 
 #### Running the inference server
 It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run: ```python -m venv venv```
@@ -78,6 +82,8 @@ Unix/Linux: ```source venv/bin/activate```
 Windows: ```venv\Scripts\activate.bat```
 
 Then you can run: ```pip install -r requirements.txt``` to install all required libraries into the virtual environment.
+
+> Note: You will need to build TensorFlow from source on the TX2.
 
 Now export the path as an environment variable:
 
@@ -146,7 +152,7 @@ Similar to the spectrogram, this turns the audio wave form into a 2D array. This
 <a id='rnn'></a>
 ## Recurrent Neural Networks
 For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. At its core, this is a machine translation problem, so an encoder-decoder model is an appropriate framework choice. Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron recieves an input as well as its own output form the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forword propogation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilitites for each possible character.
-                                    
+
 Hey, Jetson! is comprised of an acoustic model and language model. The acoustic model scores sequences of acoustic model labels over a time frame and the language model scores sequences of words. A decoding graph then maps valid acoustic label sequences to the corresponding word sequences. Speech recognition is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. So, to put it simply, speech recognition is the process of finding the word sequence that maximizes both the language and acoustic model scores.
 
 ### Loss Function
@@ -167,16 +173,13 @@ The deep neural network in this project also explores the use of Convolutional N
 ### Bidirectional Layers
 This project explores connecting two hidden layers of opposite directions to the same output, making their future input information reachable from the current state. To put it simply, this creates two layers of neurons; 1 that goes through the sequence forward in time and 1 that goes through it backward through time. This allows the output layer to get information from past and future states meaning that it will have knowledge of the letters located before and after the current utterance. This can lead to great improvements in performance but comes at a cost of increased latency.
 
-### Dropout
-I also employ randomized dropout of inputs to the aggregate model to prevent the model from over fitting.
-
 <a id='performance'></a>
 ## Performance
 Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
 
 The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
 
-The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 10%, while the overall word error rate is about 19%.
+The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is about 18%.
 
 ![performance](app/static/images/performance.png)
 
