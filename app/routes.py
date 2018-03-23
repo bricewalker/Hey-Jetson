@@ -88,7 +88,8 @@ def index():
     spectrogram_plot = None
     spectrogram_shape = None
     error_rate = None
-    similarity = None
+    cv_similarity = None
+    tfidf_similarity = None
     # Defining functions for descriptive stats for the inference engine
     def plot_raw_audio(vis_raw_audio):
         # Plot the raw audio signal
@@ -158,16 +159,21 @@ def index():
         # Plot the spectrogram of the audio file
         spectrogram_plot = plot_spectrogram_feature(vis_spectrogram_feature)
         spectrogram_shape = 'The shape of the spectrogram of the chosen audio file: ' + str(vis_spectrogram_feature.shape)
-        # Calculate cosine similarity of individual transcriptions 
+        # Calculate cosine similarity of individual transcriptions using Count Vectorizer
         cv = CountVectorizer()
-        ground_truth_vec = cv.fit_transform([truth_transcription])
-        pred_transcription_vec = cv.transform([prediction_transcription])
-        similarity = cosine_similarity(ground_truth_vec, pred_transcription_vec)
+        cv_ground_truth_vec = cv.fit_transform([truth_transcription])
+        cv_pred_transcription_vec = cv.transform([prediction_transcription])
+        cv_similarity = cosine_similarity(cv_ground_truth_vec, cv_pred_transcription_vec)
+        # Calculate cosine similarity of individual transcriptions using Tfidf Vectorizer
+        tfidf = TfidfVectorizer()
+        tfidf_ground_truth_vec = tfidf.fit_transform([truth_transcription])
+        tfidf_pred_transcription_vec = tfidf.transform([prediction_transcription])
+        tfidf_similarity = cosine_similarity(tfidf_ground_truth_vec, tfidf_pred_transcription_vec)
         # calculate word error rate of individual transcription
         error_rate = wer_calc(truth_transcription, prediction_transcription)
     # Render the html page with 
     return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription, raw_plot=raw_plot, raw_shape=raw_shape,
-    spectrogram_plot=spectrogram_plot, spectrogram_shape=spectrogram_shape, error_rate=error_rate, similarity=similarity)
+    spectrogram_plot=spectrogram_plot, spectrogram_shape=spectrogram_shape, error_rate=error_rate, cv_similarity=cv_similarity, tfidf_similarity=tfidf_similarity)
     
 @app.route('/about')
 @app.route('/about.html')

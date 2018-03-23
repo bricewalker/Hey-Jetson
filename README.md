@@ -192,3 +192,37 @@ The overall cosine similarity of the model's predictions with the ground truth t
 <a id='inference'></a>
 ## Inference
 Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions on the datasets.
+
+#### Next Steps
+
+Next steps for this project, and things you can try on your own, include: 
+- Building a deeper model with more layers
+- Training on the full LibriSpeech dataset
+- Training the model on audio with background noise
+- Training the model on conversational speech
+- Getting the audio files into an SQL database for faster service for the inference engine and for allowing service to end users with HTML5's audio tag so they can actually hear the audio file
+- Allowing users to record and transcribe their own audio for inference
+- Storing user recorded audio for online training of the model to improve performance
+- Recreating the model in TensorFlow for improved performance
+- Training the model to identify individual speakers
+- Training the model to identify the speaker's level of emotion
+- Converting the inference engine to Nvidia's TensorRT inference platform
+- Training the model on other languages
+- Trying out a transducer model
+- Building a more traditional encoder/decoder model
+- Adding attention to the model
+- Adding peephole connections to the LSTM cells
+- Adding a Hidden Markov Model
+- Using a pretrained language model
+- Building a measure for calculating character level error rates
+
+### Special Thanks
+
+I want to thank the following people/organizations for their support and training:
+
+- The instructional staff including Charles Rice, Riley Davis, and David Yerrington at [General Assembly](https://generalassemb.ly/) for their fantastic training in data science and machine/deep learning.
+- Andrew Ng with [deeplearning.ai](https://www.deeplearning.ai/), for developing the [Coursera Course on Sequence Models](https://www.coursera.org/learn/nlp-sequence-models) which helped me understand the mathematics behind recurrent neural networks.
+- [Microsoft ](https://www.microsoft.com/en-us/)for putting together the [edX course on Speech Recognition Systems](https://www.edx.org/course/speech-recognition-and-synthesis) which helped me understand the history of and theory behind speech recognition systems.
+- Alexis Cook and the staff at Udacity, IBM's Watson team, and the Amazon Alexa team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
+- The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
+- The Seattle DSI-3 Cohort at General Assembly for supporting my journey.
