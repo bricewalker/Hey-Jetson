@@ -23,6 +23,7 @@ This project also includes a flask web server for deploying an applied speech in
 - [Recurrent Neural Networks](#rnn)
 - [Performance](#performance)
 - [Inference](#selection)
+- [Conclusion](#conclusion)
 
 <a id='start'></a>
 ## Getting Started
@@ -193,6 +194,11 @@ The overall cosine similarity of the model's predictions with the ground truth t
 ## Inference
 Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions on the datasets.
 
+<a id='conclusion'></a>
+## Conclusion
+
+This concludes the model construction demo. You have now trained a strong performing recurrent neural network for speech recognition, from scratch, with a word error rate of <20% and have deployed it to the web with the flask web app framework.
+
 #### Next Steps
 
 Next steps for this project, and things you can try on your own, include: 
@@ -212,7 +218,7 @@ Next steps for this project, and things you can try on your own, include:
 - Building a more traditional encoder/decoder model
 - Adding attention to the model
 - Adding peephole connections to the LSTM cells
-- Adding a Hidden Markov Model
+- Adding a Hidden Markov Model/Gaussian Mixture Model
 - Using a pretrained language model
 - Building a measure for calculating character level error rates
 
