@@ -70,7 +70,9 @@ Optionally, you can run through the provided notebook in Jupyter for a walk thro
 ```pip uninstall tensorflow``` , and then ```pip install tensorflow-gpu``` and ```pip uninstall keras```, and then ```pip install keras-gpu``` in order to take advantage of your graphics card.
 
 #### Preparing the Jetson
-In order to prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on a Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn). You will then need to:
+In order to prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by downloading and installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on an Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to pre-install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn) on to the device. 
+
+You will then need to install pip and python-dev with: ```sudo apt-get install python3-pip python3-dev``` 
 
 #### Running the inference server
 It is recommended that you use Python 3.5+ in a virtual environment for the inference engine. To do so, navigate to the project directory and run: ```python -m venv venv```
@@ -84,6 +86,10 @@ Windows: ```venv\Scripts\activate.bat```
 Then you can run: ```pip install -r requirements.txt``` to install all required libraries into the virtual environment.
 
 > Note: You will need to build TensorFlow from source on the TX2.
+
+##### Builidng TensorFlow From Source
+
+To build TensorFlow from source:
 
 Now export the path as an environment variable:
 
