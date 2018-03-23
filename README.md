@@ -226,3 +226,7 @@ I want to thank the following people/organizations for their support and trainin
 - Alexis Cook and the staff at Udacity, IBM's Watson team, and the Amazon Alexa team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey.
+
+### Contributions
+
+If you would like to contribute to this project, please fork and clone and submit a pull request. I am always open to feedback and would love help with this project.
