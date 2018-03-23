@@ -229,4 +229,4 @@ I want to thank the following people/organizations for their support and trainin
 
 ### Contributions
 
-If you would like to contribute to this project, please fork and clone and submit a pull request. I am always open to feedback and would love help with this project.
+If you would like to contribute to this project, please fork and submit a pull request. I am always open to feedback and would love help with this project.
