@@ -202,25 +202,29 @@ This concludes the model construction demo. You have now trained a strong perfor
 #### Next Steps
 
 Next steps for this project, and things you can try on your own, include: 
-- Building a deeper model with more layers
-- Training on the full LibriSpeech dataset
-- Training the model on audio with background noise
-- Training the model on conversational speech
-- Getting the audio files into an SQL database for faster service for the inference engine and for allowing service to end users with HTML5's audio tag so they can actually hear the audio file
-- Allowing users to record and transcribe their own audio for inference
-- Storing user recorded audio for online training of the model to improve performance
-- Recreating the model in TensorFlow for improved performance
-- Training the model to identify individual speakers
-- Training the model to identify the speaker's level of emotion
-- Converting the inference engine to Nvidia's TensorRT inference platform
-- Training the model on other languages
-- Trying out a transducer model
-- Building a more traditional encoder/decoder model
-- Adding attention to the model
-- Adding peephole connections to the LSTM cells
-- Adding a Hidden Markov Model/Gaussian Mixture Model
-- Using a pretrained language model
-- Building a measure for calculating character level error rates
+- Build a deeper model with more layers.
+- Train on the full 1000 hour [LibriSpeech](http://www.openslr.org/12/) dataset.
+- Train the model on [audio with background noise](https://www.tensorflow.org/versions/master/tutorials/audio_recognition).
+- Train the model on [Mozilla's Common Voice] dataset to identify the speaker's gender and accent using this [reference project](https://github.com/mozilla/DeepSpeech).
+- Train the model on conversational speech, like that found in the [Buckeye Corpus](https://buckeyecorpus.osu.edu/), [Santa Barbara Corpus](http://www.linguistics.ucsb.edu/research/santa-barbara-corpus), or [COSINE Corpus](http://melodi.ee.washington.edu/cosine/).
+- Develop a production system for handling speech with sensitive personal information like in this reference [paper](resources/privateconversations.pdf).  
+- Get the audio files into an [SQL database](https://www.mysql.com/) for faster service for the inference engine and for allowing service to end users with [HTML5's audio tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) so they can actually hear the audio file.
+- Allow users to record and transcribe their own audio for inference.
+- Store user recorded audio for online training of the model to improve performance.
+- Recreating the model in [TensorFlow](https://www.tensorflow.org/) for [improved performance](https://github.com/tensorflow/tensorflow). [Mozilla](https://github.com/mozilla/DeepSpeech) has demonstrated the incredible power of TensorFlow for ASR.
+- Train the model using just the raw audio files, like this project from [Pannous](https://github.com/pannous/tensorflow-speech-recognition).
+- Train the model to [identify individual speakers](resources/speakeridentification.pdf) like [Google](resources/googlespeaker.pdf) using the [VoxCeleb](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/) dataset.
+- Train the model to identify the speaker's level of [emotion](resources/emotionrecognition.pdf). There are many examples on [Github](https://github.com/).
+- Convert the inference engine to Nvidia's [TensorRT](https://developer.nvidia.com/tensorrt) inference platform using their [Developer Guide](http://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html) and the [RESTful interface](https://devblogs.nvidia.com/tensorrt-container/).
+- Train the model on other languages, like [Baidu's Deep Speech 2](resources/deepspeech2.pdf).
+- Try out a [transducer model](resources/transducers.pdf), like Baidu is doing in [Deep Speech 3](http://research.baidu.com/deep-speech-3%EF%BC%9Aexploring-neural-transducers-end-end-speech-recognition/).
+- Build a more traditional encoder/decoder model
+- Add [attention](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) or other [augmentation methods](https://distill.pub/2016/augmented-rnns/) to the model
+- Add [peephole connections](resources/peepholes.pdf) to the [LSTM cells].(https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/LSTMCell).
+- Add a [Hidden Markov Model](resources/peepholes.pdf)/[Gaussian Mixture Model]((resources/peepholes.pdf)).
+- Use a pretrained language model like this one from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/).
+- Build a measure for calculating character level error rates.
+- Reduce the word error rate to [<10%](https://hacks.mozilla.org/2017/11/a-journey-to-10-word-error-rate/).
 
 ### Special Thanks
 
