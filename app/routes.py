@@ -30,7 +30,6 @@ from scipy.fftpack import dct
 import soundfile
 import json
 from python_speech_features import mfcc
-import librosa
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 from scipy import signal
@@ -41,7 +40,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Visualization
 import IPython.display as ipd
-import librosa.display
+#import librosa.display
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns

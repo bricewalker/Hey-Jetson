@@ -23,7 +23,6 @@ from scipy.fftpack import dct
 import soundfile
 import json
 from python_speech_features import mfcc
-import librosa
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 from scipy import signal
@@ -57,7 +56,6 @@ from tensorflow.core.protobuf import saver_pb2
 from tensorflow.python.training import saver as saver_lib
 
 # Visualization
-import librosa.display
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns

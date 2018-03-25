@@ -61,8 +61,10 @@ And then for training the final model, be sure to download both the train-clean-
 
 ```python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-460\ train_corpus.json```
 
-Then run the following command in the repo directory: ```pip install -r requirements.txt```
+Then run the following command in the repo directory: ```pip install -r server_requirements.txt```
 #### Training the model
+Install the required libraries and their dependencies with: ```pip install -r jetson_requirements.txt```
+
 You can then run the train_model script to train the full RNN: ```python train_model.py```
 
 Optionally, you can run through the provided notebook in Jupyter for a walk through of the modeling process and an in depth exploration of speech recognition.
@@ -84,7 +86,7 @@ Unix/Linux: ```source venv/bin/activate```
 
 Windows: ```venv\Scripts\activate.bat```
 
-Then you can run: ```pip install -r requirements.txt``` to install all required libraries into the virtual environment.
+Then you can run: ```pip install -r jetson_requirements.txt``` to install all required libraries into the virtual environment.
 
 > Note: You will need to build TensorFlow from source on the TX2.
 
