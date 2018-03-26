@@ -240,7 +240,7 @@ I want to thank the following people/organizations for their support and trainin
 - Alexis Cook and the staff at Udacity, IBM's Watson team, and the Amazon Alexa team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
 - Paolo Prandoni and Martin Vetterli at École Polytechnique Fédérale de Lausanne for teaching the course on [Digital Signal Processing on Coursera](https://www.coursera.org/learn/dsp/) that helped me understand the mathematics behind the Fourier transform.
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
-- The Seattle DSI-3 Cohort at General Assembly for supporting my journey.
+- The Seattle DSI-3 Cohort at General Assembly for supporting my journey and giving me good constructive feedback in the development phase of this project.
 
 ### Contributions
 
