@@ -150,7 +150,7 @@ This method uses the raw wave forms of the audio files and is a 1D vector of the
 
 ### Spectrograms 
 ![3dspectrogram](app/static/images/3dspectrogram.png)
-
+<br>
 This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the verticle axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.
 
 ![spectrogram](app/static/images/spectrogram.png)
