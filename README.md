@@ -86,13 +86,13 @@ Unix/Linux: ```source venv/bin/activate```
 
 Windows: ```venv\Scripts\activate.bat```
 
-Then you can run: ```pip install -r jetson_requirements.txt``` to install all required libraries into the virtual environment. You may need to install some libraries using apt-get: ```sudo apt-get install python3-<libraryname>```
+Then you can run: ```pip install -r jetson_requirements.txt``` to install all required libraries into the virtual environment. You may need to install some libraries using apt-get with a command like this: ```sudo apt-get install python3-<libraryname>```
 
 > Note: You will need to build TensorFlow from source on the TX2. Optionally, you can run ```pip install tensorflow-1.5.0-cp35-cp35m-linux_aarch64.whl``` to install the included wheel file that was prebuilt with TensorFlow 1.5.
 
 ##### Builidng TensorFlow From Source
 
-To build TensorFlow from source:
+To build TensorFlow from source, follow the instructions from [JetsonHacks](https://github.com/jetsonhacks/installTensorFlowTX2).
 
 Now export the path as an environment variable:
 
@@ -209,7 +209,7 @@ Next steps for this project, and things you can try on your own, include:
 - Build a deeper model with more layers.
 - Train on the full 1000 hour [LibriSpeech](http://www.openslr.org/12/) dataset.
 - Train the model on [audio with background noise](https://www.tensorflow.org/versions/master/tutorials/audio_recognition).
-- Train the model on [Mozilla's Common Voice] dataset to identify the speaker's gender and accent using this [reference project](https://github.com/mozilla/DeepSpeech).
+- Train the model on [Mozilla's Common Voice](https://voice.mozilla.org/) dataset to identify the speaker's gender and accent using this [reference project](https://github.com/mozilla/DeepSpeech).
 - Train the model on conversational speech, like that found in the [Buckeye Corpus](https://buckeyecorpus.osu.edu/), [Santa Barbara Corpus](http://www.linguistics.ucsb.edu/research/santa-barbara-corpus), or [COSINE Corpus](http://melodi.ee.washington.edu/cosine/).
 - Develop a production system for handling speech with sensitive personal information like in this reference [paper](resources/privateconversations.pdf).  
 - Get the audio files into an [SQL database](https://www.mysql.com/) for faster service for the inference engine and for allowing service to end users with [HTML5's audio tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) so they can actually hear the audio file.
@@ -222,9 +222,9 @@ Next steps for this project, and things you can try on your own, include:
 - Convert the inference engine to Nvidia's [TensorRT](https://developer.nvidia.com/tensorrt) inference platform using their [Developer Guide](http://docs.nvidia.com/deeplearning/sdk/tensorrt-developer-guide/index.html) and the [RESTful interface](https://devblogs.nvidia.com/tensorrt-container/).
 - Train the model on other languages, like [Baidu's Deep Speech 2](resources/deepspeech2.pdf).
 - Try out a [transducer model](resources/transducers.pdf), like Baidu is doing in [Deep Speech 3](http://research.baidu.com/deep-speech-3%EF%BC%9Aexploring-neural-transducers-end-end-speech-recognition/).
-- Build a more traditional encoder/decoder model
+- Build a more traditional [encoder/decoder](resources/encoderdecoder.pdf) model as outlined by [Lu et al](resources/encoderdecoder2.pdf). 
 - Add [attention](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) or other [augmentation methods](https://distill.pub/2016/augmented-rnns/) to the model
-- Add [peephole connections](resources/peepholes.pdf) to the [LSTM cells].(https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/LSTMCell).
+- Add [peephole connections](resources/peepholes.pdf) to the [LSTM cells](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/LSTMCell).
 - Add a [Hidden Markov Model](resources/peepholes.pdf)/[Gaussian Mixture Model]((resources/peepholes.pdf)).
 - Use a pretrained language model like this one from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/).
 - Build a measure for calculating character level error rates.
@@ -238,6 +238,7 @@ I want to thank the following people/organizations for their support and trainin
 - Andrew Ng with [deeplearning.ai](https://www.deeplearning.ai/), for developing the [Coursera Course on Sequence Models](https://www.coursera.org/learn/nlp-sequence-models) which helped me understand the mathematics behind recurrent neural networks.
 - [Microsoft ](https://www.microsoft.com/en-us/)for putting together the [edX course on Speech Recognition Systems](https://www.edx.org/course/speech-recognition-and-synthesis) which helped me understand the history of and theory behind speech recognition systems.
 - Alexis Cook and the staff at Udacity, IBM's Watson team, and the Amazon Alexa team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
+- Paolo Prandoni and Martin Vetterli at École Polytechnique Fédérale de Lausanne for teaching the course on [Digital Signal Processing on Coursera](https://www.coursera.org/learn/dsp/) that helped me understand the mathematics behind the Fourier transform.
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey.
 
