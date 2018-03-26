@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, session, redirect, url_for, send_from_directory
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for, send_from_directory, Markup
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 from flask_wtf import FlaskForm
@@ -45,6 +45,7 @@ import seaborn as sns
 import plotly.offline as py
 import plotly.graph_objs as go
 import plotly.tools as tls
+from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 from io import BytesIO
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -71,6 +72,88 @@ class InferenceForm(FlaskForm):
     instance_number = IntegerField('Enter individual instance number:', validators=[Required()])
     submit = SubmitField('Submit')
 
+def plot_raw_audio(sample_rate, samples):
+    # Plot the raw audio signal
+    time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
+    fig = plt.figure(figsize=(7,3))
+    ax = fig.add_subplot(111)
+    ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
+    plt.title('Raw Audio Signal')
+    plt.xlabel('Time')
+    plt.ylabel('Amplitude')
+    figfile1 = BytesIO()
+    plt.savefig(figfile1, format='png')
+    figfile1.seek(0)
+    raw_plot = base64.b64encode(figfile1.getvalue())
+    return raw_plot.decode('utf8')
+
+def plot_spectrogram_feature(vis_spectrogram_feature):
+    # Plot a normalized spectrogram
+    fig = plt.figure(figsize=(7,3))
+    ax1 = fig.add_subplot(111)
+    im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
+    plt.title('Normalized Log Spectrogram')
+    plt.ylabel('Frequency')
+    plt.xlabel('Time (s)')
+    divider = make_axes_locatable(ax1)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    figfile2 = BytesIO()
+    plt.savefig(figfile2, format='png')
+    figfile2.seek(0)
+    spectrogram_plot = base64.b64encode(figfile2.getvalue())
+    return spectrogram_plot.decode('utf8')
+
+def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
+    nperseg = int(round(window_size * sample_rate / 1e3))
+    noverlap = int(round(step_size * sample_rate / 1e3))
+    freqs, times, spec = signal.spectrogram(samples,
+                                            fs=sample_rate,
+                                            window='hann',
+                                            nperseg=nperseg,
+                                            noverlap=noverlap,
+                                            detrend=False)
+    freqs = (freqs*2)
+    return freqs, times, np.log(spec.T.astype(np.float64) + eps)
+
+def plot_log_spectrogram_feature(freqs, times, spectrogram):
+        fig = plt.figure(figsize=(7,3))
+        ax2 = fig.add_subplot(111)
+        ax2.imshow(spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
+                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
+        ax2.set_yticks(freqs[::20])
+        ax2.set_xticks(times[::20])
+        ax2.set_title('Normalized Log Spectrogram')
+        ax2.set_ylabel('Frequency')
+        ax2.set_xlabel('Time (s)')
+        figfile3 = BytesIO()
+        plt.savefig(figfile3, format='png')
+        figfile3.seek(0)
+        log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
+        return log_spectrogram_plot.decode('utf8')
+
+def wer_calc(ref, pred):
+    # Calcualte word error rate
+    d = np.zeros((len(ref) + 1) * (len(pred) + 1), dtype=np.uint16)
+    d = d.reshape((len(ref) + 1, len(pred) + 1))
+    for i in range(len(ref) + 1):
+        for j in range(len(pred) + 1):
+            if i == 0:
+                d[0][j] = j
+            elif j == 0:
+                d[i][0] = i
+    for i in range(1, len(ref) + 1):
+        for j in range(1, len(pred) + 1):
+            if ref[i - 1] == pred[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
+            else:
+                substitution = d[i - 1][j - 1] + 1
+                insertion = d[i][j - 1] + 1
+                deletion = d[i - 1][j] + 1
+                d[i][j] = min(substitution, insertion, deletion)
+    result = float(d[len(ref)][len(pred)]) / len(ref) * 100
+    return result
+
 @app.route('/', methods=['GET', 'POST', 'PUT'])
 @app.route('/index', methods=['GET', 'POST', 'PUT'])
 @app.route('/index.html', methods=['GET', 'POST', 'PUT'])
@@ -87,88 +170,6 @@ def index():
     error_rate = None
     cv_similarity = None
     tfidf_similarity = None
-    # Defining functions for descriptive stats for the inference engine
-    def plot_raw_audio(sample_rate, samples):
-        # Plot the raw audio signal
-        time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
-        fig = plt.figure(figsize=(7,3))
-        ax = fig.add_subplot(111)
-        ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
-        plt.title('Raw Audio Signal')
-        plt.xlabel('Time')
-        plt.ylabel('Amplitude')
-        figfile1 = BytesIO()
-        plt.savefig(figfile1, format='png')
-        figfile1.seek(0)
-        raw_plot = base64.b64encode(figfile1.getvalue())
-        return raw_plot.decode('utf8')
-
-    def plot_spectrogram_feature(vis_spectrogram_feature):
-        # Plot a normalized spectrogram
-        fig = plt.figure(figsize=(7,3))
-        ax1 = fig.add_subplot(111)
-        im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
-        plt.title('Normalized Log Spectrogram')
-        plt.ylabel('Frequency')
-        plt.xlabel('Time (s)')
-        divider = make_axes_locatable(ax1)
-        cax = divider.append_axes("right", size="5%", pad=0.05)
-        plt.colorbar(im, cax=cax)
-        figfile2 = BytesIO()
-        plt.savefig(figfile2, format='png')
-        figfile2.seek(0)
-        spectrogram_plot = base64.b64encode(figfile2.getvalue())
-        return spectrogram_plot.decode('utf8')
-
-    def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
-        nperseg = int(round(window_size * sample_rate / 1e3))
-        noverlap = int(round(step_size * sample_rate / 1e3))
-        freqs, times, spec = signal.spectrogram(samples,
-                                        fs=sample_rate,
-                                        window='hann',
-                                        nperseg=nperseg,
-                                        noverlap=noverlap,
-                                        detrend=False)
-        freqs = (freqs*2)
-        return freqs, times, np.log(spec.T.astype(np.float64) + eps)
-
-    def plot_log_spectrogram_feature(freqs, times, spectrogram):
-        fig = plt.figure(figsize=(7,3))
-        ax2 = fig.add_subplot(111)
-        ax2.imshow(spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
-                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
-        ax2.set_yticks(freqs[::20])
-        ax2.set_xticks(times[::20])
-        ax2.set_title('Normalized Log Spectrogram')
-        ax2.set_ylabel('Frequency')
-        ax2.set_xlabel('Time (s)')
-        figfile3 = BytesIO()
-        plt.savefig(figfile3, format='png')
-        figfile3.seek(0)
-        log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
-        return log_spectrogram_plot.decode('utf8')
-
-    def wer_calc(ref, pred):
-        # Calcualte word error rate
-        d = np.zeros((len(ref) + 1) * (len(pred) + 1), dtype=np.uint16)
-        d = d.reshape((len(ref) + 1, len(pred) + 1))
-        for i in range(len(ref) + 1):
-            for j in range(len(pred) + 1):
-                if i == 0:
-                    d[0][j] = j
-                elif j == 0:
-                    d[i][0] = i
-        for i in range(1, len(ref) + 1):
-            for j in range(1, len(pred) + 1):
-                if ref[i - 1] == pred[j - 1]:
-                    d[i][j] = d[i - 1][j - 1]
-                else:
-                    substitution = d[i - 1][j - 1] + 1
-                    insertion = d[i][j - 1] + 1
-                    deletion = d[i - 1][j] + 1
-                    d[i][j] = min(substitution, insertion, deletion)
-        result = float(d[len(ref)][len(pred)]) / len(ref) * 100
-        return result
 
     # Form for inference engine
     if form.validate_on_submit():
@@ -208,7 +209,28 @@ def index():
 @app.route('/about')
 @app.route('/about.html')
 def about():
-    return render_template('about.html', title='Hey, Jetson!')
+    spectrogram_3d = None
+    vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=95, partition='test')
+    freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
+    mean = np.mean(spectrogram, axis=0)
+    std = np.std(spectrogram, axis=0)
+    spectrogram = (spectrogram - mean) / std
+    def plot_3d_spectrogram(spectrogram):
+        data = [go.Surface(z=spectrogram.T, colorscale='Viridis')]
+        layout = go.Layout(
+        title='3D Specgtrogram',
+        scene = dict(
+        yaxis = dict(title='Frequency', range=freqs),
+        xaxis = dict(title='Time (s)', range=times),
+        zaxis = dict(title='Log Amplitude'),),)
+        fig = go.Figure(data=data, layout=layout)
+        div_output = plot(fig, output_type='div', include_plotlyjs=False)
+        return div_output
+
+    spectrogram_3d = plot_3d_spectrogram(spectrogram)
+    spectrogram_3d = Markup(spectrogram_3d)
+
+    return render_template('about.html', title='Hey, Jetson!', spectrogram_3d=spectrogram_3d)
 
 @app.route('/contact')
 @app.route('/contact.html')
