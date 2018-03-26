@@ -25,13 +25,12 @@ import json
 from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
-from scipy import signal
 
 # Neural Network
 import keras
 from keras.utils.generic_utils import get_custom_objects
 from keras import backend as K
-from keras import regularizers
+from keras import regularizers, callbacks
 from keras.constraints import max_norm
 from keras.models import Model, Sequential, load_model
 from keras.layers import Input, Lambda, Dense, Dropout, Flatten, Embedding, merge, Activation, GRUCell, LSTMCell,SimpleRNNCell
@@ -55,13 +54,21 @@ from tensorflow.python.tools import freeze_graph
 from tensorflow.core.protobuf import saver_pb2
 from tensorflow.python.training import saver as saver_lib
 
+# Model metrics
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
 # Visualization
+import IPython.display as ipd
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.offline as py
 import plotly.graph_objs as go
 import plotly.tools as tls
+
+color = sns.color_palette()
+sns.set_style('darkgrid')
 
 # Setting Random Seeds
 np.random.seed(95)
@@ -347,6 +354,7 @@ class AudioGenerator():
     def normalize(self, feature, eps=1e-14):
     # Scale the data
         return (feature - self.feats_mean) / (self.feats_std + eps)
+
 def spectrogram(samples, fft_length=256, sample_rate=2, hop_length=128):
 # Create a spectrogram from audio signals
     assert not np.iscomplexobj(samples), "You shall not pass in complex numbers"
@@ -370,8 +378,7 @@ def spectrogram(samples, fft_length=256, sample_rate=2, hop_length=128):
     freqs = float(sample_rate) / fft_length * np.arange(x.shape[0])
     return x, freqs
 
-def spectrogram_from_file(filename, step=10, window=20, max_freq=None,
-                          eps=1e-14):
+def spectrogram_from_file(filename, step=10, window=20, max_freq=None, eps=1e-14):
 # Calculate log(linear spectrogram) from FFT energy
     with soundfile.SoundFile(filename) as sound_file:
         audio = sound_file.read(dtype='float32')
@@ -393,7 +400,7 @@ def spectrogram_from_file(filename, step=10, window=20, max_freq=None,
         ind = np.where(freqs <= max_freq)[0][-1] + 1
     return np.transpose(np.log(pxx[:ind, :] + eps))
 
-def vis_train_features(index):
+def vis_train_features(index):   
 # Function for visualizing a single audio file based on index chosen
     # Get spectrogram
     audio_gen = AudioGenerator(spectrogram=True)
@@ -407,14 +414,43 @@ def vis_train_features(index):
     # Obtain text label
     vis_text = audio_gen.train_texts[index]
     # Obtain raw audio
-    vis_raw_audio, _ = librosa.load(vis_audio_path)
+    sample_rate, samples = wav.read(vis_audio_path)
     # Print total number of training examples
     print('There are %d total training examples.' % len(audio_gen.train_audio_paths))
     # Return labels for plotting
-    return vis_text, vis_raw_audio, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path
+    return vis_text, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
 
-# Creating visualisations for audio file at index number 2012
-vis_text, vis_raw_audio, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path = vis_train_features(2012)
+def vis_audio_features(index, partition):
+# Function for visualizing a single audio file based on index chosen
+    if partition == 'validation':
+        audio_gen = AudioGenerator(spectrogram=True)
+        audio_gen.load_validation_data()
+        vis_audio_path = audio_gen.valid_audio_paths[index]
+        vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+        vis_text = audio_gen.valid_texts[index]
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
+    
+    elif partition == 'test':
+        audio_gen = AudioGenerator(spectrogram=True)
+        audio_gen.load_test_data()
+        vis_audio_path = audio_gen.test_audio_paths[index]
+        vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+        vis_text = audio_gen.test_texts[index]
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
+    
+    elif partition == 'train':
+        audio_gen = AudioGenerator(spectrogram=True)
+        audio_gen.load_train_data()
+        vis_audio_path = audio_gen.train_audio_paths[index]
+        vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+        vis_text = audio_gen.train_texts[index]
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
+
+    else:
+        raise Exception('Invalid partition!  Must be "train", "test", or "validation"')
 
 # Custom CTC loss function (discussed below)
 def ctc_lambda_func(args):
@@ -434,22 +470,7 @@ def add_ctc_loss(input_to_softmax):
         outputs=loss_out)
     return model
 
-# Functions for modifying CNN layers for sequence problems 
-def conv_output_length(input_length, filter_size, border_mode, stride,
-                       dilation=1):
-# Compute the length of conv output seq after 1D convolution across time
-    if input_length is None:
-        return None
-    assert border_mode in {'same', 'valid', 'causal'}
-    dilated_filter_size = filter_size + (filter_size - 1) * (dilation - 1)
-    if border_mode == 'same':
-        output_length = input_length
-    elif border_mode == 'valid':
-        output_length = input_length - dilated_filter_size + 1
-    elif border_mode == 'causal':
-        output_length = input_length
-    return (output_length + stride - 1) // stride
-
+# Function for modifying CNN layers for sequence problems 
 def cnn_output_length(input_length, filter_size, border_mode, stride,
                        dilation=1):
 # Compute the length of cnn output seq after 1D convolution across time

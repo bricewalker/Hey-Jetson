@@ -86,9 +86,9 @@ Unix/Linux: ```source venv/bin/activate```
 
 Windows: ```venv\Scripts\activate.bat```
 
-Then you can run: ```pip install -r jetson_requirements.txt``` to install all required libraries into the virtual environment.
+Then you can run: ```pip install -r jetson_requirements.txt``` to install all required libraries into the virtual environment. You may need to install some libraries using apt-get: ```sudo apt-get install python3-<libraryname>```
 
-> Note: You will need to build TensorFlow from source on the TX2.
+> Note: You will need to build TensorFlow from source on the TX2. Optionally, you can run ```pip install tensorflow-1.5.0-cp35-cp35m-linux_aarch64.whl``` to install the included wheel file that was prebuilt with TensorFlow 1.5.
 
 ##### Builidng TensorFlow From Source
 

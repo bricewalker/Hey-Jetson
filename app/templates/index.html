@@ -40,7 +40,6 @@
 {% if raw_plot != None %}
 	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File:</h3>
 	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
-	<div class="mdl-cell mdl-cell--12-col">{{ raw_shape }}</div>
 {%else%}
 <div class="mdl-cell mdl-cell--12-col"></div>
 {% endif %}
@@ -48,7 +47,7 @@
 
 {% block spectrogram %}
 {% if spectrogram_plot != None %}
-	<img src="data:image/png;base64, {{ spectrogram_plot }}" alt="spectrogram">
+	<img src="data:image/png;base64, {{ log_spectrogram_plot }}" alt="spectrogram">
 	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
 {%else%}
 <div class="mdl-cell mdl-cell--12-col"></div>

@@ -32,7 +32,6 @@ import json
 from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
-from scipy import signal
 
 # Model metrics
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -40,7 +39,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 # Visualization
 import IPython.display as ipd
-#import librosa.display
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -83,19 +81,19 @@ def index():
     truth_transcription = None
     prediction_transcription = None
     raw_plot = None
-    raw_shape = None
     spectrogram_plot = None
     spectrogram_shape = None
+    log_spectrogram_plot = None
     error_rate = None
     cv_similarity = None
     tfidf_similarity = None
     # Defining functions for descriptive stats for the inference engine
-    def plot_raw_audio(vis_raw_audio):
+    def plot_raw_audio(sample_rate, samples):
         # Plot the raw audio signal
+        time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
         fig = plt.figure(figsize=(7,3))
         ax = fig.add_subplot(111)
-        steps = len(vis_raw_audio)
-        ax.plot(np.linspace(1, steps, steps), vis_raw_audio)
+        ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
         plt.title('Raw Audio Signal')
         plt.xlabel('Time')
         plt.ylabel('Amplitude')
@@ -108,12 +106,12 @@ def index():
     def plot_spectrogram_feature(vis_spectrogram_feature):
         # Plot a normalized spectrogram
         fig = plt.figure(figsize=(7,3))
-        ax = fig.add_subplot(111)
-        im = ax.imshow(vis_spectrogram_feature, cmap=plt.cm.jet, aspect='auto')
-        plt.title('Spectrogram')
-        plt.ylabel('Time')
-        plt.xlabel('Frequency')
-        divider = make_axes_locatable(ax)
+        ax1 = fig.add_subplot(111)
+        im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
+        plt.title('Normalized Log Spectrogram')
+        plt.ylabel('Frequency')
+        plt.xlabel('Time (s)')
+        divider = make_axes_locatable(ax1)
         cax = divider.append_axes("right", size="5%", pad=0.05)
         plt.colorbar(im, cax=cax)
         figfile2 = BytesIO()
@@ -121,6 +119,34 @@ def index():
         figfile2.seek(0)
         spectrogram_plot = base64.b64encode(figfile2.getvalue())
         return spectrogram_plot.decode('utf8')
+
+    def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
+        nperseg = int(round(window_size * sample_rate / 1e3))
+        noverlap = int(round(step_size * sample_rate / 1e3))
+        freqs, times, spec = signal.spectrogram(samples,
+                                        fs=sample_rate,
+                                        window='hann',
+                                        nperseg=nperseg,
+                                        noverlap=noverlap,
+                                        detrend=False)
+        freqs = (freqs*2)
+        return freqs, times, np.log(spec.T.astype(np.float64) + eps)
+
+    def plot_log_spectrogram_feature(freqs, times, spectrogram):
+        fig = plt.figure(figsize=(7,3))
+        ax2 = fig.add_subplot(111)
+        ax2.imshow(spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
+                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
+        ax2.set_yticks(freqs[::20])
+        ax2.set_xticks(times[::20])
+        ax2.set_title('Normalized Log Spectrogram')
+        ax2.set_ylabel('Frequency')
+        ax2.set_xlabel('Time (s)')
+        figfile3 = BytesIO()
+        plt.savefig(figfile3, format='png')
+        figfile3.seek(0)
+        log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
+        return log_spectrogram_plot.decode('utf8')
 
     def wer_calc(ref, pred):
         # Calcualte word error rate
@@ -143,6 +169,7 @@ def index():
                     d[i][j] = min(substitution, insertion, deletion)
         result = float(d[len(ref)][len(pred)]) / len(ref) * 100
         return result
+
     # Form for inference engine
     if form.validate_on_submit():
         partition = form.partition.data
@@ -151,13 +178,18 @@ def index():
         truth_transcription = make_predictions.get_ground_truth(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
         prediction_transcription = make_predictions.get_prediction(index=instance_number, partition=partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
         # Get features for visualizations
-        vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path = make_predictions.vis_audio_features(index=instance_number, partition=partition)
+        vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=instance_number, partition=partition)
         # Plot the audio waveform
-        raw_plot = plot_raw_audio(vis_raw_audio)
-        raw_shape = 'The shape of the waveform of the chosen audio file: ' + str(vis_raw_audio.shape)
+        raw_plot = plot_raw_audio(sample_rate, samples)
         # Plot the spectrogram of the audio file
         spectrogram_plot = plot_spectrogram_feature(vis_spectrogram_feature)
         spectrogram_shape = 'The shape of the spectrogram of the chosen audio file: ' + str(vis_spectrogram_feature.shape)
+        # 2nd and better plot of the spectrogram of the audio file
+        freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
+        mean = np.mean(spectrogram, axis=0)
+        std = np.std(spectrogram, axis=0)
+        spectrogram = (spectrogram - mean) / std
+        log_spectrogram_plot = plot_log_spectrogram_feature(freqs, times, spectrogram)
         # Calculate cosine similarity of individual transcriptions using Count Vectorizer
         cv = CountVectorizer()
         cv_ground_truth_vec = cv.fit_transform([truth_transcription])
@@ -171,8 +203,7 @@ def index():
         # calculate word error rate of individual transcription
         error_rate = wer_calc(truth_transcription, prediction_transcription)
     # Render the html page with 
-    return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription, raw_plot=raw_plot, raw_shape=raw_shape,
-    spectrogram_plot=spectrogram_plot, spectrogram_shape=spectrogram_shape, error_rate=error_rate, cv_similarity=cv_similarity, tfidf_similarity=tfidf_similarity)
+    return render_template('index.html', title='Hey, Jetson!', form=form, truth_transcription=truth_transcription, prediction_transcription=prediction_transcription, raw_plot=raw_plot, spectrogram_plot=spectrogram_plot, log_spectrogram_plot=log_spectrogram_plot, spectrogram_shape=spectrogram_shape, error_rate=error_rate, cv_similarity=cv_similarity, tfidf_similarity=tfidf_similarity)
     
 @app.route('/about')
 @app.route('/about.html')

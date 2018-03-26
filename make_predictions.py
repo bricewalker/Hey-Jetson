@@ -25,13 +25,12 @@ import json
 from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
-from scipy import signal
 
 # Neural Network
 import keras
 from keras.utils.generic_utils import get_custom_objects
 from keras import backend as K
-from keras import regularizers
+from keras import regularizers, callbacks
 from keras.constraints import max_norm
 from keras.models import Model, Sequential, load_model
 from keras.layers import Input, Lambda, Dense, Dropout, Flatten, Embedding, merge, Activation, GRUCell, LSTMCell,SimpleRNNCell
@@ -54,6 +53,22 @@ from tensorflow.python.framework import graph_io
 from tensorflow.python.tools import freeze_graph
 from tensorflow.core.protobuf import saver_pb2
 from tensorflow.python.training import saver as saver_lib
+
+# Model metrics
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Visualization
+import IPython.display as ipd
+from IPython.display import Markdown, display, Audio
+import matplotlib.pyplot as plt
+import seaborn as sns
+import plotly.offline as py
+import plotly.graph_objs as go
+import plotly.tools as tls
+
+color = sns.color_palette()
+sns.set_style('darkgrid')
 
 # Setting Random Seeds
 np.random.seed(95)
@@ -400,11 +415,11 @@ def vis_train_features(index):
     # Obtain text label
     vis_text = audio_gen.train_texts[index]
     # Obtain raw audio
-    vis_raw_audio, _ = librosa.load(vis_audio_path)
+    sample_rate, samples = wav.read(vis_audio_path)
     # Print total number of training examples
     print('There are %d total training examples.' % len(audio_gen.train_audio_paths))
     # Return labels for plotting
-    return vis_text, vis_raw_audio, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path
+    return vis_text, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
 
 def vis_audio_features(index, partition):
 # Function for visualizing a single audio file based on index chosen
@@ -414,8 +429,8 @@ def vis_audio_features(index, partition):
         vis_audio_path = audio_gen.valid_audio_paths[index]
         vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
         vis_text = audio_gen.valid_texts[index]
-        vis_raw_audio, _ = librosa.load(vis_audio_path)
-        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
     
     elif partition == 'test':
         audio_gen = AudioGenerator(spectrogram=True)
@@ -423,8 +438,8 @@ def vis_audio_features(index, partition):
         vis_audio_path = audio_gen.test_audio_paths[index]
         vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
         vis_text = audio_gen.test_texts[index]
-        vis_raw_audio, _ = librosa.load(vis_audio_path)
-        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
     
     elif partition == 'train':
         audio_gen = AudioGenerator(spectrogram=True)
@@ -432,11 +447,71 @@ def vis_audio_features(index, partition):
         vis_audio_path = audio_gen.train_audio_paths[index]
         vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
         vis_text = audio_gen.train_texts[index]
-        vis_raw_audio, _ = librosa.load(vis_audio_path)
-        return vis_text, vis_raw_audio, vis_spectrogram_feature, vis_audio_path
+        sample_rate, samples = wav.read(vis_audio_path)
+        return vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
 
     else:
         raise Exception('Invalid partition!  Must be "train", "test", or "validation"')
+
+def plot_raw_audio(sample_rate, samples):
+    # Plot the raw audio signal
+    time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
+    fig = plt.figure(figsize=(7,3))
+    ax = fig.add_subplot(111)
+    ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
+    plt.title('Raw Audio Signal')
+    plt.xlabel('Time')
+    plt.ylabel('Amplitude')
+    figfile1 = BytesIO()
+    plt.savefig(figfile1, format='png')
+    figfile1.seek(0)
+    raw_plot = base64.b64encode(figfile1.getvalue())
+    return raw_plot.decode('utf8')
+
+def plot_spectrogram_feature(vis_spectrogram_feature):
+    # Plot a normalized spectrogram
+    fig = plt.figure(figsize=(7,3))
+    ax1 = fig.add_subplot(111)
+    im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
+    plt.title('Normalized Log Spectrogram')
+    plt.ylabel('Frequency')
+    plt.xlabel('Time (s)')
+    divider = make_axes_locatable(ax1)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    figfile2 = BytesIO()
+    plt.savefig(figfile2, format='png')
+    figfile2.seek(0)
+    spectrogram_plot = base64.b64encode(figfile2.getvalue())
+    return spectrogram_plot.decode('utf8')
+
+def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
+    nperseg = int(round(window_size * sample_rate / 1e3))
+    noverlap = int(round(step_size * sample_rate / 1e3))
+    freqs, times, spec = signal.spectrogram(samples,
+                                        fs=sample_rate,
+                                        window='hann',
+                                        nperseg=nperseg,
+                                        noverlap=noverlap,
+                                        detrend=False)
+    freqs = (freqs*2)
+    return freqs, times, np.log(spec.T.astype(np.float64) + eps)
+
+def plot_log_spectrogram_feature(freqs, times, spectrogram):
+    fig = plt.figure(figsize=(7,3))
+    ax2 = fig.add_subplot(111)
+    ax2.imshow(spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
+                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
+    ax2.set_yticks(freqs[::20])
+    ax2.set_xticks(times[::20])
+    ax2.set_title('Normalized Log Spectrogram')
+    ax2.set_ylabel('Frequency')
+    ax2.set_xlabel('Time (s)')
+    figfile3 = BytesIO()
+    plt.savefig(figfile3, format='png')
+    figfile3.seek(0)
+    log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
+    return log_spectrogram_plot.decode('utf8')
 
 # Custom CTC loss function (discussed below)
 def ctc_lambda_func(args):
@@ -457,23 +532,7 @@ def add_ctc_loss(input_to_softmax):
     return model
 
 # Functions for modifying CNN layers for sequence problems 
-def conv_output_length(input_length, filter_size, border_mode, stride,
-                       dilation=1):
-# Compute the length of conv output seq after 1D convolution across time
-    if input_length is None:
-        return None
-    assert border_mode in {'same', 'valid', 'causal'}
-    dilated_filter_size = filter_size + (filter_size - 1) * (dilation - 1)
-    if border_mode == 'same':
-        output_length = input_length
-    elif border_mode == 'valid':
-        output_length = input_length - dilated_filter_size + 1
-    elif border_mode == 'causal':
-        output_length = input_length
-    return (output_length + stride - 1) // stride
-
-def cnn_output_length(input_length, filter_size, border_mode, stride,
-                       dilation=1):
+def cnn_output_length(input_length, filter_size, border_mode, stride, dilation=1):
 # Compute the length of cnn output seq after 1D convolution across time
     if input_length is None:
         return None
@@ -532,10 +591,10 @@ def train_model(input_to_softmax,
         pickle.dump(hist.history, f)
 
 # Creating a TensorFlow session
-#from keras.backend.tensorflow_backend import set_session
-#config = tf.ConfigProto()
-#config.gpu_options.per_process_gpu_memory_fraction = 1.0
-#set_session(tf.Session(config=config))
+from keras.backend.tensorflow_backend import set_session
+config = tf.ConfigProto()
+config.gpu_options.per_process_gpu_memory_fraction = 1.0
+set_session(tf.Session(config=config))
 # tf.reset_default_graph()
 
 def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
