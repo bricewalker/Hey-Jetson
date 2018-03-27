@@ -241,6 +241,7 @@ I want to thank the following people/organizations for their support and trainin
 - Paolo Prandoni and Martin Vetterli at École Polytechnique Fédérale de Lausanne for teaching the course on [Digital Signal Processing on Coursera](https://www.coursera.org/learn/dsp/) that helped me understand the mathematics behind the Fourier transform.
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey and giving me good constructive feedback in the development phase of this project.
+- [Miguel Grinberg](https://blog.miguelgrinberg.com/index) who's book and online tutorial on Flask helped me learn how to deploy web apps in Flask.
 
 ### Contributions
 
