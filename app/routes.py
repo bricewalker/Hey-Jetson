@@ -75,7 +75,7 @@ class InferenceForm(FlaskForm):
 def plot_raw_audio(sample_rate, samples):
     # Plot the raw audio signal
     time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
-    fig = plt.figure(figsize=(7,3))
+    fig = plt.figure(figsize=(6,3))
     ax = fig.add_subplot(111)
     ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
     plt.title('Raw Audio Signal')
@@ -89,7 +89,7 @@ def plot_raw_audio(sample_rate, samples):
 
 def plot_spectrogram_feature(vis_spectrogram_feature):
     # Plot a normalized spectrogram
-    fig = plt.figure(figsize=(7,3))
+    fig = plt.figure(figsize=(6,3))
     ax1 = fig.add_subplot(111)
     im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
     plt.title('Normalized Log Spectrogram')
@@ -210,7 +210,7 @@ def index():
 @app.route('/about.html')
 def about():
     spectrogram_3d = None
-    vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=95, partition='test')
+    vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=np.random.randint(0, 1878), partition='test')
     freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
     mean = np.mean(spectrogram, axis=0)
     std = np.std(spectrogram, axis=0)
