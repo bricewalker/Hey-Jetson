@@ -242,11 +242,11 @@ I want to thank the following people/organizations for their support and trainin
 - The instructional staff including Charles Rice, Riley Davis, and David Yerrington at [General Assembly](https://generalassemb.ly/) for their fantastic training in data science and machine/deep learning.
 - Andrew Ng with [deeplearning.ai](https://www.deeplearning.ai/), for developing the [Coursera Course on Sequence Models](https://www.coursera.org/learn/nlp-sequence-models) which helped me understand the mathematics behind recurrent neural networks.
 - [Microsoft ](https://www.microsoft.com/en-us/)for putting together the [edX course on Speech Recognition Systems](https://www.edx.org/course/speech-recognition-and-synthesis) which helped me understand the history of and theory behind speech recognition systems.
-- Alexis Cook and the staff at Udacity, IBM's Watson team, and the Amazon Alexa team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
-- Paolo Prandoni and Martin Vetterli at École Polytechnique Fédérale de Lausanne for teaching the course on [Digital Signal Processing on Coursera](https://www.coursera.org/learn/dsp/) that helped me understand the mathematics behind the Fourier transform.
+- Alexis Cook and the staff at [Udacity](https://www.udacity.com/), [IBM's Watson team](https://www.ibm.com/watson/), and the [Amazon Alexa](https://developer.amazon.com/alexa) team for the course on [Artificial Intelligence on Udacity](https://www.udacity.com/course/artificial-intelligence-nanodegree--nd889) which helped me learn how to apply my knowledge on a real world dataset.
+- Paolo Prandoni and Martin Vetterli at [École Polytechnique Fédérale de Lausanne](https://www.epfl.ch/) for teaching the course on [Digital Signal Processing on Coursera](https://www.coursera.org/learn/dsp/) that helped me understand the mathematics behind the Fourier transform.
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey and giving me good constructive feedback in the development phase of this project.
-- [Miguel Grinberg](https://blog.miguelgrinberg.com/index) who's book and online tutorial on Flask helped me learn how to deploy web apps in Flask.
+- [Miguel Grinberg](https://blog.miguelgrinberg.com/index) whose book and online tutorial on Flask helped me learn how to deploy web apps in Flask.
 
 ### Contributions
 
