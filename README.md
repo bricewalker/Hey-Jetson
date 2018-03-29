@@ -94,6 +94,8 @@ Then you can run: ```pip install -r jetson_requirements.txt``` to install all re
 
 To build TensorFlow from source, follow the instructions from [JetsonHacks](https://github.com/jetsonhacks/installTensorFlowTX2).
 
+You may be able to install TensorFlow from a wheel file provided by [Jason at Nvidia](https://github.com/JasonAtNvidia/JetsonTFBuild).
+
 Now export the path as an environment variable:
 
 Unix/Linux: ```export FLASK_APP=inference.py```
@@ -103,6 +105,9 @@ Windows: ```set FLASK_APP=inference.py```
 Finally, initialize the web app with: ```flask run```
 
 Now you can access the inference engine in your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) or [http://localhost:5000](http://localhost:5000).
+
+#### Publishing the Web App
+The Flask server is not recomended for deployment in production. It is recommended to use a more robust server like [gunicorn](http://gunicorn.org/). You can then create a reverse proxy like [NGINX](https://www.nginx.com/) to publish your local web server to the internet. You can use a program like [Supervisor](http://supervisord.org/) to automate this process.
 
 <a id='intro'></a>
 ## Introduction
