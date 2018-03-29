@@ -1,0 +1,213 @@
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+           <title>Hey, Jetson!</title>
+        <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+        <meta name="author" content="Brice Walker">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
+        <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/fontawesome.min.css') }}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+        <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+        <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+        <link rel="mask-icon" href="{{ url_for('static', filename='icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+        <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
+        <meta name="application-name" content="Hey, Jetson!">
+        <meta name="msapplication-TileColor" content="#00a300">
+        <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
+        <meta name="theme-color" content="#ffffff">
+    </head>
+
+<body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+                <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+                    <div class="mdl-layout__header-row portfolio-logo-row">
+                        <span class="mdl-layout__title">
+                            <span class="mdl-layout__title">Hey, Jetson!</span>
+                        </span>
+                    </div>
+            <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+                <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+                    <a class="mdl-navigation__link" href="index.html">Inference Engine</a>
+                    <a class="mdl-navigation__link is-active" href="about.html">About</a>
+                    <a class="mdl-navigation__link" href="contact.html">Contact</a>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer mdl-layout--small-screen-only">
+            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+                <a class="mdl-navigation__link" href="index.html">Inference Engine</a>
+                <a class="mdl-navigation__link is-active" href="about.html">About</a>
+                <a class="mdl-navigation__link" href="contact.html">Contact</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="mdl-grid portfolio-max-width">
+                <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                    <div class="mdl-card__title">
+                        <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference on the Nvidia Jetson.</h2>
+                    </div>
+                    <div class="mdl-card__media">
+                        <img class="article-image" src="{{ url_for('static', filename='images/raw.png') }}" border="0" alt="">
+                    </div>
+                    <div class="mdl-card__supporting-text">
+                        <strong>Includes:</strong>
+                        <span>Python, Flask, Tensorflow, Keras, Nvidia Jetson, Jetpack, Ubuntu, L4T, HTML, CSS, JavaScript, Anaconda, Jupyter Notebook, Cudnn</span>
+                    </div>
+                    <div class="mdl-grid portfolio-copy">
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">About</h3>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <p>
+                                The inference engine on this websit allows you to test real time speech recognition inference on the Nvidia Jetson TX2 module for embedded AI computing at the edge. The model consists of a layer of 256 convolutional neurons, 2 layers of 512 bidirectional recurrent neurons, and a layer of time distributed dense neurons. The model was trained using Keras/Tensorflow on an Nvidia GTX 1070 GPU and deployed on an apache web server on a Jetson TX2 using flask in python.
+                            </p>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                        <a href="https://github.com/bricewalker/Hey-Jetson">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            View full project on Github
+                        </button>
+                        </a>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                        <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
+                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                            View full project on nbviewer
+                        </button>
+                        </a>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Statment</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                My goal was to build a character-level ASR system using a recurrent neural network in tensorflow that can run inference on an Nvidia Jetson with a word error rate of <20%.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">The Data</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                The primary dataset used is the <a href="http://www.openslr.org/12/">LibriSpeech ASR corpus</a> which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of audio files was used for model development. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files between 10-15 seconds long of spoken english derived from read audiobooks from the LibriVox project. 
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">The Tools</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                The training server contains an Intel 7700k, overclocked to 4.8GHz with 32Gb ram clocked at 2400Hz, with an Nvidia GTX1070 clocked to 1746Mhz (1920 Pascal Cores). The inference server is a Jetson TX2 Developer Kit (256 Pascal Cores).
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Feature Extraction and Engineering</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                There are 3 primary methods for extracting features for speech recognition. This includes using raw audio forms, spectrograms, and mfcc's. For this project, I have created a character level sequence-to-sequence model using spectrograms. This allows me to train a model on a data set with a limited vocabulary that can generalize to more unique/rare words better. This comes at the cost of making a model that is more; computationally expensive, difficult to interpret/understand, succeptible to the problems of vanishing or exploding gradients as the sequences can be quite long.
+                            </p>
+                            <h4>Raw Audio Waves (pictured above)</h4>
+                            <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
+                            <h4>Spectrograms</h4>
+                            <div class="mdl-cell mdl-cell--12-col">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrogram.png') }}" border="0" alt="">
+                            </div>
+                            <p>This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the verticle axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.</p>
+                            <div class="mdl-cell mdl-cell--12-col">
+                            <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+                            {{ spectrogram_3d  }}
+                            </div>
+                            <h4>Mel-Frequency Cepstrum Coefficients</h4>
+                            <div class="mdl-cell mdl-cell--12-col">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/mfcc.png') }}" border="0" alt="">
+                            </div>
+                            <p>Similar to the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.</p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Recurrent Neural Networks</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                                <p>For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. At its core, this is a machine translation problem, so an encoder-decoder model is an appropriate framework choice. Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron recieves an input as well as its own output form the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forword propogation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilitites for each possible character.</p>
+                                    
+                                <p>Hey, Jetson! is comprised of an acoustic model and language model. The acoustic model scores sequences of acoustic model labels over a time frame and the language model scores sequences of words. A decoding graph then maps valid acoustic label sequences to the corresponding word sequences. Speech recognition is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. So, to put it simply, speech recognition is the process of finding the word sequence that maximizes both the language and acoustic model scores.</p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Loss Function</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                The loss function I am using is a custom implementation of Connectionist Temporal Classification (CTC), which is a special case of sequential objective functions that addresses some of the modeling burden in cross-entropy that forces the model to link every frame of input data to a label. CTC's label set includes a "blank" symbol in its alphabet so if a frame of data doesn’t contain any utterance, the CTC system can output "blank" indicating that there isn't enough information to classify an output. This also has the added benefits of allowing us to have inputs/outputs of varying length as short files can be padded with the "blank" character. This function only observes the sequence of labels along a path, ignoring the alignment of the labels to the acoustic data.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Long-Short Term Memory Cells</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                My RNN explores the use of layers of Long-Short Term Memory Cells and Gated Recurrent Units. LSTM's include forget and output gates, which allow more control over the cell's memory by allowing separate control of what is forgotten and what is passed through to the next hidden layer of cells. This will also make it easier to implement 'peepholes' later, which allow the cell to look at both the previous output state and hidden state when making this determination. GRU's are a simplified type of Long-Short Term Memory Recurrent Neuron with fewer parameters than typical LSTM's. These work via a memory update gate and provide most of the performance of traditional LSTM's at a fraction of the computing cost.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Time Distributed Dense Layers</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                The ASR model explores the addition of layers of normal Dense neurons to every temporal slice of an input.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Batch Normalization</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                Hey, Jetson! also uses batch normalization, which normalizes the activations of the layers with a mean close to 0 and standard deviation close to 1.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">CNN's</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                The deep neural network in this project also explores the use of Convolutional Neural Network for early pattern detection, as well as the use of dilated convolutional networks which introduces gap into the CNN's kernels, so that the receptive field has to encircle areas rather than simply slide over the window in a systematic way. This means that the convolutional layer can pick up on the global context of what it is looking at while still only having as many weights/inputs as the standard form.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Bidirectional Layers</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                This model explores connecting two hidden layers of opposite directions to the same output, making their future input information reachable from the current state. To put it simply, this creates two layers of neurons; 1 that goes through the sequence forward in time and 1 that goes through it backward through time. This allows the output layer to get information from past and future states meaning that it will have knowledge of the letters located before and after the current utterance. This can lead to great improvements in performance but comes at a cost of increased latency.
+                            </p>
+                        </div>
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance</h3>
+                        <div class="mdl-cell mdl-cell--12-col">
+                                <img class="article-image" src="{{ url_for('static', filename='images/performance.png') }}" border="0" alt="">
+                        </div>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
+                            </p>
+                            <p>
+                                The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is about 18%.
+                            </p>
+                        </div>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <a href="https://github.com/bricewalker/Hey-Jetson">
+                            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                Download the code and contribute or run the model yourself!
+                            </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <div class="mdl-logo">&copy; Copyright 2015-2018 Brice Anthony Walker. Design by <a href="http://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using HTML, CSS, Javascript, and PHP. Compliant with Material Design guidelines.</div>
+                </div>
+                <div class="mdl-mini-footer__right-sec">
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><a href="https://github.com/bricewalker"><i class="fab fa-github fa-3x"></i><div class="mdl-tooltip">Github</div></a></li>
+                        <li><a href="https://stackexchange.com/users/11615581/brice-walker"><i class="fab fa-stack-exchange fa-3x"></i><div class="mdl-tooltip">Stack Exchange</div></a></li>
+                        <li><a href="https://www.instagram.com/recoverybrice/"><i class="fab fa-instagram fa-3x"></i><div class="mdl-tooltip">Instagram</div></a></li>
+                    </ul>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</body>
+
+</html>
