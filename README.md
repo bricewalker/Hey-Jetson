@@ -61,9 +61,8 @@ And then for training the final model, be sure to download both the train-clean-
 
 ```python create_desc_json.py C:\Users\brice\LibriSpeech\train-clean-460\ train_corpus.json```
 
-Then run the following command in the repo directory: ```pip install -r server_requirements.txt```
 #### Training the model
-Install the required libraries and their dependencies with: ```pip install -r jetson_requirements.txt```
+Install the required libraries and their dependencies with: ```pip install -r server_requirements.txt```
 
 You can then run the train_model script to train the full RNN: ```python train_model.py```
 
