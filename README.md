@@ -8,7 +8,7 @@
 
 ![audio](app/static/images/raw.png)
 
-This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This is a real world application of automatic speech recognition that was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
+This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This real-world application of automatic speech recognition was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
 The final production model consists of a layer of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is around 18%.
 
@@ -64,7 +64,7 @@ And then for training the final model, be sure to download both the train-clean-
 #### Training the model
 Install the required libraries and their dependencies with: ```pip install -r server_requirements.txt```
 
-You can then run the train_model script to train the full RNN: ```python train_model.py```
+You can then run the train_model.py script to train the full RNN: ```python train_model.py```
 
 Optionally, you can run through the provided notebook in Jupyter for a walk through of the modeling process and an in depth exploration of speech recognition.
 
@@ -72,7 +72,7 @@ Optionally, you can run through the provided notebook in Jupyter for a walk thro
 ```pip uninstall tensorflow``` , and then ```pip install tensorflow-gpu``` and ```pip uninstall keras```, and then ```pip install keras-gpu``` in order to take advantage of your graphics card.
 
 #### Preparing the Jetson
-In order to prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by downloading and installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on an Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to pre-install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn) on to the device. 
+To prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by downloading and installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on an Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to pre-install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn) on to the device. 
 
 You will then need to install pip and python-dev with: ```sudo apt-get install python3-pip python3-dev``` 
 
@@ -89,7 +89,7 @@ Then you can run: ```pip install -r jetson_requirements.txt``` to install all re
 
 > Note: You will need to build TensorFlow from source on the TX2.
 
-##### Builidng TensorFlow From Source
+##### Buildng TensorFlow From Source
 
 To build TensorFlow from source, follow the instructions from [JetsonHacks](https://github.com/jetsonhacks/installTensorFlowTX2).
 
@@ -106,7 +106,7 @@ Finally, initialize the web app with: ```flask run```
 Now you can access the inference engine in your browser at [http://127.0.0.1:5000](http://127.0.0.1:5000) or [http://localhost:5000](http://localhost:5000).
 
 #### Publishing the Web App
-The Flask server is not recomended for deployment in production. It is recommended to use a more robust server like [gunicorn](http://gunicorn.org/). You can then create a reverse proxy like [NGINX](https://www.nginx.com/) to publish your local web server to the internet. You can use a program like [Supervisor](http://supervisord.org/) to automate this process.
+The Flask server is not recommended for deployment in production. It is recommended to use a more robust server like [gunicorn](http://gunicorn.org/). You can then create a reverse proxy like [NGINX](https://www.nginx.com/) to publish your local web server to the internet. You can use a program like [Supervisor](http://supervisord.org/) to automate this process.
 
 <a id='intro'></a>
 ## Introduction
@@ -119,7 +119,7 @@ Speech recognition models are based on a statistical optimization problem called
 Speech recognition can be broken into two parts; the acoustic model, that describes the distribution over acoustic observations, O, given the word sequence, W; and the language model based solely on the word sequence which assigns a probability to every possible word sequence. This sequence to sequence model combines both the acoustic and language models into one neural network, though pretrained acoustic models are available from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/) if you would like to speed up training.
 
 ### Problem Statement
-My goal was to build a character-level ASR system using a recurrent neural network in tensorflow that can run inference on an Nvidia Jetson with a word error rate of <20%.
+My goal was to build a character-level ASR system using a recurrent neural network in TensorFlow that can run inference on an Nvidia Jetson with a word error rate of <20%.
 
 <a id='libraries'></a>
 ## Tools
@@ -139,11 +139,11 @@ The tools used in this project include:
 
 <a id='data'></a>
 ## Dataset
-The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of 10-15 second audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken english derived from read audiobooks from the LibriVox project.
+The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of 10-15 second audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken English derived from read audiobooks from the LibriVox project.
 
 <a id='features'></a>
 ## Feature Extraction/Engineering
-There are 3 primary methods for extracting features for speech recognition. This includes using raw audio forms, spectrograms, and mfcc's. For this project, I will be creating a character level sequencing model. This allows me to train a model on a data set with a limited vocabulary that can generalize to more unique/rare words better. The downsides are that these models are more computationally expensive, more difficult to interpret/understand, and they are more succeptible to the problems of vanishing or exploding gradients as the sequences can be quite long.
+There are 3 primary methods for extracting features for speech recognition. This includes using raw audio forms, spectrograms, and mfcc's. For this project, I have created a character level sequencing model. This allows me to train a model on a data set with a limited vocabulary that can generalize to more unique/rare words better. The downsides are that these models are more computationally expensive, more difficult to interpret/understand, and they are more susceptible to the problems of vanishing or exploding gradients as the sequences can be quite long.
 
 This project explores the following methods of feature extraction for acoustic modeling:
 
@@ -155,18 +155,18 @@ This method uses the raw wave forms of the audio files and is a 1D vector of the
 ### Spectrograms 
 ![3dspectrogram](app/static/images/3dspectrogram.png)
 <br>
-This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the verticle axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.
+This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the vertical axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.
 
 ![spectrogram](app/static/images/spectrogram.png)
 
 ### MFCC's
-Similar to the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.
+Like the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.
 
 ![mfcc](app/static/images/mfcc.png)
 
 <a id='rnn'></a>
 ## Recurrent Neural Networks
-For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. At its core, this is a machine translation problem, so an encoder-decoder model is an appropriate framework choice. Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron recieves an input as well as its own output form the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forword propogation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilitites for each possible character.
+For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. At its core, this is a machine translation problem, so an encoder-decoder model is an appropriate framework choice. Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron receives an input as well as its own output from the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forward propagation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilities for each possible character.
 
 Hey, Jetson! is comprised of an acoustic model and language model. The acoustic model scores sequences of acoustic model labels over a time frame and the language model scores sequences of words. A decoding graph then maps valid acoustic label sequences to the corresponding word sequences. Speech recognition is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. So, to put it simply, speech recognition is the process of finding the word sequence that maximizes both the language and acoustic model scores.
 
@@ -183,16 +183,16 @@ The ASR model explores the addition of layers of normal Dense neurons to every t
 Hey, Jetson! also uses batch normalization, which normalizes the activations of the layers with a mean close to 0 and standard deviation close to 1.
 
 ### CNN's
-The deep neural network in this project also explores the use of Convolutional Neural Network for early pattern detection, as well as the use of dilated convolutional networks which introduces gap into the CNN's kernels, so that the receptive field has to encircle areas rather than simply slide over the window in a systematic way. This means that the convolutional layer can pick up on the global context of what it is looking at while still only having as many weights/inputs as the standard form.
+The deep neural network in this project also explores the use of Convolutional Neural Network for early pattern detection, as well as the use of dilated convolutional networks which introduces gap into the CNN's kernels, so that the receptive field must encircle areas rather than simply slide over the window in a systematic way. This means that the convolutional layer can pick up on the global context of what it is looking at while still only having as many weights/inputs as the standard form.
 
 ### Bidirectional Layers
 This project explores connecting two hidden layers of opposite directions to the same output, making their future input information reachable from the current state. To put it simply, this creates two layers of neurons; 1 that goes through the sequence forward in time and 1 that goes through it backward through time. This allows the output layer to get information from past and future states meaning that it will have knowledge of the letters located before and after the current utterance. This can lead to great improvements in performance but comes at a cost of increased latency.
 
 <a id='performance'></a>
 ## Performance
-Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non zero probabilities over all possible occurences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
+Language modeling, the component of a speech recognition system that estimates the prior probabilities of spoken sounds, is the system's knowledge of what probable word sequences are. This system uses a class based language model, which allows it to narrow down its search field through the vocabulary of the speech recognizer (the first part of the system) as it will rarely see a sentence that looks like "the dog the ate sand the water" so it will assume that 'the' is not likely to come after the word 'sand'. We do this by assigning a probability to every possible sentence and then picking the word with the highest prior probability of occurring. Language model smoothing (often called discounting) will help us overcome the problem that this creates a model that will assign a probability of 0 to anything it hasn't witnessed in training. This is done by distributing non-zero probabilities over all possible occurrences in proportion to the unigram probabilities of words. This overcomes the limitations of traditional n-gram based modeling and is all made possible by the added dimension of time sequences in the recurrent neural network.
 
-The best performing model is considered the one that gives the highest probabilities to the words that are actually found in a test set, since it wastes less probability on words that actually occur.
+The best performing model is considered the one that gives the highest probabilities to the words that are found in a test set, since it wastes less probability on words that actually occur.
 
 The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is about 18%.
 

@@ -218,7 +218,7 @@ def about():
     def plot_3d_spectrogram(spectrogram):
         data = [go.Surface(z=spectrogram.T, colorscale='Viridis')]
         layout = go.Layout(
-        title='3D Specgtrogram',
+        title='3D Spectrogram',
         scene = dict(
         yaxis = dict(title='Frequency', range=freqs),
         xaxis = dict(title='Time (s)', range=times),
