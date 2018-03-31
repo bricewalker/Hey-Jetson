@@ -210,7 +210,7 @@ def index():
 @app.route('/about.html')
 def about():
     spectrogram_3d = None
-    vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=np.random.randint(0, 1878), partition='test')
+    vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=95, partition='test')
     freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
     mean = np.mean(spectrogram, axis=0)
     std = np.std(spectrogram, axis=0)
