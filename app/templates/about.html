@@ -116,7 +116,7 @@
                             <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
                             <h4>Spectrograms</h4>
                             <div class="mdl-cell mdl-cell--12-col">
-                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrogram.png') }}" border="0" alt="">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrogram.png') }}" border="0" alt="spectrogram">
                             </div>
                             <p>This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the vertical axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2.</p>
                             <div class="mdl-cell mdl-cell--12-col">
@@ -125,7 +125,7 @@
                             </div>
                             <h4>Mel-Frequency Cepstrum Coefficients</h4>
                             <div class="mdl-cell mdl-cell--12-col">
-                                    <img class="article-image" src="{{ url_for('static', filename='images/mfcc.png') }}" border="0" alt="">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/mfcc.png') }}" border="0" alt="mfcc">
                             </div>
                             <p>Like the spectrogram, this turns the audio wave form into a 2D array. This works by mapping the powers of the Fourier transform of the signal, and then taking the discrete cosine transform of the logged mel powers. This produces a 2D array with reduced dimensions when compared to spectrograms, effectively allowing for compression of the spectrogram and speeding up training.</p>
                         </div>
@@ -134,6 +134,9 @@
                                 <p>For this project, the architecture chosen is a (Recurrent) Deep Neural Network (RNN) as it is easy to implement, and scales well. At its core, this is a machine translation problem, so an encoder-decoder model is an appropriate framework choice. Recurrent neurons are similar to feedforward neurons, except they also have connections pointing backward. At each step in time, each neuron receives an input as well as its own output from the previous time step. Each neuron has two sets of weights, one for the input and one for the output at the last time step. Each layer takes vectors as inputs and outputs some vector. This model works by calculating forward propagation through each time step, t, and then back propagation through each time step. At each time step, the speaker is assumed to have spoken 1 of 29 possible characters (26 letters, 1 space character, 1 apostrophe, and 1 blank/empty character used to pad short files since inputs will have varying length). The output of this model at each time step will be a list of probabilities for each possible character.</p>
                                     
                                 <p>Hey, Jetson! is comprised of an acoustic model and language model. The acoustic model scores sequences of acoustic model labels over a time frame and the language model scores sequences of words. A decoding graph then maps valid acoustic label sequences to the corresponding word sequences. Speech recognition is a path search algorithm through the decoding graph, where the score of the path is the sum of the score given to it by the decoding graph, and the score given to it by the acoustic model. So, to put it simply, speech recognition is the process of finding the word sequence that maximizes both the language and acoustic model scores.</p>
+                        </div>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <img class="article-image" src="{{ url_for('static', filename='images/model_8.png') }}" border="0" alt="model_architecture">
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Loss Function</h3>
                         <div class="mdl-cell mdl-cell--12-col">
