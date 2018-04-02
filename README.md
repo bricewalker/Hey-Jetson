@@ -204,7 +204,7 @@ The overall cosine similarity of the model's predictions with the ground truth t
 
 <a id='inference'></a>
 ## Inference
-Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app that can serve real time predictions on the datasets.
+Finally, I demonstrate exporting the model for quick local inference on mobile platforms like the Nvidia Jetson with a flask web app, which you can demo at [heyjetson.com](https://heyjetson.com) that can serve real time predictions on the datasets.
 
 <a id='conclusion'></a>
 ## Conclusion
