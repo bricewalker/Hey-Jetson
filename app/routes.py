@@ -108,29 +108,24 @@ def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, 
     nperseg = int(round(window_size * sample_rate / 1e3))
     noverlap = int(round(step_size * sample_rate / 1e3))
     freqs, times, spec = signal.spectrogram(samples,
-                                            fs=sample_rate,
-                                            window='hann',
-                                            nperseg=nperseg,
-                                            noverlap=noverlap,
-                                            detrend=False)
+                                    fs=sample_rate,
+                                    window='hann',
+                                    nperseg=nperseg,
+                                    noverlap=noverlap,
+                                    detrend=False)
     freqs = (freqs*2)
     return freqs, times, np.log(spec.T.astype(np.float64) + eps)
 
-def plot_log_spectrogram_feature(freqs, times, spectrogram):
-        fig = plt.figure(figsize=(7,3))
-        ax2 = fig.add_subplot(111)
-        ax2.imshow(spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
-                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
-        ax2.set_yticks(freqs[::20])
-        ax2.set_xticks(times[::20])
-        ax2.set_title('Normalized Log Spectrogram')
-        ax2.set_ylabel('Frequency')
-        ax2.set_xlabel('Time (s)')
-        figfile3 = BytesIO()
-        plt.savefig(figfile3, format='png')
-        figfile3.seek(0)
-        log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
-        return log_spectrogram_plot.decode('utf8')
+def plot_log_spectrogram_feature(freqs, times, log_spectrogram):
+    fig = plt.figure(figsize=(12,5))
+    ax2 = fig.add_subplot(111)
+    ax2.imshow(log_spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
+               extent=[times.min(), times.max(), freqs.min(), freqs.max()])
+    ax2.set_yticks(freqs[::20])
+    ax2.set_xticks(times[::20])
+    ax2.set_title('Normalized Log Spectrogram')
+    ax2.set_ylabel('Frequency')
+    ax2.set_xlabel('Time (s)')
 
 def wer_calc(ref, pred):
     # Calcualte word error rate
@@ -186,11 +181,11 @@ def index():
         spectrogram_plot = plot_spectrogram_feature(vis_spectrogram_feature)
         spectrogram_shape = 'The shape of the spectrogram of the chosen audio file: ' + str(vis_spectrogram_feature.shape)
         # 2nd and better plot of the spectrogram of the audio file
-        freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
-        mean = np.mean(spectrogram, axis=0)
-        std = np.std(spectrogram, axis=0)
-        spectrogram = (spectrogram - mean) / std
-        log_spectrogram_plot = plot_log_spectrogram_feature(freqs, times, spectrogram)
+        freqs, times, log_spectrogram = log_spectrogram_feature(samples, sample_rate)
+        mean = np.mean(log_spectrogram, axis=0)
+        std = np.std(log_spectrogram, axis=0)
+        log_spectrogram = (log_spectrogram - mean) / std
+        log_spectrogram_plot = plot_log_spectrogram_feature(freqs, times, log_spectrogram)
         # Calculate cosine similarity of individual transcriptions using Count Vectorizer
         cv = CountVectorizer()
         cv_ground_truth_vec = cv.fit_transform([truth_transcription])
@@ -211,12 +206,13 @@ def index():
 def about():
     spectrogram_3d = None
     vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=95, partition='test')
-    freqs, times, spectrogram = log_spectrogram_feature(samples, sample_rate)
-    mean = np.mean(spectrogram, axis=0)
-    std = np.std(spectrogram, axis=0)
-    spectrogram = (spectrogram - mean) / std
-    def plot_3d_spectrogram(spectrogram):
-        data = [go.Surface(z=spectrogram.T, colorscale='Viridis')]
+    freqs, times, log_spectrogram = log_spectrogram_feature(samples, sample_rate)
+    mean = np.mean(log_spectrogram, axis=0)
+    std = np.std(log_spectrogram, axis=0)
+    log_spectrogram = (log_spectrogram - mean) / std
+
+    def plot_3d_spectrogram(log_spectrogram):
+        data = [go.Surface(z=log_spectrogram.T, colorscale='Viridis')]
         layout = go.Layout(
         title='3D Spectrogram',
         scene = dict(
@@ -227,7 +223,7 @@ def about():
         div_output = plot(fig, output_type='div', include_plotlyjs=False)
         return div_output
 
-    spectrogram_3d = plot_3d_spectrogram(spectrogram)
+    spectrogram_3d = plot_3d_spectrogram(log_spectrogram)
     spectrogram_3d = Markup(spectrogram_3d)
 
     return render_template('about.html', title='Hey, Jetson!', spectrogram_3d=spectrogram_3d)
