@@ -575,7 +575,7 @@ def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
     print(model.summary())
     return model
 
-model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
+model_10 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                       filters=256,
                       activation='relu',
                       kernel_size=11, 
@@ -584,7 +584,7 @@ model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                       recur_layers=2,
                       units=256)
 
-train_model(input_to_softmax=model_8, 
-            pickle_path='model_8.pickle', 
-            save_model_path='model_8.h5', 
+train_model(input_to_softmax=model_10, 
+            pickle_path='model_10.pickle', 
+            save_model_path='model_10.h5', 
             spectrogram=True) # True for Spectrogram/False for MFCC
