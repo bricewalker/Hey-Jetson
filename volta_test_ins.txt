@@ -1,0 +1,42 @@
+git clone https://github.com/bricewalker/Hey-Jetson.git
+
+cd Hey-Jetson
+
+wget http://www.openslr.org/resources/12/dev-clean.tar.gz
+
+tar -xzvf dev-clean.tar.gz
+
+wget http://www.openslr.org/resources/12/test-clean.tar.gz
+
+tar -xzvf test-clean.tar.gz
+
+wget http://www.openslr.org/resources/12/train-clean-100.tar.gz
+
+tar -xzvf train-clean-100.tar.gz
+
+wget http://www.openslr.org/resources/12/train-clean-360.tar.gz
+
+tar -xzvf train-clean-360.tar.gz
+
+mv flac_to_wav.sh LibriSpeech
+
+cd LibriSpeech
+
+mkdir train-clean-460
+
+mv  -v ~/train-clean-100/* ~/train-clean-460/
+
+mv  -v ~/train-clean-360/* ~/train-clean-460/
+
+./flac_to_wav.sh
+
+cd ..
+
+python create_desc_json.py LibriSpeech/train-clean-460/ train_corpus.json
+
+python create_desc_json.py LibriSpeech/dev-clean/ valid_corpus.json
+
+python create_desc_json.py LibriSpeech/test-clean/test_corpus.json
+
+python train_aws_volta.py
+
