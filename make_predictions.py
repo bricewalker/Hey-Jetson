@@ -580,7 +580,7 @@ def train_model(input_to_softmax,
     terminator = callbacks.TerminateOnNaN()
     time_machiner = callbacks.History()
     logger = callbacks.CSVLogger('training.log')
-    tensor_boarder = callbacks.TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=16, 
+    tensor_boarder = callbacks.TensorBoard(log_dir='./logs', batch_size=16,
                                           write_graph=True, write_grads=True, write_images=True,)
     # Fit/train model
     hist = model.fit_generator(generator=audio_gen.next_train(), steps_per_epoch=steps_per_epoch,
