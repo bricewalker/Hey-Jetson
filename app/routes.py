@@ -117,7 +117,7 @@ def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, 
     return freqs, times, np.log(spec.T.astype(np.float64) + eps)
 
 def plot_log_spectrogram_feature(freqs, times, log_spectrogram):
-    fig = plt.figure(figsize=(12,5))
+    fig = plt.figure(figsize=(6,3))
     ax2 = fig.add_subplot(111)
     ax2.imshow(log_spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
                extent=[times.min(), times.max(), freqs.min(), freqs.max()])
@@ -126,6 +126,11 @@ def plot_log_spectrogram_feature(freqs, times, log_spectrogram):
     ax2.set_title('Normalized Log Spectrogram')
     ax2.set_ylabel('Frequency')
     ax2.set_xlabel('Time (s)')
+    figfile3 = BytesIO()
+    plt.savefig(figfile3, format='png')
+    figfile3.seek(0)
+    log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
+    return log_spectrogram_plot.decode('utf8')
 
 def wer_calc(ref, pred):
     # Calcualte word error rate

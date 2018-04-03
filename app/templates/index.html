@@ -45,8 +45,8 @@
 {% endif %}
 {% endblock %}
 
-{% block spectrogram %}
-{% if spectrogram_plot != None %}
+{% block log_spectrogram %}
+{% if log_spectrogram_plot != None %}
 	<img src="data:image/png;base64, {{ log_spectrogram_plot }}" alt="spectrogram">
 	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
 {%else%}
