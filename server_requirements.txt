@@ -39,8 +39,6 @@ jupyter-console==5.2.0
 jupyter-core==4.4.0
 Keras==2.1.5
 kiwisolver==1.0.1
-librosa==0.6.0
-llvmlite==0.22.0
 Markdown==2.6.11
 MarkupSafe==1.0
 matplotlib==2.2.0
@@ -48,7 +46,6 @@ mistune==0.8.3
 nbconvert==5.3.1
 nbformat==4.4.0
 notebook==5.4.0
-numba==0.37.0
 numpy==1.14.2
 pandas==0.22.0
 pandocfilters==1.4.2
@@ -64,8 +61,6 @@ pyparsing==2.2.0
 python-dateutil==2.7.0
 python-speech-features==0.6
 pytz==2018.3
-pywinpty==0.5.1
-PyYAML==3.12
 pyzmq==17.0.0
 qtconsole==4.3.1
 requests==2.18.4
