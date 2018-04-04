@@ -491,11 +491,11 @@ def train_model(input_to_softmax,
                 save_model_path,
                 train_json='train_corpus.json',
                 valid_json='valid_corpus.json',
-                minibatch_size=32, # You will want to change this depending on the GPU you are training on
+                minibatch_size=30, # You will want to change this depending on the GPU you are training on
                 spectrogram=True,
                 mfcc_dim=13,
                 optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=1, clipvalue=.5),
-                epochs=70, # You will want to change this depending on the model you are training and data you are using
+                epochs=50, # You will want to change this depending on the model you are training and data you are using
                 verbose=1,
                 sort_by_duration=False,
                 max_duration=10.0):
@@ -525,7 +525,7 @@ def train_model(input_to_softmax,
     terminator = callbacks.TerminateOnNaN()
     time_machiner = callbacks.History()
     logger = callbacks.CSVLogger('training.log')
-    tensor_boarder = callbacks.TensorBoard(log_dir='./logs', batch_size=16,
+    tensor_boarder = callbacks.TensorBoard(log_dir='./logs', batch_size=30,
                                            write_graph=True, write_grads=True, write_images=True,)
     # Fit/train model
     hist = model.fit_generator(generator=audio_gen.next_train(), steps_per_epoch=steps_per_epoch,
