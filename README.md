@@ -238,6 +238,7 @@ Next steps for this project, and things you can try on your own, include:
 - Build a measure for calculating character level error rates.
 - Reduce the word error rate to [<10%](https://hacks.mozilla.org/2017/11/a-journey-to-10-word-error-rate/).
 - Include [entity extraction](https://towardsdatascience.com/entity-extraction-using-deep-learning-8014acac6bb8) in the model so that it can begin to identify the topic of discussion.
+- Implement a [wake-word detection engine](https://github.com/Picovoice/Porcupine).
 
 ### Special Thanks
 
