@@ -1,22 +1,12 @@
 
 <html lang="en">
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90685436-2"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-    
-        gtag('config', 'UA-90685436-2');
-    </script>
-    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-   	<title>Hey, Jetson!</title>
-	<meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
-	<meta name="author" content="Brice Walker">
+    <title>Hey, Jetson!</title>
+    <meta name="description" content="Hey, Jetson! Speech Recogntion Inference">
+    <meta name="author" content="Brice Walker">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
     <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
@@ -36,6 +26,15 @@
     <meta name="msapplication-TileColor" content="#00a300">
     <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
     <meta name="theme-color" content="#ffffff">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-90685436-2"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-90685436-2');
+</script>
 </head>
 
 <body>
