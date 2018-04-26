@@ -1,3 +1,5 @@
+# Config file for the flask web app
+
 import os
 from dotenv import load_dotenv
 

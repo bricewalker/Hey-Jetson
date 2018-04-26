@@ -1,4 +1,7 @@
-# Common, File Based, and Math Imports
+# This is the primary python script used by the inference engine
+# This contains all code necessary to make predictions on all 3 data sets using the final model
+
+# Common, File Based, and Math imports
 import pandas as pd
 import numpy as np
 import collections
@@ -17,7 +20,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.lib.stride_tricks import as_strided
 from tqdm import tqdm
 
-# Audio processing
+# Audio processing imports
 from scipy import signal
 from scipy.fftpack import dct
 import soundfile
@@ -26,7 +29,7 @@ from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 
-# Neural Network
+# Neural Network imports
 import keras
 from keras.utils.generic_utils import get_custom_objects
 from keras import backend as K
@@ -54,11 +57,11 @@ from tensorflow.python.tools import freeze_graph
 from tensorflow.core.protobuf import saver_pb2
 from tensorflow.python.training import saver as saver_lib
 
-# Model metrics
+# Model metric imports
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Visualization
+# Visualization imports
 import IPython.display as ipd
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt

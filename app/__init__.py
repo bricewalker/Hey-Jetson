@@ -1,3 +1,5 @@
+# This initializes the flask web app
+
 from flask import Flask
 from config import Config
 

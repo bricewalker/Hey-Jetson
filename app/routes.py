@@ -1,3 +1,6 @@
+# This is the primary script for defining the routes for the flask web app
+
+# Flask package imports
 from flask import Flask, jsonify, request, render_template, session, redirect, url_for, send_from_directory, Markup
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
@@ -24,7 +27,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.lib.stride_tricks import as_strided
 from tqdm import tqdm
 
-# Audio processing
+# Audio processing imports
 from scipy import signal
 from scipy.fftpack import dct
 import soundfile
@@ -33,11 +36,11 @@ from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
 
-# Model metrics
+# Model metric imports
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# Visualization
+# Visualization imports
 import IPython.display as ipd
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
@@ -58,7 +61,7 @@ import base64
 color = sns.color_palette()
 sns.set_style('darkgrid')
 
-# Flask app imports
+# Script imports
 from app import app
 import make_predictions
 
