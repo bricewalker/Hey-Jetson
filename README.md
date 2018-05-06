@@ -223,7 +223,7 @@ Next steps for this project, and things you can try on your own, include:
 - Get the audio files into an [SQL database](https://www.mysql.com/) for faster service for the inference engine and for allowing service to end users with [HTML5's audio tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/audio) so they can actually hear the audio file.
 - Allow users to record and transcribe their own audio for inference.
 - Store user recorded audio for online training of the model to improve performance.
-- Recreating the model in [TensorFlow](https://www.tensorflow.org/) for [improved performance](https://github.com/tensorflow/tensorflow). [Mozilla](https://github.com/mozilla/DeepSpeech) has demonstrated the incredible power of TensorFlow for ASR.
+- Recreate the model in [TensorFlow](https://www.tensorflow.org/) for [improved performance](https://github.com/tensorflow/tensorflow). [Mozilla](https://github.com/mozilla/DeepSpeech) has demonstrated the incredible power of TensorFlow for ASR.
 - Train the model using just the raw audio files, like this project from [Pannous](https://github.com/pannous/tensorflow-speech-recognition).
 - Train the model to [identify individual speakers](resources/speakeridentification.pdf) like [Google](resources/googlespeaker.pdf) using the [VoxCeleb](http://www.robots.ox.ac.uk/~vgg/data/voxceleb/) dataset.
 - Train the model to identify the speaker's level of [emotion](resources/emotionrecognition.pdf). There are many examples on [Github](https://github.com/).
@@ -231,7 +231,7 @@ Next steps for this project, and things you can try on your own, include:
 - Train the model on other languages, like [Baidu's Deep Speech 2](resources/deepspeech2.pdf).
 - Try out a [transducer model](resources/transducers.pdf), like Baidu is doing in [Deep Speech 3](http://research.baidu.com/deep-speech-3%EF%BC%9Aexploring-neural-transducers-end-end-speech-recognition/).
 - Build a more traditional [encoder/decoder](resources/encoderdecoder.pdf) model as outlined by [Lu et al](resources/encoderdecoder2.pdf). 
-- Add [attention](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) or other [augmentation methods](https://distill.pub/2016/augmented-rnns/) to the model
+- Add [attention](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) or other [augmentation methods](https://distill.pub/2016/augmented-rnns/) to the model.
 - Add [peephole connections](resources/peepholes.pdf) to the [LSTM cells](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/LSTMCell).
 - Add a [Hidden Markov Model](resources/hmm.pdf)/[Gaussian Mixture Model](resources/gmm.pdf).
 - Use a pretrained language model like this one from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/).
@@ -252,6 +252,7 @@ I want to thank the following people/organizations for their support and trainin
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey and giving me good constructive feedback in the development phase of this project.
 - [Miguel Grinberg](https://blog.miguelgrinberg.com/index) whose book and online tutorial on Flask helped me learn how to deploy web apps in Flask.
+- [Jetson Hacks](http://http://www.jetsonhacks.com/) for providing several tutorials and repos that helped me learn how to develop on the Jetson.
 
 ### Contributions
 
