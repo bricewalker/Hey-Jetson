@@ -252,7 +252,7 @@ I want to thank the following people/organizations for their support and trainin
 - The staff at [Nvidia](http://www.nvidia.com/page/home.html) who have helped me learn how to run inference on the Jetson.
 - The Seattle DSI-3 Cohort at General Assembly for supporting my journey and giving me good constructive feedback in the development phase of this project.
 - [Miguel Grinberg](https://blog.miguelgrinberg.com/index) whose book and online tutorial on Flask helped me learn how to deploy web apps in Flask.
-- [Jetson Hacks](http://http://www.jetsonhacks.com/) for providing several tutorials and repos that helped me learn how to develop on the Jetson.
+- [Jetson Hacks](http://www.jetsonhacks.com/) for providing several tutorials and repos that helped me learn how to develop on the Jetson.
 
 ### Contributions
 
