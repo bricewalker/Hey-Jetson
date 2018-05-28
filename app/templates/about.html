@@ -113,7 +113,7 @@
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">The Tools</h3>
                         <div class="mdl-cell mdl-cell--12-col">
                             <p>
-                                The training server contains an Intel 7700k, overclocked to 4.8GHz with 32Gb ram clocked at 2400Hz, with an Nvidia GTX1070 clocked to 1746Mhz (1920 Pascal Cores). The inference server is a <a href="https://developer.nvidia.com/embedded/buy/jetson-tx2">Jetson TX2 Developer Kit</a> (256 Pascal Cores).
+                                The training server contains an Intel 7700k, overclocked to 4.8GHz with 32Gb ram clocked at 2400Hz, with an <a href="https://www.nvidia.com/en-us/geforce/products/10series/geforce-gtx-1070-ti/">Nvidia GTX1070</a> clocked to 1746Mhz (1920 Pascal Cores). The inference server is a <a href="https://developer.nvidia.com/embedded/buy/jetson-tx2">Jetson TX2 Developer Kit</a> (256 Pascal Cores).
                             </p>
                         </div>
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Feature Extraction and Engineering</h3>
@@ -125,7 +125,7 @@
                             <p>This method uses the raw wave forms of the audio files and is a 1D vector where X = [x1, x2, x3...]</p>
                             <h4>Spectrograms</h4>
                             <div class="mdl-cell mdl-cell--12-col">
-                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrograms.png') }}" border="0" alt="spectrogram">
+                                    <img class="article-image" src="{{ url_for('static', filename='images/spectrogram.png') }}" border="0" alt="spectrogram">
                             </div>
                             <p>This transforms the raw audio wave forms into a 2D tensor where the first dimension corresponds to time (the horizontal axis), and the second dimension corresponds to frequency (the vertical axis) rather than amplitude. We lose a little bit of information in this conversion process as we take the log of the power of FFT. This can be written as log |FFT(X)|^2. The full transformation process is documented <a href="{{ url_for('static', filename='images/spectrograms.pdf') }}">here</a>.</p>
                             <div class="mdl-cell mdl-cell--12-col">
