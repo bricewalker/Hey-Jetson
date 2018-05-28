@@ -139,7 +139,7 @@ The tools used in this project include:
 
 <a id='data'></a>
 ## Dataset
-The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of 10-15 second audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken English derived from read audiobooks from the LibriVox project.
+The primary dataset used is the [LibriSpeech ASR corpus](http://www.openslr.org/12/) which includes 1000 hours of recorded speech. A 100 hour(6G) subset of the dataset of 10-15 second audio files was used for testing the models to reduce training and model building time. The final model was trained on a 460 hour subset. The dataset consists of 16kHz audio files of spoken English derived from read audiobooks from the LibriVox project. An overview of some of the difficulties of working with data such as this can be found <a href="https://awni.github.io/speech-recognition/">here</a>.
 
 <a id='features'></a>
 ## Feature Extraction/Engineering
@@ -198,7 +198,7 @@ Language modeling, the component of a speech recognition system that estimates t
 
 The best performing model is considered the one that gives the highest probabilities to the words that are found in a test set, since it wastes less probability on words that actually occur.
 
-The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is about 18%.
+The overall <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a> of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall <a href="https://en.wikipedia.org/wiki/Word_error_rate">word error rate</a> is about 18%.
 
 ![performance](app/static/images/performance.png)
 
