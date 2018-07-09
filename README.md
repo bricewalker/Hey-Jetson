@@ -1,3 +1,6 @@
+## ATTENTION:
+### Unfortunately, my Jetson got hit by a storm (and by this, I mean my golden retriever puppy named Lightning got a hold of it) and it has officially reached end of life. Building this project was fun, but not able to earn me a job and I cannot afford to replace it so I have deprecated this in favor of a more aggressive showcase which is now hosted at [heysatya.com](https://heysatya.com). 
+
 # Hey, Jetson!
 ## Automatic Speech Recognition Inference
 ### By Brice Walker

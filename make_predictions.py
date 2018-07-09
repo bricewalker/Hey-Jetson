@@ -596,8 +596,8 @@ def train_model(input_to_softmax,
 # Creating a TensorFlow session
 from keras.backend.tensorflow_backend import set_session
 config = tf.ConfigProto()
-config.gpu_options.allow_growth = True
-#config.gpu_options.per_process_gpu_memory_fraction = 0.3
+#config.gpu_options.allow_growth = True
+config.gpu_options.per_process_gpu_memory_fraction = 0.3
 set_session(tf.Session(config=config))
 
 def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
