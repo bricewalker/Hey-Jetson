@@ -1,55 +1,112 @@
 {% extends "home.html" %}
 
 {% block usr_input %}
-	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Inference Engine</h2>
-	<div class="mdl-cell mdl-cell--12-col">Select an instance to run inference on. Valid indexes are:
-		<br>Train set: 0-25150
-		<br>Validation set: 0-2022
-		<br>Test set: 0-1878
+	<h3>Inference Engine</h3>
+	<div class="mdl-cell mdl-cell--12-col">
+		Use the input box to upload a .wav file to run inference on. 
+		<p>
+			<i>
+				Note: Audio files must be in WAVE/WAV format (file extension must be '.wav') and no more than 10 seconds in length. The audio file must be encoded in PCM single channel (mono).The bit rate must be at least 64k, and the sample rate must be 16000Hz (16Khz). The max frequency cannot be more than 16000Hz. You can record using your microphone with a tool like <a href="https://www.audacityteam.org/">Audacity</a>. Alternatively, you can download the sample files provided to test the model.
+			</i>
+		</p>
+	</div>
+	<h4>Sample files:</h4>
+	<div class="mdl-cell mdl-cell--12-col">
+		<p>Sample File 1:</p>
+		<audio controls src="{{ url_for('static', filename='audio/sample1.wav') }}">
+			Your browser does not support the HTML5 audio element.
+		</audio>
 	</div>
 	<div class="mdl-cell mdl-cell--12-col">
-		<form method="POST" action="/">
-			{{ form.csrf_token }}
-			{{ form.partition.label }} {{ form.partition() }}
-			<br>
-			{{ form.instance_number.label }} {{ form.instance_number() }}
-			<br>
-			{{ form.submit() }}
+		<a href="{{ url_for('static', filename='audio/sample1.wav') }}"><button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--colored"><i class="fa fa-download fa fw" aria-hidden="true"></i> Download Sample Audio File 1</button></a>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<p>Sample File 2:</p>
+		<audio controls src="{{ url_for('static', filename='audio/sample2.wav') }}">
+				Your browser does not support the HTML5 audio element.
+		</audio>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<a href="{{ url_for('static', filename='audio/sample2.wav') }}"><button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--colored"><i class="fa fa-download fa fw" aria-hidden="true"></i> Download Sample Audio File 2</button></a>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<p>Sample File 3:</p>
+		<audio controls src="{{ url_for('static', filename='audio/sample3.wav') }}">
+				Your browser does not support the HTML5 audio element.
+		</audio>
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<a href="{{ url_for('static', filename='audio/sample3.wav') }}"><button class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect mdl-button--colored"><i class="fa fa-download fa fw" aria-hidden="true"></i> Download Sample Audio File 3</button></a>
+	</div>
+	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Select file for inference:</h2>
+	<div class="mdl-cell mdl-cell--12-col">
+		<form method="POST" action="" enctype="multipart/form-data">
+			{{ audio_form.csrf_token }}
+			{{ audio_form.audio_file }}
+			<input type="submit">
 		</form>
 	</div>
 {% endblock %}
 
 {% block transcriptions %}
 {% if prediction_transcription != None %}
-	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Ground Truth Transcription:</h3>
-	<div class="mdl-cell mdl-cell--12-col">{{ truth_transcription }}</div>
-	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Predicted Transcription:</h3>
-	<div class="mdl-cell mdl-cell--12-col">{{ prediction_transcription }}</div>
-	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance Measures:</h3>
-	<div class="mdl-cell mdl-cell--12-col">CV Cosine Similarity: {{ cv_similarity }}</div>
-	<div class="mdl-cell mdl-cell--12-col">TFIDF Cosine Similarity: {{ tfidf_similarity }}</div>
-	<div class="mdl-cell mdl-cell--12-col">This is a measure where a score of 1 means that the two strings are exactly equal and a score of 0 means the prediction transcription contains none of the words in the ground truth label.</div>
-	<div class="mdl-cell mdl-cell--12-col">Word Error Rate: {{ error_rate }} %</div>
-	<div class="mdl-cell mdl-cell--12-col">This measure is defined as (substitutions + deletions + insertions) / # of words in the ground truth transcription.</div>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Transcribing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Predicted Transcription: </h4><h5>{{ prediction_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Predicted Transcription: </h4><h5>{{ lexical }}</h5></div>
 {%else%}
-	<div class="mdl-cell mdl-cell--12-col"></div>
 {% endif %}
 {% endblock %}
 
 {% block waveform %}
 {% if raw_plot != None %}
-	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File:</h3>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File</h3>
 	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
 {%else%}
-<div class="mdl-cell mdl-cell--12-col"></div>
+{% endif %}
+{% endblock %}
+
+{% block spectrogram %}
+{% if spectrogram_plot != None %}
+	<img src="data:image/png;base64, {{ spectrogram_plot }}" alt="spectrogram">
+{%else%}
 {% endif %}
 {% endblock %}
 
 {% block log_spectrogram %}
 {% if log_spectrogram_plot != None %}
-	<img src="data:image/png;base64, {{ log_spectrogram_plot }}" alt="spectrogram">
+	<img src="data:image/png;base64, {{ log_spectrogram_plot }}" alt="log_spectrogram">
 	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
 {%else%}
-<div class="mdl-cell mdl-cell--12-col"></div>
+{% endif %}
+{% endblock %}
+
+{% block three_d %}
+{% if spectrogram_3d != None %}
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	{{ spectrogram_3d  }}
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block performance %}
+{% if prediction_transcription != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance Measures</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Time to produce Hey, Jetson! prediction (in seconds): </h4><h5>{{ jetson_time_to_predict }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Time to produce Cortana prediction (in seconds): </h4><h5>{{ cortana_time_to_predict }}</h5></div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block sentiment_analysis %}
+{% if prediction_score != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Sentiment Analysis</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Sentiment Score: </h4><h5>{{ prediction_score }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Sentiment Score: </h4><h5>{{ cortana_score }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<p>
+			The sentiment score for a document is between $0$ and $1$. Scores close to 1 indicate positive sentiment, while scores close to 0 indicate negative sentiment. A score of 0.5 indicates the lack of sentiment. The sentiment engine was developed using Microsoft's Cognitive Services Text Analytics API to allow users to assess how sentiment analysis can be conducted on the model's predicted transcriptions to begin to derive a measure of conversational and therapeutic interactions. It is hypothesized that sentiment analysis could be useful in determining whether or not someone is responding positively to a therapeutic intervention as the content of their responses may be more positive rather than negative.
+		</p>
+	</div>
+{%else%}
 {% endif %}
 {% endblock %}

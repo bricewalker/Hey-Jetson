@@ -1,4 +1,4 @@
-
+<!doctype html>
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,8 +9,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
     <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/fontawesome.min.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
@@ -25,28 +24,32 @@
     <meta name="msapplication-TileColor" content="#00a300">
     <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
     <meta name="theme-color" content="#ffffff">
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-90685436-2"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90685436-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
 
-  gtag('config', 'UA-90685436-2');
-</script>
+    gtag('config', 'UA-90685436-2');
+    </script>
 </head>
 
 <body>
-        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-                <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
-                    <div class="mdl-layout__header-row portfolio-logo-row">
-                        <span class="mdl-layout__title">
-                            <span class="mdl-layout__title">Hey, Jetson!</span>
-                        </span>
-                    </div>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+            <div class="mdl-layout__header-row portfolio-logo-row">
+                <span class="mdl-layout__title">
+                    <span class="mdl-layout__title">Hey, Jetson!</span>
+                </span>
+            </div>
             <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
                 <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                    <a class="mdl-navigation__link is-active" href="index.html">Inference Engine</a>
+                    <a class="mdl-navigation__link is-active" href="index.html">Inference</a>
+                    <a class="mdl-navigation__link" href="asr.html">ASR</a>
+                    <a class="mdl-navigation__link" href="visualization.html">Visualization</a>
+                    <a class="mdl-navigation__link" href="performance.html">Performance</a>
+                    <a class="mdl-navigation__link" href="sentiment.html">Sentiment</a>
                     <a class="mdl-navigation__link" href="about.html">About</a>
                     <a class="mdl-navigation__link" href="contact.html">Contact</a>
                 </nav>
@@ -54,7 +57,11 @@
         </header>
         <div class="mdl-layout__drawer mdl-layout--small-screen-only">
             <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
-                <a class="mdl-navigation__link is-active" href="index.html">Inference Engine</a>
+                <a class="mdl-navigation__link is-active" href="index.html">Inference</a>
+                <a class="mdl-navigation__link" href="asr.html">ASR</a>
+                <a class="mdl-navigation__link" href="visualization.html">Visualization</a>
+                <a class="mdl-navigation__link" href="performance.html">Performance</a>
+                <a class="mdl-navigation__link" href="sentiment.html">Sentiment</a>
                 <a class="mdl-navigation__link" href="about.html">About</a>
                 <a class="mdl-navigation__link" href="contact.html">Contact</a>
             </nav>
@@ -63,48 +70,58 @@
             <div class="mdl-grid portfolio-max-width">
                 <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
                     <div class="mdl-card__title">
-                        <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference on the Nvidia Jetson.</h2>
-                    </div>
-                    <div class="mdl-card__supporting-text">
-                        <strong>Includes:</strong>
-                        <span>Python, Flask, Tensorflow, Keras, Nvidia Jetson, Jetpack, Ubuntu, L4T, HTML, CSS, JavaScript, Anaconda, Jupyter Notebook, Cudnn</span>
+                        <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference</h2>
                     </div>
                     <div class="mdl-grid portfolio-copy">
                         <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Introduction</h3>
                         <div class="mdl-cell mdl-cell--6-col">
                             <p>
-                                This server runs a live demo of a scalable automatic speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This end to end sequencing model uses a recurrent neural network trained on an Nvidia GTX1070. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is about 18%. Use the inference engine below to test out the model.
+                                This website runs a live demo of a scalable automatic speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This end to end sequencing model uses a recurrent neural network trained on an Nvidia GTX1070 that was inspired by my mental health career and a desire to build a system for therapeutic intervention outcomes measurement
                             </p>
                         </div>
                         <div class="mdl-cell mdl-cell--6-col">
                             <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
                         </div>
-                        <div class="mdl-cell mdl-cell--6-col">
-                        <a href="https://github.com/bricewalker/Hey-Jetson">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            View full project on Github
-                        </button>
-                        </a>
-                        </div>
-                        <div class="mdl-cell mdl-cell--6-col">
-                        <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
-                        <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                            View full project on nbviewer
-                        </button>
-                        </a>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                My model's cosine similarity score is about 80% in the validation set and 78% in the test set and the word error rate is around 16% in the validation set and 18% in the test set. Use the inference engine below to test out the model on your own recorded audio files.
+                            </p>
                         </div>
                         <div class="mdl-cell mdl-cell--12-col">{% block usr_input %}{% endblock %}</div>
                         <div class="mdl-cell mdl-cell--12-col">{% block transcriptions %}{% endblock %}</div>
-                        <div>
-                        <div class="mdl-cell mdl-cell--12-col">{% block waveform %}{% endblock %}</div>
-                        <div class="mdl-cell mdl-cell--12-col">{% block log_spectrogram %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            {% block waveform %}{% endblock %}
+                            {% block spectrogram %}{% endblock %}
+                            {% block log_spectrogram %}{% endblock %}
+                            {% block three_d %}{% endblock %}
                         </div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block performance %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block sentiment_analysis %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">
+                            <p>
+                                Thanks for checking out my project. You can demo ASR with Azure Cognitive Services on the ASR tab above and you can click on the visualization or performance tabs to get a more in depth view of the data and model. The about tab also has an outline of my development process. The sentiment analysis page also lets you test out sentiment analysis on the model's predictions using the Microsoft Azure Cognitive Services Text Analytics API. I've included links below to view the code on github or to check out the interactive code notebook on JupyterHub. If you found this impressive, email me at <a href="mailto:brice@bricewalker.com">brice@bricewalker.com</a> so we can set up an interview.
+                            </p>
                         </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <a href="https://github.com/bricewalker/Hey-Jetson">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                    View full project on Github
+                                </button>
+                            </a>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                    View full project on nbviewer
+                                </button>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
             <footer class="mdl-mini-footer">
                 <div class="mdl-mini-footer__left-section">
-                    <div class="mdl-logo">&copy; Copyright 2015-2018 Brice Walker. Design by <a href="https://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using HTML, CSS, Javascript, and PHP. Compliant with Material Design guidelines.</div>
+                    <div class="mdl-logo">&copy; Copyright 2015-2018 Brice Walker. Design by <a href="https://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using Python, HTML, CSS, and JavaScript.</div>
                 </div>
                 <div class="mdl-mini-footer__right-sec">
                     <ul class="mdl-mini-footer__link-list">
@@ -119,5 +136,4 @@
     </div>
     <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 </body>
-
 </html>

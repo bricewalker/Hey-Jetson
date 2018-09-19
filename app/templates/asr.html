@@ -1,0 +1,374 @@
+{% extends "recognition.html" %}
+
+{% block asr %}
+	<div id="warning">
+		<h1>Speech Recognition SDK not compatible with your browser.</h1>
+	</div>
+	<div id="content">
+
+		<h2>Microsoft Cognitive Services</h2>
+		<div class="mdl-cell mdl-cell--12-col">
+			<h3><a href="https://www.microsoft.com/cognitive-services/en-us/sign-up" target="_blank">Subscription</a>:</h3>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<input id="key" type="text" size="40" value="YOUR_AZURE_SPEECH_API_KEY">
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			Language:
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<select id="languageOptions">
+				<option value="ar-EG">Arabic - EG</option>
+				<option value="ca-ES">Catalan - ES</option>
+				<option value="da-DK">Danish - DK</option>
+				<option value="da-DK">Danish - DK</option>
+				<option value="de-DE">German - DE</option>
+				<option value="en-AU">English - AU</option>
+				<option value="en-CA">English - CA</option>
+				<option value="en-GB">English - GB</option>
+				<option value="en-IN">English - IN</option>
+				<option value="en-NZ">English - NZ</option>
+				<option value="zh-CN">Chinese - CN</option>
+				<option value="en-US" selected="selected">English - US</option>
+				<option value="es-ES">Spanish - ES</option>
+				<option value="es-MX">Spanish - MX</option>
+				<option value="fi-FI">Finnish - FI</option>
+				<option value="fr-CA">French - CA</option>
+				<option value="fr-FR">French - FR</option>
+				<option value="hi-IN">Hindi - IN</option>
+				<option value="it-IT">Italian - IT</option>
+				<option value="ja-JP">Japanese - JP</option>
+				<option value="ko-KR">Korean - KR</option>
+				<option value="nb-NO">Norwegian - NO</option>
+				<option value="nl-NL">Dutch - NL</option>
+				<option value="pl-PL">Polish - PL</option>
+				<option value="pt-BR">Portuguese - BR</option>
+				<option value="pt-PT">Portuguese - PT</option>
+				<option value="ru-RU">Russian - RU</option>
+				<option value="sv-SE">Swedish - SE</option>
+				<option value="zh-CN">Chinese - CN</option>
+				<option value="zh-HK">Chinese - HK</option>
+				<option value="zh-TW">Chinese - TW</option>
+			</select>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			Recognition Mode:
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<select id="recognitionMode">
+				<option value="Interactive" selected="selected">Interactive</option>
+				<option value="Conversation">Conversation</option>
+				<option value="Dictation">Dictation</option>
+			</select>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			Format:
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<select id="formatOptions">
+				<option value="Simple" selected="selected">Simple Result</option>
+				<option value="Detailed">Detailed Result</option>
+			</select>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			Input:
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<select id="inputSource">
+				<option value="Mic" selected="selected">Microphone</option>
+				<option value="File">Audio File</option>
+			</select>
+			<p>
+				<i>
+					Note: Audio files must be in WAVE/WAV format (file extension must be '.wav') and no more than 10 seconds in length. The audio file must be encoded in PCM single channel (mono).The bit rate must be at least 64k, and the sample rate must be 16000Hz (16Khz). The max frequency cannot be more than 16000Hz. You can record using your microphone with a tool like <a href="https://www.audacityteam.org/">Audacity</a>.
+				</i>
+			</p>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<button id="startBtn" disabled="disabled">Start</button>
+			<button id="stopBtn" disabled="disabled">Stop</button>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<input type="file" id="filePicker" accept=".wav" style="display:none"/>
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<h4>Status:</h4>	
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<span id="statusDiv"></span>			
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<h3>Current hypothesis:</h3>		
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<span id="hypothesisDiv" style="display:inline-block;"></span>		
+			</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<h3>Results:</h3>		
+		</div>
+		<div class="mdl-cell mdl-cell--12-col">
+			<textarea id="phraseDiv" style="display: inline-block; height: 200px;"></textarea>		
+		</div>
+	</div>
+
+	<!-- SDK REFERENCE -->
+	<script src="{{ url_for('static', filename = 'js/speech.sdk.bundle.js') }}"></script>
+
+	<!-- SDK USAGE -->
+	<script>
+		// On document load resolve the SDK dependency
+		function Initialize(onComplete) {
+			if (!!window.SDK) {
+				document.getElementById('content').style.display = 'block';
+				document.getElementById('warning').style.display = 'none';
+				onComplete(window.SDK);
+			}
+		}
+		
+		// Setup the recognizer
+		function RecognizerSetup(SDK, recognitionMode, language, format, subscriptionKey) {
+			
+			switch (recognitionMode) {
+				case "Interactive" :
+					recognitionMode = SDK.RecognitionMode.Interactive;    
+					break;
+				case "Conversation" :
+					recognitionMode = SDK.RecognitionMode.Conversation;    
+					break;
+				case "Dictation" :
+					recognitionMode = SDK.RecognitionMode.Dictation;    
+					break;
+				default:
+					recognitionMode = SDK.RecognitionMode.Interactive;
+			}
+
+			var recognizerConfig = new SDK.RecognizerConfig(
+				new SDK.SpeechConfig(
+					new SDK.Context(
+						new SDK.OS(navigator.userAgent, "Browser", null),
+						new SDK.Device("SpeechSample", "SpeechSample", "1.0.00000"))),
+				recognitionMode,
+				language, // Supported languages are specific to each recognition mode. Refer to docs.
+				format); // SDK.SpeechResultFormat.Simple (Options - Simple/Detailed)
+
+
+			var useTokenAuth = false;
+			
+			var authentication = function() {
+				if (!useTokenAuth)
+					return new SDK.CognitiveSubscriptionKeyAuthentication(subscriptionKey);
+
+				var callback = function() {
+					var tokenDeferral = new SDK.Deferred();
+					try {
+						var xhr = new(XMLHttpRequest || ActiveXObject)('MSXML2.XMLHTTP.3.0');
+						xhr.open('GET', '/token', 1);
+						xhr.onload = function () {
+							if (xhr.status === 200)  {
+								tokenDeferral.Resolve(xhr.responseText);
+							} else {
+								tokenDeferral.Reject('Issue token request failed.');
+							}
+						};
+						xhr.send();
+					} catch (e) {
+						window.console && console.log(e);
+						tokenDeferral.Reject(e.message);
+					}
+					return tokenDeferral.Promise();
+				}
+
+				return new SDK.CognitiveTokenAuthentication(callback, callback);
+			}();
+			
+			var files = document.getElementById('filePicker').files;
+			if (!files.length) {
+				return SDK.CreateRecognizer(recognizerConfig, authentication);
+			} else {
+				return SDK.CreateRecognizerWithFileAudioSource(recognizerConfig, authentication, files[0]);
+			}
+		}
+
+		// Start the recognition
+		function RecognizerStart(SDK, recognizer) {
+			recognizer.Recognize((event) => {
+				/*
+				Alternative syntax for typescript devs.
+				if (event instanceof SDK.RecognitionTriggeredEvent)
+				*/
+				switch (event.Name) {
+					case "RecognitionTriggeredEvent" :
+						UpdateStatus("Initializing");
+						break;
+					case "ListeningStartedEvent" :
+						UpdateStatus("Listening");
+						break;
+					case "RecognitionStartedEvent" :
+						UpdateStatus("Listening_Recognizing");
+						break;
+					case "SpeechStartDetectedEvent" :
+						UpdateStatus("Listening_DetectedSpeech_Recognizing");
+						console.log(JSON.stringify(event.Result)); // check console for other information in result
+						break;
+					case "SpeechHypothesisEvent" :
+						UpdateRecognizedHypothesis(event.Result.Text, false);
+						console.log(JSON.stringify(event.Result)); // check console for other information in result
+						break;
+					case "SpeechFragmentEvent" :
+						UpdateRecognizedHypothesis(event.Result.Text, true);
+						console.log(JSON.stringify(event.Result)); // check console for other information in result
+						break;
+					case "SpeechEndDetectedEvent" :
+						OnSpeechEndDetected();
+						UpdateStatus("Processing_Adding_Final_Touches");
+						console.log(JSON.stringify(event.Result)); // check console for other information in result
+						break;
+					case "SpeechSimplePhraseEvent" :
+						UpdateRecognizedPhrase(JSON.stringify(event.Result, null, 3));
+						break;
+					case "SpeechDetailedPhraseEvent" :
+						UpdateRecognizedPhrase(JSON.stringify(event.Result, null, 3));
+						break;
+					case "RecognitionEndedEvent" :
+						OnComplete();
+						UpdateStatus("Idle");
+						console.log(JSON.stringify(event)); // Debug information
+						break;
+					default:
+						console.log(JSON.stringify(event)); // Debug information
+				}
+			})
+			.On(() => {
+				// The request succeeded. Nothing to do here.
+			},
+			(error) => {
+				console.error(error);
+			});
+		}
+
+		// Stop the Recognition.
+		function RecognizerStop(SDK, recognizer) {
+			// recognizer.AudioSource.Detach(audioNodeId) can be also used here. (audioNodeId is part of ListeningStartedEvent)
+			recognizer.AudioSource.TurnOff();
+		}
+	</script>
+
+	<!-- Browser Hooks -->
+	<script>
+		var startBtn, stopBtn, hypothesisDiv, phraseDiv, statusDiv;
+		var key, languageOptions, formatOptions, recognitionMode, inputSource, filePicker;
+		var SDK;
+		var recognizer;
+		var previousSubscriptionKey;
+
+		document.addEventListener("DOMContentLoaded", function () {
+			createBtn = document.getElementById("createBtn");
+			startBtn = document.getElementById("startBtn");
+			stopBtn = document.getElementById("stopBtn");
+			phraseDiv = document.getElementById("phraseDiv");
+			hypothesisDiv = document.getElementById("hypothesisDiv");
+			statusDiv = document.getElementById("statusDiv");
+			key = document.getElementById("key");
+			languageOptions = document.getElementById("languageOptions");
+			formatOptions = document.getElementById("formatOptions");
+			inputSource = document.getElementById("inputSource");
+			recognitionMode = document.getElementById("recognitionMode");
+			filePicker = document.getElementById('filePicker');
+
+			languageOptions.addEventListener("change", Setup);
+			formatOptions.addEventListener("change", Setup);
+			recognitionMode.addEventListener("change", Setup);
+
+			startBtn.addEventListener("click", function () {
+				if (key.value == "" || key.value == "YOUR_AZURE_SPEECH_API_KEY") {
+					alert("Please enter your Azure Cognitive Services Speech subscription key!");
+					return;
+				}
+				if (inputSource.value === "File") {
+					filePicker.click();
+				} else {
+					if (!recognizer || previousSubscriptionKey != key.value) {
+						previousSubscriptionKey = key.value;
+						Setup();
+					}
+
+					hypothesisDiv.innerHTML = "";
+					phraseDiv.innerHTML = "";
+					RecognizerStart(SDK, recognizer);
+					startBtn.disabled = true;
+					stopBtn.disabled = false;
+				}                
+			});
+
+			key.addEventListener("focus", function () {
+			if (key.value == "YOUR_AZURE_SPEECH_API_KEY") {
+				key.value = "";
+			}
+			});
+
+			key.addEventListener("focusout", function () {
+			if (key.value == "") {
+				key.value = "YOUR_AZURE_SPEECH_API_KEY";
+			}
+			});
+
+			filePicker.addEventListener("change", function () {
+				Setup();
+				hypothesisDiv.innerHTML = "";
+				phraseDiv.innerHTML = "";
+				RecognizerStart(SDK, recognizer);
+				startBtn.disabled = true;
+				stopBtn.disabled = false;
+				filePicker.value = "";
+			});
+
+			stopBtn.addEventListener("click", function () {
+				RecognizerStop(SDK, recognizer);
+				startBtn.disabled = false;
+				stopBtn.disabled = true;
+			});
+
+			Initialize(function (speechSdk) {
+				SDK = speechSdk;
+				startBtn.disabled = false;
+			});
+		});
+
+		function Setup() {
+			if (recognizer != null) {
+				RecognizerStop(SDK, recognizer);
+			}
+			recognizer = RecognizerSetup(SDK, recognitionMode.value, languageOptions.value, SDK.SpeechResultFormat[formatOptions.value], key.value);
+		}
+
+		function UpdateStatus(status) {
+			statusDiv.innerHTML = status;
+		}
+
+		function UpdateRecognizedHypothesis(text, append) {
+			if (append) 
+				hypothesisDiv.innerHTML += text + " ";
+			else 
+				hypothesisDiv.innerHTML = text;
+
+			var length = hypothesisDiv.innerHTML.length;
+			if (length > 403) {
+				hypothesisDiv.innerHTML = "..." + hypothesisDiv.innerHTML.substr(length-400, length);
+			}
+		}
+
+		function OnSpeechEndDetected() {
+			stopBtn.disabled = true;
+		}
+
+		function UpdateRecognizedPhrase(json) {
+			hypothesisDiv.innerHTML = "";
+			phraseDiv.innerHTML += json + "\n";
+		}
+
+		function OnComplete() {
+			startBtn.disabled = false;
+			stopBtn.disabled = true;
+		}
+	</script>
+{% endblock %}

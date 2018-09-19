@@ -1,0 +1,63 @@
+{% extends "measure.html" %}
+
+{% block usr_input %}
+	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Performance Engine</h2>
+	<div class="mdl-cell mdl-cell--12-col">Select an instance to test performance on. Valid indexes are:
+		<br>Validation set: 0-4277
+		<br>Test set: 0-4176
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<form method="POST" action="">
+			{{ performance_form.csrf_token }}
+			{{ performance_form.perf_model_number.label }} {{ performance_form.perf_model_number() }}
+			<br>
+			{{ performance_form.perf_partition.label }} {{ performance_form.perf_partition() }}
+			<br>
+			{{ performance_form.perf_instance_number.label }} {{ performance_form.perf_instance_number() }}
+			<br>
+			{{ performance_form.perf_submit() }}
+		</form>
+	</div>
+{% endblock %}
+
+{% block audio_player %}
+{% if play_audio != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Playing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col">
+		<audio controls>
+			<source src={{ play_audio }}>
+				Your browser does not support the HTML5 audio element.
+		</audio>
+	</div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block transcriptions %}
+{% if prediction_transcription != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Transcribing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Ground Truth Transcription: </h4><h5>{{ truth_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Predicted Transcription: </h4><h5>{{ prediction_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Predicted Transcription: </h4><h5>{{ lexical }}</h5></div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block performance %}
+{% if word_error_rate != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Hey, Jetson! Performance Measures</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>CV Cosine Similarity: </h4><h5>{{ cv_similarity }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>TFIDF Cosine Similarity: </h4><h5>{{ tfidf_similarity }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col">This is a measure where a score of 1 means that the two strings are exactly equal and a score of 0 means the prediction transcription contains none of the words in the ground truth label.</div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Word Error Rate: </h4><h5>{{ word_error_rate }} %</h5></div>
+	<div class="mdl-cell mdl-cell--12-col">This measure is defined as (substitutions + deletions + insertions) / # of words/characters in the ground truth transcription.</div>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Cortana Performance Measures</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>CV Cosine Similarity: </h4><h5>{{ cortana_cv }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>TFIDF Cosine Similarity: </h4><h5>{{ cortana_tfidf }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Word Error Rate: </h4><h5>{{ cortana_wer }} %</h5></div>
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Benchmarks</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Time to produce Hey, Jetson! prediction (in seconds): </h4><h5>{{ jetson_time_to_predict }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Time to produce Cortana prediction (in seconds): </h4><h5>{{ cortana_time_to_predict }}</h5></div>
+{%else%}
+{% endif %}
+{% endblock %}

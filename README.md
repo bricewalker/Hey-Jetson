@@ -8,7 +8,7 @@
 
 This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This real-world application of automatic speech recognition was inspired by my career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent is to build a tool that can give therapists real time feedback on the efficacy of their interventions, but this has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
-The final production model consists of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 24 hours. The overall cosine similarity of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall word error rate is around 18%.
+The final production model consists of a deep neural network with 1 layer of convolutional neurons, 2 layers of bidirectional recurrent neurons (GRU cells), and a layer of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 6.5 days. The model's cosine similarity score is about 80% in the validation set and 78% in the test set and the word error rate is around 16% in the validation set and 18% in the test set.
 
 This project also includes a flask web server for deploying an applied speech inference engine.
 
@@ -170,7 +170,7 @@ Hey, Jetson! is comprised of an acoustic model and language model. The acoustic 
 
 ### Model Architecture
 
-![model_8](app/static/images/model_8.png)
+![model_8](app/static/images/model_10.png)
 
 ### CNN's
 The deep neural network in this project explores the use of a Convolutional Neural Network consisting of 256 neurons for early pattern detection. The initial layer of convolutional neurons conducts feature extraction for the recurrent network.
@@ -196,7 +196,7 @@ Language modeling, the component of a speech recognition system that estimates t
 
 The best performing model is considered the one that gives the highest probabilities to the words that are found in a test set, since it wastes less probability on words that actually occur.
 
-The overall <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a> of the model's predictions with the ground truth transcriptions in both the test and validation set is about 74%, while the overall <a href="https://en.wikipedia.org/wiki/Word_error_rate">word error rate</a> is about 18%.
+The overall <a href="https://en.wikipedia.org/wiki/Cosine_similarity">cosine similarity</a> of the model's predictions with the ground truth transcriptions is about 80% in the validation set and 78% in the test set, while the overall <a href="https://en.wikipedia.org/wiki/Word_error_rate">word error rate</a> is around 16% in the validation set and 18% in the test set.
 
 ![performance](app/static/images/performance.png)
 

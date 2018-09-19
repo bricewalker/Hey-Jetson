@@ -76,7 +76,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  background-color: #e53935;
+  background-color: #039be5;
   left: 15%;
 }
 
@@ -150,7 +150,7 @@ img.article-image {
   margin: auto;
 }
 
-.download-button {
+.theme-button {
   text-align: center;
 }
 
@@ -164,7 +164,7 @@ footer {
 
 footer a, footer a:visited { color: #fff; }
 
-footer a:hover, footer a:focus { color: #e53935; }
+footer a:hover, footer a:focus { color: #039be5; }
 
 footer .mdl-mini-footer__social {
   display:inline-block;

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Hey, Jetson! Automatic Speech Recogntion Inference with TensorFlow/Keras on the Nvidia Netson">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Hey, Jetson!</title>
+    <meta name="author" content="Brice Walker">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.green-cyan.min.css" />
+    <link rel= "stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel= "stylesheet" href="{{ url_for('static', filename='fa/css/fontawesome.min.css') }}">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css" integrity="sha384-3AB7yXWz4OeoZcPbieVW64vVXEwADiYyAEhwilzWsLw+9FgqpyjjStpPnpBO8o8S" crossorigin="anonymous">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='icons/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='icons/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ url_for('static', filename='icons/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ url_for('static', filename='icons/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='icons/favicon.ico') }}">
+    <meta name="apple-mobile-web-app-title" content="Hey, Jetson!">
+    <meta name="application-name" content="Hey, Jetson!">
+    <meta name="msapplication-TileColor" content="#00a300">
+    <meta name="msapplication-config" content="{{ url_for('static', filename='icons/browserconfig.xml') }}">
+    <meta name="theme-color" content="#ffffff">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-90685436-2"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-90685436-2');
+    </script>
+</head>
+
+<body>
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header mdl-layout__header--waterfall portfolio-header">
+            <div class="mdl-layout__header-row portfolio-logo-row">
+                <span class="mdl-layout__title">
+                    <span class="mdl-layout__title">Hey, Jetson!</span>
+                </span>
+            </div>
+            <div class="mdl-layout__header-row portfolio-navigation-row mdl-layout--large-screen-only">
+                <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+                    <a class="mdl-navigation__link" href="index.html">Inference</a>
+                    <a class="mdl-navigation__link" href="asr.html">ASR</a>
+                    <a class="mdl-navigation__link" href="visualization.html">Visualization</a>
+                    <a class="mdl-navigation__link" href="performance.html">Performance</a>
+                    <a class="mdl-navigation__link is-active" href="sentiment.html">Sentiment</a>
+                    <a class="mdl-navigation__link" href="about.html">About</a>
+                    <a class="mdl-navigation__link" href="contact.html">Contact</a>
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer mdl-layout--small-screen-only">
+            <nav class="mdl-navigation mdl-typography--body-1-force-preferred-font">
+                <a class="mdl-navigation__link" href="index.html">Inference</a>
+                <a class="mdl-navigation__link" href="asr.html">ASR</a>
+                <a class="mdl-navigation__link" href="visualization.html">Visualization</a>
+                <a class="mdl-navigation__link" href="performance.html">Performance</a>
+                <a class="mdl-navigation__link is-active" href="sentiment.html">Sentiment</a>
+                <a class="mdl-navigation__link" href="about.html">About</a>
+                <a class="mdl-navigation__link" href="contact.html">Contact</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="mdl-grid portfolio-max-width">
+                <div class="mdl-cell mdl-cell--12-col mdl-card mdl-shadow--4dp">
+                    <div class="mdl-card__title">
+                        <h2 class="mdl-card__title-text">Automatic Speech Recognition Inference</h2>
+                    </div>
+                    <div class="mdl-grid portfolio-copy">
+                        <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Introduction</h3>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <p>
+                                This website runs a live demo of a scalable automatic speech recognition platform on an Nvidia Jetson built with a neural network for speech inference that was inspired by my mental health career with a cosine similarity of about 80% in the validation set and 78% in the test set and word error rate of around 16% in the validation set and 18% in the test set. Use the sentiment engine below to analyze the model's output.
+                            </p>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <img class="article-image" src="{{ url_for('static', filename='images/JTX2.png') }}" border="0" alt="">
+                        </div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block usr_input %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block audio_player %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block transcriptions %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--12-col">{% block sentiment_analysis %}{% endblock %}</div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <a href="https://github.com/bricewalker/Hey-Jetson">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                    View full project on Github
+                                </button>
+                            </a>
+                        </div>
+                        <div class="mdl-cell mdl-cell--6-col">
+                            <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
+                                <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                                    View full project on nbviewer
+                                </button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <div class="mdl-logo">&copy; Copyright 2015-2018 Brice Walker. Design by <a href="https://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using Python, HTML, CSS, and JavaScript.</div>
+                </div>
+                <div class="mdl-mini-footer__right-sec">
+                    <ul class="mdl-mini-footer__link-list">
+                        <li><a href="https://github.com/bricewalker"><i class="fab fa-github fa-3x"></i><div class="mdl-tooltip">Github</div></a></li>
+                        <li><a href="https://www.linkedin.com/in/briceawalker/"><i class="fab fa-linkedin-in fa-3x"></i><div class="mdl-tooltip">Linkedin</div></a></li>
+                        <li><a href="https://stackexchange.com/users/11615581/brice-walker"><i class="fab fa-stack-exchange fa-3x"></i><div class="mdl-tooltip">Stack Exchange</div></a></li>
+                        <li><a href="https://www.instagram.com/recoverybrice/"><i class="fab fa-instagram fa-3x"></i><div class="mdl-tooltip">Instagram</div></a></li>
+                    </ul>
+                </div>
+            </footer>
+        </main>
+    </div>
+    <script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</body>
+</html>

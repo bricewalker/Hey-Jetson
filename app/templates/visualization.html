@@ -1,0 +1,75 @@
+{% extends "explore.html" %}
+
+{% block usr_input %}
+	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Visualization Engine</h2>
+	<div class="mdl-cell mdl-cell--12-col">Select an instance to visualize. Valid indexes are:
+		<br>Validation set: 0-4277
+		<br>Test set: 0-4176
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<form method="POST" action="">
+			{{ visualization_form.csrf_token }}
+			{{ visualization_form.viz_model_number.label }} {{ visualization_form.viz_model_number() }}
+			<br>
+			{{ visualization_form.viz_partition.label }} {{ visualization_form.viz_partition() }}
+			<br>
+			{{ visualization_form.viz_instance_number.label }} {{ visualization_form.viz_instance_number() }}
+			<br>
+			{{ visualization_form.viz_submit() }}
+		</form>
+	</div>
+{% endblock %}
+
+{% block audio_player %}
+{% if play_audio != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Playing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col">
+		<audio controls>
+			<source src={{ play_audio }}>
+				Your browser does not support the HTML5 audio element.
+		</audio>
+	</div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block transcriptions %}
+{% if prediction_transcription != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Transcribing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Ground Truth Transcription: </h4><h5>{{ truth_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Predicted Transcription: </h4><h5>{{ prediction_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Predicted Transcription: </h4><h5>{{ lexical }}</h5></div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block waveform %}
+{% if raw_plot != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Graphing The Audio File</h3>
+	<img src="data:image/png;base64, {{ raw_plot  }}" alt="waveform">
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block spectrogram %}
+{% if spectrogram_plot != None %}
+	<img src="data:image/png;base64, {{ spectrogram_plot }}" alt="spectrogram">
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block log_spectrogram %}
+{% if log_spectrogram_plot != None %}
+	<img src="data:image/png;base64, {{ log_spectrogram_plot }}" alt="log_spectrogram">
+	<div class="mdl-cell mdl-cell--12-col">{{ spectrogram_shape }}</div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block three_d %}
+{% if spectrogram_3d != None %}
+	<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	{{ spectrogram_3d  }}
+{%else%}
+{% endif %}
+{% endblock %}

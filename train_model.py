@@ -575,7 +575,6 @@ def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
     model = Model(inputs=input_data, outputs=y_pred)
     model.output_length = Lambda(lambda x: cnn_output_length(
         x, kernel_size, conv_border_mode, conv_stride))
-    print(model.summary())
     return model
 
 model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
@@ -587,7 +586,60 @@ model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                       recur_layers=2,
                       units=256)
 
-train_model(input_to_softmax=model_8, 
-            pickle_path='model_8.pickle', 
-            save_model_path='model_8.h5', 
+def hey_jetson(input_dim, filters, activation, kernel_size, conv_stride,
+    conv_border_mode, recur_layers, dilation_rate, units, conv_layers, output_dim=29):
+    # Input
+    input_data = Input(name='the_input', shape=(None, input_dim))
+    # Convolutional layer
+    conv_1d = Conv1D(filters, kernel_size, 
+                     strides=conv_stride, 
+                     padding=conv_border_mode,
+                     activation=activation,
+                     name='conv1d')(input_data)
+    # Batch normalization
+    bn_cnn = BatchNormalization()(conv_1d)
+    for i in range(conv_layers - 1):
+        conv_1d = Conv1D(filters, kernel_size,
+                         padding=conv_border_mode,
+                         activation=activation,
+                         dilation_rate=2**i,
+                         name="conv_1d_"+str(i))(bn_cnn)
+        bn_cnn = BatchNormalization()(conv_1d)
+    # Bidirectional recurrent layer
+    brnn = Bidirectional(GRU(units, activation=activation, 
+        return_sequences=True, implementation=2, recurrent_dropout=0.01, name='brnn'))(bn_cnn)
+    # Batch normalization 
+    bn_rnn = BatchNormalization()(brnn)
+    # Loop for additional layers
+    for i in range(recur_layers - 1):
+        name = 'brnn_' + str(i + 1)
+        brnn = Bidirectional(GRU(units, activation=activation, 
+        return_sequences=True, implementation=2, name=name))(bn_rnn)
+        bn_rnn = BatchNormalization()(brnn)
+    # TimeDistributed Dense layer
+    time_distributed_dense = TimeDistributed(Dense(1024))(bn_rnn)
+    time_dense = TimeDistributed(Dense(output_dim))(time_distributed_dense)
+    # Softmax activation layer
+    y_pred = Activation('softmax', name='softmax')(time_dense)
+    # Specifying the model
+    model = Model(inputs=input_data, outputs=y_pred)
+    model.output_length = lambda x: cnn_output_length(
+        x, kernel_size, conv_border_mode, conv_stride)
+    print(model.summary())
+    return model
+
+model_10 = hey_jetson(input_dim=161, # 161 for Spectrogram/13 for MFCC
+                      filters=256,
+                      activation='relu',
+                      kernel_size=5, 
+                      conv_stride=2,
+                      recur_layers=7,
+                      conv_border_mode='causal',
+                      conv_layers=3,
+                      dilation_rate=2,
+                      units=256)
+
+train_model(input_to_softmax=model_10, 
+            pickle_path='model_10.pickle', 
+            save_model_path='model_10.h5', 
             spectrogram=True) # True for Spectrogram/False for MFCC

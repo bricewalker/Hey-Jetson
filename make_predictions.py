@@ -1,13 +1,14 @@
 # This is the primary python script used by the inference engine
-# This contains all code necessary to make predictions on all 3 data sets using the final model
+# This contains all code necessary for the web app
 
-# Common, File Based, and Math imports
+# Common, File Based, and Math Imports
 import pandas as pd
 import numpy as np
 import collections
 import os
 from os.path import isdir, join
 from pathlib import Path
+import subprocess
 from subprocess import check_output
 import sys
 import math
@@ -19,12 +20,20 @@ import json
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from numpy.lib.stride_tricks import as_strided
 from tqdm import tqdm
+import timeit
+import time
+import base64
+import datetime
+import uuid
+import wave
+import requests
+import audioop
+from io import BytesIO
 
 # Audio processing imports
 from scipy import signal
 from scipy.fftpack import dct
 import soundfile
-import json
 from python_speech_features import mfcc
 import scipy.io.wavfile as wav
 from scipy.fftpack import fft
@@ -43,7 +52,7 @@ from keras.layers import LeakyReLU, PReLU, ThresholdedReLU, ELU
 from keras.layers import BatchNormalization, TimeDistributed, Bidirectional
 from keras.layers import activations, Wrapper
 from keras.regularizers import l2
-from keras.optimizers import Adam, SGD, RMSprop, Adagrad, Adadelta, Adamax, Nadam
+from keras.optimizers import Adam
 from keras.callbacks import ModelCheckpoint 
 from keras.utils import np_utils
 from keras import constraints, initializers, regularizers
@@ -52,10 +61,6 @@ import keras.losses
 from keras.backend.tensorflow_backend import set_session
 from keras.engine import InputSpec
 import tensorflow as tf 
-from tensorflow.python.framework import graph_io
-from tensorflow.python.tools import freeze_graph
-from tensorflow.core.protobuf import saver_pb2
-from tensorflow.python.training import saver as saver_lib
 
 # Model metric imports
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -66,10 +71,14 @@ import IPython.display as ipd
 from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns
-import plotly.offline as py
-import plotly.graph_objs as go
-import plotly.tools as tls
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+from matplotlib.dates import DateFormatter
+from flask import Flask, render_template, send_file, make_response, request
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
+# Visualization settings
 color = sns.color_palette()
 sns.set_style('darkgrid')
 
@@ -404,26 +413,6 @@ def spectrogram_from_file(filename, step=10, window=20, max_freq=None,
         ind = np.where(freqs <= max_freq)[0][-1] + 1
     return np.transpose(np.log(pxx[:ind, :] + eps))
 
-def vis_train_features(index):
-# Function for visualizing a single audio file based on index chosen
-    # Get spectrogram
-    audio_gen = AudioGenerator(spectrogram=True)
-    audio_gen.load_train_data()
-    vis_audio_path = audio_gen.train_audio_paths[index]
-    vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
-    # Get mfcc
-    audio_gen = AudioGenerator(spectrogram=False)
-    audio_gen.load_train_data()
-    vis_mfcc_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
-    # Obtain text label
-    vis_text = audio_gen.train_texts[index]
-    # Obtain raw audio
-    sample_rate, samples = wav.read(vis_audio_path)
-    # Print total number of training examples
-    print('There are %d total training examples.' % len(audio_gen.train_audio_paths))
-    # Return labels for plotting
-    return vis_text, vis_mfcc_feature, vis_spectrogram_feature, vis_audio_path, sample_rate, samples
-
 def vis_audio_features(index, partition):
 # Function for visualizing a single audio file based on index chosen
     if partition == 'validation':
@@ -455,61 +444,6 @@ def vis_audio_features(index, partition):
 
     else:
         raise Exception('Invalid partition!  Must be "train", "test", or "validation"')
-
-def plot_raw_audio(sample_rate, samples):
-    # Plot the raw audio signal
-    time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
-    fig = plt.figure(figsize=(7,3))
-    ax = fig.add_subplot(111)
-    ax.plot(time, samples, linewidth=1, alpha=0.7, color='#76b900')
-    plt.title('Raw Audio Signal')
-    plt.xlabel('Time')
-    plt.ylabel('Amplitude')
-    figfile1 = BytesIO()
-    plt.savefig(figfile1, format='png')
-    figfile1.seek(0)
-    raw_plot = base64.b64encode(figfile1.getvalue())
-    return raw_plot.decode('utf8')
-
-def plot_spectrogram_feature(vis_spectrogram_feature):
-    # Plot a normalized spectrogram
-    fig = plt.figure(figsize=(7,3))
-    ax1 = fig.add_subplot(111)
-    im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
-    plt.title('Normalized Log Spectrogram')
-    plt.ylabel('Frequency')
-    plt.xlabel('Time (s)')
-    divider = make_axes_locatable(ax1)
-    cax = divider.append_axes("right", size="5%", pad=0.05)
-    plt.colorbar(im, cax=cax)
-    figfile2 = BytesIO()
-    plt.savefig(figfile2, format='png')
-    figfile2.seek(0)
-    spectrogram_plot = base64.b64encode(figfile2.getvalue())
-    return spectrogram_plot.decode('utf8')
-
-def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
-    nperseg = int(round(window_size * sample_rate / 1e3))
-    noverlap = int(round(step_size * sample_rate / 1e3))
-    freqs, times, spec = signal.spectrogram(samples,
-                                    fs=sample_rate,
-                                    window='hann',
-                                    nperseg=nperseg,
-                                    noverlap=noverlap,
-                                    detrend=False)
-    freqs = (freqs*2)
-    return freqs, times, np.log(spec.T.astype(np.float64) + eps)
-
-def plot_log_spectrogram_feature(freqs, times, log_spectrogram):
-    fig = plt.figure(figsize=(12,5))
-    ax2 = fig.add_subplot(111)
-    ax2.imshow(log_spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
-               extent=[times.min(), times.max(), freqs.min(), freqs.max()])
-    ax2.set_yticks(freqs[::20])
-    ax2.set_xticks(times[::20])
-    ax2.set_title('Normalized Log Spectrogram')
-    ax2.set_ylabel('Frequency')
-    ax2.set_xlabel('Time (s)')
 
 # Custom CTC loss function (discussed below)
 def ctc_lambda_func(args):
@@ -544,60 +478,11 @@ def cnn_output_length(input_length, filter_size, border_mode, stride, dilation=1
         output_length = input_length
     return (output_length + stride - 1) // stride
 
-def train_model(input_to_softmax, 
-                pickle_path,
-                save_model_path,
-                train_json='train_corpus.json',
-                valid_json='valid_corpus.json',
-                minibatch_size=16, # You will want to change this depending on the GPU you are training on
-                spectrogram=True,
-                mfcc_dim=13,
-                optimizer=Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=1, clipvalue=.5),
-                epochs=30, # You will want to change this depending on the model you are training and data you are using
-                verbose=1,
-                sort_by_duration=False,
-                max_duration=10.0):
-    
-    # Obtain batches of data
-    audio_gen = AudioGenerator(minibatch_size=minibatch_size, 
-        spectrogram=spectrogram, mfcc_dim=mfcc_dim, max_duration=max_duration,
-        sort_by_duration=sort_by_duration)
-    # Load the datasets
-    audio_gen.load_train_data(train_json)
-    audio_gen.load_validation_data(valid_json)  
-    # Calculate steps per epoch
-    num_train_examples=len(audio_gen.train_audio_paths)
-    steps_per_epoch = num_train_examples//minibatch_size
-    # Calculate validation steps
-    num_valid_samples = len(audio_gen.valid_audio_paths) 
-    validation_steps = num_valid_samples//minibatch_size    
-    # Add custom CTC loss function to the nn
-    model = add_ctc_loss(input_to_softmax)
-    # Dummy lambda function for loss since CTC loss is implemented above
-    model.compile(loss={'ctc': lambda y_true, y_pred: y_pred}, optimizer=optimizer)
-    # Make  initial results/ directory for saving model pickles
-    if not os.path.exists('results'):
-        os.makedirs('results')
-    # Add callbacks
-    checkpointer = ModelCheckpoint(filepath='results/'+save_model_path, verbose=0)
-    terminator = callbacks.TerminateOnNaN()
-    time_machiner = callbacks.History()
-    logger = callbacks.CSVLogger('training.log')
-    tensor_boarder = callbacks.TensorBoard(log_dir='./logs', batch_size=16,
-                                          write_graph=True, write_grads=True, write_images=True,)
-    # Fit/train model
-    hist = model.fit_generator(generator=audio_gen.next_train(), steps_per_epoch=steps_per_epoch,
-        epochs=epochs, validation_data=audio_gen.next_valid(), validation_steps=validation_steps,
-        callbacks=[checkpointer, terminator, logger, time_machiner, tensor_boarder], verbose=verbose)
-    # Save model loss
-    with open('results/'+pickle_path, 'wb') as f:
-        pickle.dump(hist.history, f)
-
 # Creating a TensorFlow session
 from keras.backend.tensorflow_backend import set_session
 config = tf.ConfigProto()
 #config.gpu_options.allow_growth = True
-config.gpu_options.per_process_gpu_memory_fraction = 0.3
+config.gpu_options.per_process_gpu_memory_fraction = 0.1
 set_session(tf.Session(config=config))
 
 def keras_model(input_dim, filters, activation, kernel_size, conv_stride,
@@ -642,9 +527,60 @@ model_8 = keras_model(input_dim=161, # 161 for Spectrogram/13 for MFCC
                       recur_layers=2,
                       units=256)
 
+def hey_jetson(input_dim, filters, activation, kernel_size, conv_stride,
+    conv_border_mode, recur_layers, dilation_rate, units, conv_layers, output_dim=29):
+    # Input
+    input_data = Input(name='the_input', shape=(None, input_dim))
+    # Convolutional layer
+    conv_1d = Conv1D(filters, kernel_size, 
+                     strides=conv_stride, 
+                     padding=conv_border_mode,
+                     activation=activation,
+                     name='conv1d')(input_data)
+    # Batch normalization
+    bn_cnn = BatchNormalization()(conv_1d)
+    for i in range(conv_layers - 1):
+        conv_1d = Conv1D(filters, kernel_size,
+                         padding=conv_border_mode,
+                         activation=activation,
+                         dilation_rate=2**i,
+                         name="conv_1d_"+str(i))(bn_cnn)
+        bn_cnn = BatchNormalization()(conv_1d)
+    # Bidirectional recurrent layer
+    brnn = Bidirectional(GRU(units, activation=activation, 
+        return_sequences=True, implementation=2, recurrent_dropout=0.01, name='brnn'))(bn_cnn)
+    # Batch normalization 
+    bn_rnn = BatchNormalization()(brnn)
+    # Loop for additional layers
+    for i in range(recur_layers - 1):
+        name = 'brnn_' + str(i + 1)
+        brnn = Bidirectional(GRU(units, activation=activation, 
+        return_sequences=True, implementation=2, name=name))(bn_rnn)
+        bn_rnn = BatchNormalization()(brnn)
+    # TimeDistributed Dense layer
+    time_distributed_dense = TimeDistributed(Dense(1024))(bn_rnn)
+    time_dense = TimeDistributed(Dense(output_dim))(time_distributed_dense)
+    # Softmax activation layer
+    y_pred = Activation('softmax', name='softmax')(time_dense)
+    # Specifying the model
+    model = Model(inputs=input_data, outputs=y_pred)
+    model.output_length = lambda x: cnn_output_length(
+        x, kernel_size, conv_border_mode, conv_stride)
+    return model
+
+model_10 = hey_jetson(input_dim=161, # 161 for Spectrogram/13 for MFCC
+                     filters=256,
+                     activation='relu',
+                     kernel_size=5, 
+                     conv_stride=2,
+                     recur_layers=7,
+                     conv_border_mode='causal',
+                     conv_layers=3,
+                     dilation_rate=2,
+                     units=256)
+
 def get_ground_truth(index, partition, input_to_softmax, model_path):
-    
-    # Load the train and test data
+    # Load the train, validation, and test data
     data_gen = AudioGenerator(spectrogram = spectrogram)
     data_gen.load_validation_data()
     data_gen.load_test_data()
@@ -664,8 +600,7 @@ def get_ground_truth(index, partition, input_to_softmax, model_path):
     return transcription
 
 def get_prediction(index, partition, input_to_softmax, model_path):
-    
-    # Load the train and test data
+    # Load the train, validation, and test data
     data_gen = AudioGenerator(spectrogram = spectrogram)
     data_gen.load_validation_data()
     data_gen.load_test_data()
@@ -694,3 +629,156 @@ def get_prediction(index, partition, input_to_softmax, model_path):
     # Display predicted transcripted.
     prediction_transcription = ''.join(int_seq_to_text(pred_ints))
     return prediction_transcription
+
+def run_inference(audio_path, input_to_softmax, model_path):
+    # Load the audio
+    data_gen = AudioGenerator(spectrogram = spectrogram)
+    data_gen.load_validation_data()
+    data_gen.load_test_data()
+    data_gen.load_train_data()
+    data_point = data_gen.normalize(data_gen.featurize(audio_path))
+        
+    # Obtain predictions
+    input_to_softmax.load_weights(model_path)
+    prediction = input_to_softmax.predict(np.expand_dims(data_point, axis=0))
+    output_length = [input_to_softmax.output_length(data_point.shape[0])] 
+    pred_ints = (K.eval(K.ctc_decode(
+                prediction, output_length)[0][0])+1).flatten().tolist()
+    
+    # Display predicted transcripted.
+    prediction_transcription = ''.join(int_seq_to_text(pred_ints))
+    return prediction_transcription
+
+def inference_vis_audio_features(index):
+# Function for visualizing a single audio file based on index chosen
+    audio_gen = AudioGenerator(spectrogram=True)
+    vis_audio_path = index
+    vis_spectrogram_feature = audio_gen.normalize(audio_gen.featurize(vis_audio_path))
+    sample_rate, samples = wav.read(vis_audio_path)
+    return vis_spectrogram_feature, sample_rate, samples
+
+def azure_inference(index, partition):
+    # Load the audio
+    data_gen = AudioGenerator(spectrogram=True)
+    data_gen.load_train_data()
+    data_gen.load_validation_data()
+    data_gen.load_test_data()
+    # Identify the path for the audio file
+    if partition == 'validation':
+        audio_path = data_gen.valid_audio_paths[index]
+    elif partition == 'test':
+        audio_path = data_gen.test_audio_paths[index]
+    elif partition == 'train':
+        audio_path = data_gen.train_audio_paths[index]
+    # Return the file path
+    return audio_path
+
+# Plot for the raw audio signal
+def plot_raw_audio(sample_rate, samples):
+    time = np.arange(0, float(samples.shape[0]), 1) / sample_rate
+    fig = plt.figure(figsize=(6,3))
+    ax = fig.add_subplot(111)
+    ax.plot(time, samples, linewidth=1, alpha=0.7, color='#512da8')
+    plt.title('Raw Audio Signal')
+    plt.xlabel('Time')
+    plt.ylabel('Amplitude')
+    figfile1 = BytesIO()
+    plt.savefig(figfile1, format='png')
+    figfile1.seek(0)
+    raw_plot = base64.b64encode(figfile1.getvalue())
+    return raw_plot.decode('utf8')
+
+# Plot for normalized spectrogram
+def plot_spectrogram_feature(vis_spectrogram_feature):
+    fig = plt.figure(figsize=(6,3))
+    ax1 = fig.add_subplot(111)
+    im = ax1.imshow(vis_spectrogram_feature.T, cmap=plt.cm.viridis, aspect='auto', origin='lower')
+    plt.title('Log Spectrogram')
+    plt.ylabel('Frequency')
+    plt.xlabel('Time (s)')
+    divider = make_axes_locatable(ax1)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    figfile2 = BytesIO()
+    plt.savefig(figfile2, format='png')
+    figfile2.seek(0)
+    spectrogram_plot = base64.b64encode(figfile2.getvalue())
+    return spectrogram_plot.decode('utf8')
+
+def log_spectrogram_feature(samples, sample_rate, window_size=20, step_size=10, eps=1e-14):
+    nperseg = int(round(window_size * sample_rate / 1e3))
+    noverlap = int(round(step_size * sample_rate / 1e3))
+    freqs, times, spec = signal.spectrogram(samples,
+                                    fs=sample_rate,
+                                    window='hann',
+                                    nperseg=nperseg,
+                                    noverlap=noverlap,
+                                    detrend=False)
+    freqs = (freqs*2)
+    return freqs, times, np.log(spec.T.astype(np.float64) + eps)
+
+# 2nd plot for normalized spectrogram
+def plot_log_spectrogram_feature(freqs, times, log_spectrogram):
+    fig = plt.figure(figsize=(6,3))
+    ax2 = fig.add_subplot(111)
+    ax2.imshow(log_spectrogram.T, aspect='auto', origin='lower', cmap=plt.cm.viridis, 
+               extent=[times.min(), times.max(), freqs.min(), freqs.max()])
+    ax2.set_yticks(freqs[::20])
+    ax2.set_xticks(times[::20])
+    ax2.set_title('Normalized Log Spectrogram')
+    ax2.set_ylabel('Frequency')
+    ax2.set_xlabel('Time (s)')
+    figfile3 = BytesIO()
+    plt.savefig(figfile3, format='png')
+    figfile3.seek(0)
+    log_spectrogram_plot = base64.b64encode(figfile3.getvalue())
+    return log_spectrogram_plot.decode('utf8')
+
+# Plot a normalized MFCC feature
+def plot_mfcc_feature(vis_mfcc_feature):
+    fig = plt.figure(figsize=(6,3))
+    ax = fig.add_subplot(111)
+    im = ax.imshow(vis_mfcc_feature, cmap=plt.cm.viridis, aspect='auto')
+    plt.title('Normalized MFCC')
+    plt.ylabel('Time')
+    plt.xlabel('MFCC Coefficient')
+    divider = make_axes_locatable(ax)
+    cax = divider.append_axes("right", size="5%", pad=0.05)
+    plt.colorbar(im, cax=cax)
+    ax.set_xticks(np.arange(0, 13, 2), minor=False);
+    figfile4 = BytesIO()
+    plt.savefig(figfile4, format='png')
+    figfile4.seek(0)
+    mfcc_plot = base64.b64encode(figfile4.getvalue())
+    return mfcc_plot.decode('utf8')
+
+# Function to calcualte word error rate
+def wer_calc(ref, pred):
+    d = np.zeros((len(ref) + 1) * (len(pred) + 1), dtype=np.uint16)
+    d = d.reshape((len(ref) + 1, len(pred) + 1))
+    for i in range(len(ref) + 1):
+        for j in range(len(pred) + 1):
+            if i == 0:
+                d[0][j] = j
+            elif j == 0:
+                d[i][0] = i
+    for i in range(1, len(ref) + 1):
+        for j in range(1, len(pred) + 1):
+            if ref[i - 1] == pred[j - 1]:
+                d[i][j] = d[i - 1][j - 1]
+            else:
+                substitution = d[i - 1][j - 1] + 1
+                insertion = d[i][j - 1] + 1
+                deletion = d[i - 1][j] + 1
+                d[i][j] = min(substitution, insertion, deletion)
+    result = float(d[len(ref)][len(pred)]) / len(ref) * 100
+    return result
+
+# Generator to read a file piece by piece. Default chunk size: 1k
+def read_in_chunks(file_object, blocksize=1024, chunks=-1):
+    while chunks:
+        data = file_object.read(blocksize)
+        if not data:
+            break
+        yield data
+        chunks -= 1

@@ -1,0 +1,59 @@
+{% extends "analysis.html" %}
+
+{% block usr_input %}
+	<h2 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Sentiment Engine</h2>
+	<div class="mdl-cell mdl-cell--12-col">Select an instance to run sentiment analysis on. Valid indexes are:
+		<br>Validation set: 0-4277
+		<br>Test set: 0-4176
+	</div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<form method="POST" action="">
+			{{ sentiment_form.csrf_token }}
+			{{ sentiment_form.sent_model_number.label }} {{ sentiment_form.sent_model_number() }}
+			<br>
+			{{ sentiment_form.sent_partition.label }} {{ sentiment_form.sent_partition() }}
+			<br>
+			{{ sentiment_form.sent_instance_number.label }} {{ sentiment_form.sent_instance_number() }}
+			<br>
+			{{ sentiment_form.sent_submit() }}
+		</form>
+	</div>
+{% endblock %}
+
+{% block audio_player %}
+{% if play_audio != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Playing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col">
+		<audio controls>
+			<source src={{ play_audio }}>
+				Your browser does not support the HTML5 audio element.
+		</audio>
+	</div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block transcriptions %}
+{% if prediction_transcription != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Transcribing The Audio File</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Ground Truth Transcription: </h4><h5>{{ truth_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Predicted Transcription: </h4><h5>{{ prediction_transcription }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Predicted Transcription: </h4><h5>{{ lexical }}</h5></div>
+{%else%}
+{% endif %}
+{% endblock %}
+
+{% block sentiment_analysis %}
+{% if prediction_transcription != None %}
+	<h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Sentiment Analysis</h3>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Ground Truth Sentiment: </h4><h5>{{ truth_score }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Hey, Jetson! Sentiment: </h4><h5>{{ prediction_score }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col"><h4>Cortana Sentiment: </h4><h5>{{ cortana_score }}</h5></div>
+	<div class="mdl-cell mdl-cell--12-col">
+		<p>
+			The sentiment score for a document is between $0$ and $1$. Scores close to 1 indicate positive sentiment, while scores close to 0 indicate negative sentiment. A score of 0.5 indicates the lack of sentiment. The sentiment engine was developed using Microsoft's Cognitive Services Text Analytics API to allow users to assess how sentiment analysis can be conducted on the model's predicted transcriptions to begin to derive a measure of conversational and therapeutic interactions. It is hypothesized that sentiment analysis could be useful in determining whether or not someone is responding positively to a therapeutic intervention as the content of their responses may be more positive rather than negative.
+		</p>
+	</div>
+{%else%}
+{% endif %}
+{% endblock %}
