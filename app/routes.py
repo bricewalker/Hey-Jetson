@@ -513,7 +513,7 @@ def about():
     spectrogram_3d = None
     # Creating variables for 3d spectrogram plot
     vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=np.random.randint(0, 4176), partition='test')
-    freqs, times, log_spectrogram = log_spectrogram_feature(samples, sample_rate)
+    freqs, times, log_spectrogram = make_predictions.log_spectrogram_feature(samples, sample_rate)
     mean = np.mean(log_spectrogram, axis=0)
     std = np.std(log_spectrogram, axis=0)
     log_spectrogram = (log_spectrogram - mean) / std
