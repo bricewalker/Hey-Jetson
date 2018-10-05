@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Hey, Jetson! Automatic Speech Recogntion Inference with TensorFlow/Keras on the Nvidia Netson">
+    <meta name="description" content="Hey, Jetson! Automatic Speech Recogntion Inference with TensorFlow/Keras on the Nvidia Jetson">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
     <title>Hey, Jetson!</title>
     <meta name="author" content="Brice Walker">
@@ -83,7 +83,7 @@
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">About</h3>
                             <div class="mdl-cell mdl-cell--6-col">
                                 <p>
-                                    The inference engine on this website allows you to test real time speech recognition inference on an ubuntu server instance with an Nvidia GPU. The model consists of 3 layers of 256 convolutional neurons, 7 layers of 512 bidirectional recurrent neurons, and 2 layers of time distributed dense neurons. The model was trained using Keras/Tensorflow on an Nvidia GTX 1070 GPU and deployed on an Nvidia Jetson based web server using flask in python.
+                                    The inference engine on this website allows you to test real time speech recognition inference on an Nvidia Jetson. The model consists of 3 layers of 256 convolutional neurons, 7 layers of 512 bidirectional recurrent neurons, and 2 layers of time distributed dense neurons. The model was trained using Keras/Tensorflow on an Nvidia GTX 1070 GPU and deployed on an Nvidia Jetson based web server using flask in python.
                                 </p>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
@@ -92,14 +92,14 @@
                             <div class="mdl-cell mdl-cell--6-col">
                                 <a href="https://github.com/bricewalker/Hey-Jetson">
                                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                        View full project on Github
+                                        Github
                                     </button>
                                 </a>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
                                 <a href="https://nbviewer.jupyter.org/github/bricewalker/Hey-Jetson/blob/master/Speech.ipynb">
                                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                        View full project on nbviewer
+                                        nbviewer
                                     </button>
                                 </a>
                             </div>
@@ -168,7 +168,7 @@
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Model Architecture</h3>
                             <div class="mdl-cell mdl-cell--12-col">
                                 <p>
-                                    <a href="{{ url_for('static', filename='images/model_10.png') }}">Click here to view a graph of the model.</a>
+                                    <a href="{{ url_for('static', filename='images/model_10.png') }}">Model Graph.</a>
                                 </p>
                                 <p>
                                     With each epoch taking around 5 hours and 10 minutes to train using spectrograms, the total training time on an Nvidia GTX1070(8GB) for the final model architecture was roughly 6.5 days.
@@ -246,7 +246,7 @@
                             <div class="mdl-cell mdl-cell--12-col">
                                 <a href="https://github.com/bricewalker/Hey-Jetson">
                                     <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                                        Download the code and contribute or run the model yourself!
+                                        Github
                                     </button>
                                 </a>
                             </div>
