@@ -78,6 +78,33 @@ import make_predictions
 np.random.seed(95)
 RNG_SEED = 95
 
+from azure.keyvault import KeyVaultClient, KeyVaultAuthentication
+from azure.common.credentials import ServicePrincipalCredentials
+
+credentials = None
+
+AZURE_TENANT_ID = '89dd8617-dd08-49d6-a072-bf0b4cc27084'
+AZURE_CLIENT_ID = '0db1e353-1aa2-4bc2-838d-7511578ca2bd'
+AZURE_CLIENT_OID = '18be8686-9958-4cf5-9ccd-cde327077606'
+AZURE_CLIENT_SECRET = 'h81+5KGSgbcazglgQNAvV9voor6SmDABW79km97aZrk='
+AZURE_SUBSCRIPTION_ID = '397f6ac2-359d-4e8f-9712-eb8f4930dfe6'
+
+def auth_callback(server, resource, scope):
+    credentials = ServicePrincipalCredentials(
+        client_id = AZURE_CLIENT_ID,
+        secret = AZURE_CLIENT_SECRET,
+        tenant = AZURE_TENANT_ID,
+        resource = "https://vault.azure.net"
+    )
+    token = credentials.token
+    return token['token_type'], token['access_token']
+
+client = KeyVaultClient(KeyVaultAuthentication(auth_callback))
+
+secret_bundle = client.get_secret("https://VAULT_ID.vault.azure.net/", "SECRET_ID", "SECRET_VERSION")
+
+print(secret_bundle.value)
+
 # Microsoft Cognitive Services Speech API parameters
 SUBSCRIPTION_KEY = 'YOUR_AZURE_SPEECH_API_KEY'
 assert SUBSCRIPTION_KEY
