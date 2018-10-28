@@ -67,8 +67,6 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Visualization imports
-import IPython.display as ipd
-from IPython.display import Markdown, display, Audio
 import matplotlib.pyplot as plt
 import seaborn as sns
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
