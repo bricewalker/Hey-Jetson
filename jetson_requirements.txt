@@ -88,7 +88,7 @@ python-speech-features==0.6
 python-systemd==231
 pytz==2014.10
 pyxdg==0.25
-PyYAML==3.12
+PyYAML==4.2b1
 pyzmq==17.0.0
 qtconsole==4.3.1
 reportlab==3.3.0
