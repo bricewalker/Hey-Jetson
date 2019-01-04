@@ -128,7 +128,7 @@ pyparsing==2.2.2
 python-dateutil==2.7.5
 python-speech-features==0.6
 pytz==2018.6
-PyYAML==3.13
+PyYAML==4.2b1
 requests==2.20.0
 requests-oauthlib==1.0.0
 retrying==1.3.3
