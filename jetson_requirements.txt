@@ -35,7 +35,7 @@ ipython-genutils==0.2.0
 ipywidgets==7.1.2
 itsdangerous==0.24
 jedi==0.11.1
-Jinja2==2.8
+Jinja2==2.10.1
 joblib==0.11
 jsonschema==2.6.0
 jupyter==1.0.0
