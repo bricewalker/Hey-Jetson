@@ -6,9 +6,9 @@
 
 ![audio](app/static/images/raw.png)
 
-This project builds a scalable speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This real-world application of automatic speech recognition was inspired by my previous career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent was to build a tool that can give therapists real time feedback on the efficacy of their interventions, but on-device speech recognition has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
+This project builds a scalable attention based speech recognition platform in Keras/Tensorflow for inference on the Nvidia Jetson Embedded Computing Platform for AI at the Edge. This real-world application of automatic speech recognition was inspired by my previous career in mental health. This project begins a journey towards building a platform for real time therapeutic intervention inference and feedback. The ultimate intent was to build a tool that can give therapists real time feedback on the efficacy of their interventions, but on-device speech recognition has many applications in mobile, robotics, or other areas where cloud based deep learning is not desirable.
 
-The final production model consists of a deep neural network with 3 layers of dilated convolutional neurons, 7 layers of bidirectional recurrent neurons (GRU cells), and 2 layers of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, dilated convolutions, dropout, and bidirectional layers. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 6.5 days. The overall cosine similarity of the model's predictions with the ground truth transcriptions in the test set is about 78% (80% on validation set), while the overall word error rate is around 18% on the test set (16% on the validation set).
+The final production model consists of a deep neural network with 3 layers of dilated convolutional neurons, 7 layers of bidirectional recurrent neurons (GRU cells), a single attention layer and 2 layers of time distributed dense neurons. This model makes use of a CTC loss function, the Adam optimizer, batch normalization, dilated convolutions, recurrent dropout, bidirectional layers, and attention based mechanisms. The model was trained on an Nvidia GTX1070(8G) GPU for 30 epochs for a total training time of roughly 6.5 days. The overall cosine similarity of the model's predictions with the ground truth transcriptions in the test set is about 78% (80% on validation set), while the overall word error rate is around 18% on the test set (16% on the validation set).
 
 This project also includes a flask web server for deploying an applied speech inference engine using a REST API.
 
@@ -343,6 +343,12 @@ My RNN explores the use of layers of Long-Short Term Memory Cells and Gated Recu
 ### Bidirectional Layers
 This project explores connecting two hidden layers of opposite directions to the same output, making their future input information reachable from the current state. To put it simply, this creates two layers of neurons; 1 that goes through the sequence forward in time and 1 that goes through it backward through time. This allows the output layer to get information from past and future states meaning that it will have knowledge of the letters located before and after the current utterance. This can lead to great improvements in performance but comes at a cost of increased latency.
 
+### Recurrent Dropout
+This model also employs randomized dropout of units to prevent the model from over fitting.
+
+### Attention Mechanism
+The decoder portion of the model includes the ability to "attend" to different parts of the audio clip at each time step. This lets the model learn what to pay attention to based on the input and what it has predicted the output to be so far. Attention allows the network to refer back to the input sequence by giving the network access to its internal memory, which is the hidden state of the encoder (the RNN layers).
+
 ### Time Distributed Dense Layers
 The ASR model explores the addition of layers of normal Dense neurons to every temporal slice of the input sequence. 
 
@@ -384,7 +390,7 @@ Next steps for this project, and things you can try on your own, include:
 - Train the model on other languages, like [Baidu's Deep Speech 2](resources/deepspeech2.pdf).
 - Try out a [transducer model](resources/transducers.pdf), like Baidu is doing in [Deep Speech 3](http://research.baidu.com/deep-speech-3%EF%BC%9Aexploring-neural-transducers-end-end-speech-recognition/).
 - Build a more traditional [encoder/decoder](resources/encoderdecoder.pdf) model as outlined by [Lu et al](resources/encoderdecoder2.pdf). 
-- Add [attention](http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/) or other [augmentation methods](https://distill.pub/2016/augmented-rnns/) to the model.
+- Add other [augmentation methods](https://distill.pub/2016/augmented-rnns/) besides just attention to the model.
 - Add [peephole connections](resources/peepholes.pdf) to the [LSTM cells](https://www.tensorflow.org/api_docs/python/tf/contrib/rnn/LSTMCell).
 - Add a [Hidden Markov Model](resources/hmm.pdf)/[Gaussian Mixture Model](resources/gmm.pdf).
 - Use a pretrained language model like this one from [kaldi](http://www.kaldi-asr.org/downloads/build/6/trunk/egs/).

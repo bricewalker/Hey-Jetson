@@ -9,8 +9,6 @@
 	<div class="mdl-cell mdl-cell--12-col">
 		<form method="POST" action="">
 			{{ performance_form.csrf_token }}
-			{{ performance_form.perf_model_number.label }} {{ performance_form.perf_model_number() }}
-			<br>
 			{{ performance_form.perf_partition.label }} {{ performance_form.perf_partition() }}
 			<br>
 			{{ performance_form.perf_instance_number.label }} {{ performance_form.perf_instance_number() }}

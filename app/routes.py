@@ -1,7 +1,7 @@
 # This is the primary script for defining the routes for the flask web app
 
 # Flask package imports
-from flask import Flask, jsonify, request, render_template, session, redirect, url_for, send_from_directory, Markup, abort
+from flask import Flask, jsonify, request, render_template, session, redirect, url_for, send_from_directory, Markup, abort, send_file, make_response
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 from flask_wtf import FlaskForm
@@ -62,7 +62,6 @@ from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 from matplotlib.dates import DateFormatter
-from flask import Flask, render_template, send_file, make_response, request
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
 
@@ -74,36 +73,32 @@ sns.set_style('darkgrid')
 from app import app
 import make_predictions
 
-# Setting random seeds
-np.random.seed(95)
-RNG_SEED = 95
+# from azure.keyvault import KeyVaultClient, KeyVaultAuthentication
+# from azure.common.credentials import ServicePrincipalCredentials
 
-from azure.keyvault import KeyVaultClient, KeyVaultAuthentication
-from azure.common.credentials import ServicePrincipalCredentials
+# credentials = None
 
-credentials = None
+# AZURE_TENANT_ID = ''
+# AZURE_CLIENT_ID = ''
+# AZURE_CLIENT_OID = ''
+# AZURE_CLIENT_SECRET = ''
+# AZURE_SUBSCRIPTION_ID = ''
 
-AZURE_TENANT_ID = '89dd8617-dd08-49d6-a072-bf0b4cc27084'
-AZURE_CLIENT_ID = '0db1e353-1aa2-4bc2-838d-7511578ca2bd'
-AZURE_CLIENT_OID = '18be8686-9958-4cf5-9ccd-cde327077606'
-AZURE_CLIENT_SECRET = 'h81+5KGSgbcazglgQNAvV9voor6SmDABW79km97aZrk='
-AZURE_SUBSCRIPTION_ID = '397f6ac2-359d-4e8f-9712-eb8f4930dfe6'
+# def auth_callback(server, resource, scope):
+#     credentials = ServicePrincipalCredentials(
+#         client_id = AZURE_CLIENT_ID,
+#         secret = AZURE_CLIENT_SECRET,
+#         tenant = AZURE_TENANT_ID,
+#         resource = "https://vault.azure.net/"
+#     )
+#     token = credentials.token
+#     return token['token_type'], token['access_token']
 
-def auth_callback(server, resource, scope):
-    credentials = ServicePrincipalCredentials(
-        client_id = AZURE_CLIENT_ID,
-        secret = AZURE_CLIENT_SECRET,
-        tenant = AZURE_TENANT_ID,
-        resource = "https://vault.azure.net"
-    )
-    token = credentials.token
-    return token['token_type'], token['access_token']
+# client = KeyVaultClient(KeyVaultAuthentication(auth_callback))
 
-client = KeyVaultClient(KeyVaultAuthentication(auth_callback))
+# secret_bundle = client.get_secret("", AZURE_CLIENT_SECRET, 1)
 
-secret_bundle = client.get_secret("https://VAULT_ID.vault.azure.net/", "SECRET_ID", "SECRET_VERSION")
-
-print(secret_bundle.value)
+# print(secret_bundle.value)
 
 # Microsoft Cognitive Services Speech API parameters
 SUBSCRIPTION_KEY = 'YOUR_AZURE_SPEECH_API_KEY'
@@ -111,15 +106,17 @@ assert SUBSCRIPTION_KEY
 headers = {
            'Transfer-Encoding': 'chunked',
            'Ocp-Apim-Subscription-Key': SUBSCRIPTION_KEY,
-           'Content-type': 'audio/wav; codec=audio/pcm; samplerate=16000'
+           'Content-type': 'audio/wav; codec=audio/pcm; samplerate=16000',
+           'Accept': 'application/json'
           }
 
-params = (('language', 'en-us'), ('format', 'detailed'),)
+params = (('language', 'en-us'), ('format', 'detailed'), ('profanity', 'raw'))
+speech_api_url = 'https://westus2.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1'
 
 # Microsoft Cognitive Services Text Analytics API parameters
 SUB_KEY = 'YOUR_AZURE_TEXT_API_KEY'
 assert SUB_KEY
-text_analytics_base_url = "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/"
+text_analytics_base_url = "https://westus2.api.cognitive.microsoft.com/text/analytics/v2.0/"
 language_api_url = text_analytics_base_url + "languages"
 sentiment_api_url = text_analytics_base_url + "sentiment"
 key_phrase_api_url = text_analytics_base_url + "keyPhrases"
@@ -133,21 +130,18 @@ class AudioForm(FlaskForm):
 
 # Flask wtform to collect user input data for visualization engine
 class VisualizationForm(FlaskForm):
-    viz_model_number = SelectField('Select model:', choices=[('model_10', 'model_10'), ('model_8', 'model_8')], coerce=str)
     viz_partition = SelectField('Select data partition:', choices=[('validation', 'validation'), ('test', 'test')], coerce=str)
     viz_instance_number = IntegerField('Enter individual instance number:', validators=[Required()])
     viz_submit = SubmitField('Submit')
 
 # Flask wtform to collect user input data for performance engine
 class PerformanceForm(FlaskForm):
-    perf_model_number = SelectField('Select model:', choices=[('model_10', 'model_10'), ('model_8', 'model_8')], coerce=str)
     perf_partition = SelectField('Select data partition:', choices=[('validation', 'validation'), ('test', 'test')], coerce=str)
     perf_instance_number = IntegerField('Enter individual instance number:', validators=[Required()])
     perf_submit = SubmitField('Submit')
 
 # Flask wtform to collect user input data for sentiment engine
 class SentimentForm(FlaskForm):
-    sent_model_number = SelectField('Select model:', choices=[('model_10', 'model_10'), ('model_8', 'model_8')], coerce=str)
     sent_partition = SelectField('Select data partition:', choices=[('validation', 'validation'), ('test', 'test')], coerce=str)
     sent_instance_number = IntegerField('Enter individual instance number:', validators=[Required()])
     sent_submit = SubmitField('Submit')
@@ -205,7 +199,7 @@ def index():
         # Connecting to Microsoft Speech API for Cortana's predicted transcription 
         c_start = time.time()
         audiofile =  open(filename, 'rb')
-        response = requests.post('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1', headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
+        response = requests.post(speech_api_url, headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
         cortana_transcription = response.content
         c_end = time.time()
         cortana_time_to_predict = c_end - c_start
@@ -221,7 +215,7 @@ def index():
         display = val["NBest"][0]["Display"]
         # Producing Hey, Jetson! predicted transcription
         s_start = time.time()
-        prediction_transcription = make_predictions.run_inference(audio_path=filename, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
+        prediction_transcription = make_predictions.run_inference(audio_path=filename)
         s_end = time.time()
         jetson_time_to_predict = s_end - s_start
         vis_spectrogram_feature, sample_rate, samples = make_predictions.inference_vis_audio_features(index=filename)
@@ -303,16 +297,11 @@ def visualization():
 
     # Form for visualization engine
     if visualization_form.validate_on_submit():
-        v_model_number = visualization_form.viz_model_number.data
         v_partition = visualization_form.viz_partition.data
         v_instance_number = visualization_form.viz_instance_number.data
         # Get ground truth and predicted transcriptions
-        if v_model_number == 'model_10':
-            truth_transcription = make_predictions.get_ground_truth(index=v_instance_number, partition=v_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-            prediction_transcription = make_predictions.get_prediction(index=v_instance_number, partition=v_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-        else:
-            truth_transcription = make_predictions.get_ground_truth(index=v_instance_number, partition=v_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
-            prediction_transcription = make_predictions.get_prediction(index=v_instance_number, partition=v_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
+        truth_transcription = make_predictions.get_ground_truth(index=v_instance_number, partition=v_partition)
+        prediction_transcription = make_predictions.get_prediction(index=v_instance_number, partition=v_partition)
         # Get features for visualizations
         vis_text, vis_spectrogram_feature, vis_audio_path, sample_rate, samples = make_predictions.vis_audio_features(index=v_instance_number, partition=v_partition)
         # Plot the audio waveform
@@ -344,8 +333,7 @@ def visualization():
         # Connecting to Microsoft Speech API for Cortana's predicted transcription
         filepath = make_predictions.azure_inference(index=v_instance_number, partition=v_partition)
         audiofile =  open(filepath, 'rb')
-        response = requests.post('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1',
-                                 headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
+        response = requests.post(speech_api_url, headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
         cortana_transcription = response.content
         val = json.loads(response.text)
         recognitionstatus = val["RecognitionStatus"]
@@ -393,22 +381,14 @@ def performance():
 
     # Form for performance engine
     if performance_form.validate_on_submit():
-        p_model_number = performance_form.perf_model_number.data
         p_partition = performance_form.perf_partition.data
         p_instance_number = performance_form.perf_instance_number.data
         # Get ground truth and predicted transcriptions
-        if p_model_number == 'model_10':
-            truth_transcription = make_predictions.get_ground_truth(index=p_instance_number, partition=p_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-            start = time.time()
-            prediction_transcription = make_predictions.get_prediction(index=p_instance_number, partition=p_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-            end = time.time()
-            jetson_time_to_predict = end - start
-        else:
-            truth_transcription = make_predictions.get_ground_truth(index=p_instance_number, partition=p_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
-            start = time.time()
-            prediction_transcription = make_predictions.get_prediction(index=p_instance_number, partition=p_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
-            end = time.time()
-            jetson_time_to_predict = end - start
+        truth_transcription = make_predictions.get_ground_truth(index=p_instance_number, partition=p_partition)
+        start = time.time()
+        prediction_transcription = make_predictions.get_prediction(index=p_instance_number, partition=p_partition)
+        end = time.time()
+        jetson_time_to_predict = end - start
         # Calculate cosine similarity of individual transcriptions using Count Vectorizer
         cv = CountVectorizer()
         cv_ground_truth_vec = cv.fit_transform([truth_transcription])
@@ -425,8 +405,7 @@ def performance():
         c_start = time.time()
         filepath = make_predictions.azure_inference(index=p_instance_number, partition=p_partition)
         audiofile =  open(filepath, 'rb')
-        response = requests.post('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1',
-                                 headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
+        response = requests.post(speech_api_url, headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
         cortana_transcription = response.content
         c_end = time.time()
         cortana_time_to_predict = c_end - c_start
@@ -483,21 +462,15 @@ def sentiment():
 
     # Form for sentiment engine
     if sentiment_form.validate_on_submit():
-        s_model_number = sentiment_form.sent_model_number.data
         s_partition = sentiment_form.sent_partition.data
         s_instance_number = sentiment_form.sent_instance_number.data
         # Get ground truth and predicted transcriptions
-        if s_model_number == 'model_10':
-            truth_transcription = make_predictions.get_ground_truth(index=s_instance_number, partition=s_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-            prediction_transcription = make_predictions.get_prediction(index=s_instance_number, partition=s_partition, input_to_softmax=make_predictions.model_10, model_path='./results/model_10.h5')
-        else:
-            truth_transcription = make_predictions.get_ground_truth(index=s_instance_number, partition=s_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
-            prediction_transcription = make_predictions.get_prediction(index=s_instance_number, partition=s_partition, input_to_softmax=make_predictions.model_8, model_path='./results/model_8.h5')
+        truth_transcription = make_predictions.get_ground_truth(index=s_instance_number, partition=s_partition)
+        prediction_transcription = make_predictions.get_prediction(index=s_instance_number, partition=s_partition)
         # Connecting to Microsoft Speech API for Cortana's predicted transcription
         filepath = make_predictions.azure_inference(index=s_instance_number, partition=s_partition)
         audiofile =  open(filepath, 'rb')
-        response = requests.post('https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1',
-                                 headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
+        response = requests.post(speech_api_url, headers=headers, params=params, data=make_predictions.read_in_chunks(audiofile))
         cortana_transcription = response.content
         val = json.loads(response.text)
         recognitionstatus = val["RecognitionStatus"]

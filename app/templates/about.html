@@ -77,13 +77,13 @@
                         </div>
                         <div class="mdl-card__supporting-text">
                             <strong>Includes:</strong>
-                                <span>Ubuntu, Python, Anaconda, HTML, CSS, JavaScript, VS Code, Jupyter Notebook, Keras, TensorFlow, Sci-kit Learn, matplotlib, seaborn, Azure Cognitive Services Speech API, gunicorn, CUDA, cuDNN, NGINX, Supervisor, & Certbot</span>
+                                <span>Ubuntu, Python, Anaconda, HTML, CSS, JavaScript, VS Code, Jupyter Notebook, Keras, TensorFlow, Sci-kit Learn, matplotlib, seaborn, Azure Cognitive Services, gunicorn, CUDA, cuDNN, NGINX, Supervisor, & Certbot</span>
                         </div>
                         <div class="mdl-grid portfolio-copy">
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">About</h3>
                             <div class="mdl-cell mdl-cell--6-col">
                                 <p>
-                                    The inference engine on this website allows you to test real time speech recognition inference on an Nvidia Jetson. The model consists of 3 layers of 256 convolutional neurons, 7 layers of 512 bidirectional recurrent neurons, and 2 layers of time distributed dense neurons. The model was trained using Keras/Tensorflow on an Nvidia GTX 1070 GPU and deployed on an Nvidia Jetson based web server using flask in python.
+                                    The inference engine on this website allows you to test real time speech recognition inference using a deep neural network on an Nvidia Jetson. The model consists of 3 layers of 256 convolutional neurons, 7 layers of 512 bidirectional recurrent neurons, an attention mechanism, and 2 layers of time distributed dense neurons. The model was trained using Keras/Tensorflow on an Nvidia GTX 1070 GPU and deployed on an Nvidia Jetson based web server using flask in python.
                                 </p>
                             </div>
                             <div class="mdl-cell mdl-cell--6-col">
@@ -106,13 +106,13 @@
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Scope</h3>
                             <div class="mdl-cell mdl-cell--12-col">
                                 <p>
-                                    The initial idea for this project was to explore the possibility of building a speech recognition platform that could identify keywords in conversational speech, link them to therapeutic interventions and then conduct sentiment or emotion analysis to give real time feedback on client responses to cognitive behavioral talk therapy interventions.
+                                    The initial idea for this project was to explore the possibility of building a deep learning based speech recognition platform that could identify keywords in conversational speech, link them to therapeutic interventions and then conduct sentiment or emotion analysis to give real time feedback on client responses to cognitive behavioral talk therapy interventions.
                                 </p>
                             </div>
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Problem Statment</h3>
                             <div class="mdl-cell mdl-cell--12-col">
                                 <p>
-                                    My goal was to build a character-level ASR system using a recurrent neural network in TensorFlow that can run inference on an Nvidia Jetson with a word error rate of < 20%. 
+                                    My goal was to build a character-level ASR system using a recurrent neural network with attention in TensorFlow that can run inference on an Nvidia Jetson with a word error rate of < 20%. 
                                 </p>
                             </div>
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">The Data</h3>
@@ -168,7 +168,7 @@
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Model Architecture</h3>
                             <div class="mdl-cell mdl-cell--12-col">
                                 <p>
-                                    <a href="{{ url_for('static', filename='images/model_10.png') }}">Model Graph.</a>
+                                    <a href="{{ url_for('static', filename='images/model_11.png') }}">Model Graph.</a>
                                 </p>
                                 <p>
                                     With each epoch taking around 5 hours and 10 minutes to train using spectrograms, the total training time on an Nvidia GTX1070(8GB) for the final model architecture was roughly 6.5 days.
@@ -213,6 +213,12 @@
                                     This model also employs randomized dropout of units to prevent the model from over fitting. An example of the use of dropout in ASR can be found in this paper <a href="{{ url_for('static', filename='images/microsoft2016.pdf') }}">paper</a>.
                                 </p>
                             </div>
+                            <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Attention Mechanism</h3>
+                            <div class="mdl-cell mdl-cell--12-col">
+                                <p>
+                                    The decoder portion of the model includes the ability to "attend" to different parts of the audio clip at each time step. This lets the model learn what to pay attention to based on the input and what it has predicted the output to be so far. <a href="http://www.wildml.com/2016/01/attention-and-memory-in-deep-learning-and-nlp/">Attention</a> allows the network to refer back to the input sequence by giving the network access to its internal memory, which is the hidden state of the encoder (the RNN layers).
+                                </p>
+                            </div>
                             <h3 class="mdl-cell mdl-cell--12-col mdl-typography--headline">Time Distributed Dense Layers</h3>
                             <div class="mdl-cell mdl-cell--12-col">
                                 <p>
@@ -255,14 +261,14 @@
                 </div>
                 <footer class="mdl-mini-footer">
                     <div class="mdl-mini-footer__left-section">
-                        <div class="mdl-logo">&copy; Copyright 2015-2018 Brice Walker. Design by <a href="https://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using Python, HTML, CSS, and JavaScript.</div>
+                        <div class="mdl-logo">&copy; Copyright 2015-2019 Brice Walker. Design by <a href="https://bricewalker.com" id="tt1">Brice Walker</a><div class="mdl-tooltip" data-mdl-for="tt1">Brice Walker</div>. Created using Python, HTML, CSS, and JavaScript.</div>
                     </div>
                     <div class="mdl-mini-footer__right-sec">
                         <ul class="mdl-mini-footer__link-list">
                             <li><a href="https://github.com/bricewalker"><i class="fab fa-github fa-3x"></i><div class="mdl-tooltip">GitHub</div></a></li>
                             <li><a href="https://www.linkedin.com/in/briceawalker/"><i class="fab fa-linkedin-in fa-3x"></i><div class="mdl-tooltip">Linkedin</div></a></li>
                             <li><a href="https://stackexchange.com/users/11615581/brice-walker"><i class="fab fa-stack-exchange fa-3x"></i><div class="mdl-tooltip">Stack Exchange</div></a></li>
-                            <li><a href="https://www.instagram.com/recoverybrice/"><i class="fab fa-instagram fa-3x"></i><div class="mdl-tooltip">Instagram</div></a></li>
+                            <li><a href="https://www.instagram.com/bricewalker/"><i class="fab fa-instagram fa-3x"></i><div class="mdl-tooltip">Instagram</div></a></li>
                         </ul>
                     </div>
                 </footer>

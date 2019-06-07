@@ -9,8 +9,6 @@
 	<div class="mdl-cell mdl-cell--12-col">
 		<form method="POST" action="">
 			{{ visualization_form.csrf_token }}
-			{{ visualization_form.viz_model_number.label }} {{ visualization_form.viz_model_number() }}
-			<br>
 			{{ visualization_form.viz_partition.label }} {{ visualization_form.viz_partition() }}
 			<br>
 			{{ visualization_form.viz_instance_number.label }} {{ visualization_form.viz_instance_number() }}

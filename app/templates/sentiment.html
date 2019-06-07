@@ -9,8 +9,6 @@
 	<div class="mdl-cell mdl-cell--12-col">
 		<form method="POST" action="">
 			{{ sentiment_form.csrf_token }}
-			{{ sentiment_form.sent_model_number.label }} {{ sentiment_form.sent_model_number() }}
-			<br>
 			{{ sentiment_form.sent_partition.label }} {{ sentiment_form.sent_partition() }}
 			<br>
 			{{ sentiment_form.sent_instance_number.label }} {{ sentiment_form.sent_instance_number() }}
