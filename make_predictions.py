@@ -58,7 +58,6 @@ from keras.engine.topology import Layer
 import keras.losses
 from keras.engine import InputSpec
 
-
 # Model metric imports
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
