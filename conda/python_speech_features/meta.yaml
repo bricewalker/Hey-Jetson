@@ -1,0 +1,45 @@
+{% set name = "python_speech_features" %}
+{% set version = "0.6" %}
+
+package:
+  name: "{{ name|lower }}"
+  version: "{{ version }}"
+
+source:
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: a0aebf746464bc929dc3162cb369d7ff967c398c5120ddf5fb40a65f01b92b11
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps --ignore-installed -vv "
+
+requirements:
+  host:
+    - pip
+    - python
+    - numpy >=1.16.4
+    - scipy
+  run:
+    - python
+    - numpy >=1.16.4
+    - scipy
+
+test:
+  imports:
+    - numpy
+    - scipy
+    - python_speech_features
+
+about:
+  home: https://github.com/jameslyons/python_speech_features
+  license: MIT
+  license_family: MIT
+  license_file: 
+  summary: Python Speech Feature extraction
+  doc_url: 
+  dev_url: 
+
+extra:
+  recipe-maintainers:
+    - your-github-id-here

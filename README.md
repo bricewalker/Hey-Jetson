@@ -70,21 +70,39 @@ python create_desc_json.py /home/brice/LibriSpeech/test test_corpus.json
 ```
 
 #### Preparing the Development Environment
-It is recommended that you use Python 3.6+ in a virtual environment for the inference engine. To do so, first make sure python is installed with:
+It is recommended that you use Python 3.6+ in a conda environment for the training server. 
 
-```sudo apt-get -y install python3 python3-venv python3-dev```
+You can download anaconda from [anaconda.com](https://www.anaconda.com/) or miniconda from [conda.io](https://conda.io/en/latest/miniconda.html).
 
-Then, navigate to the project directory and run: 
+To prepare the development environment, first navigate to the conda folder in the repo in your terminal, then create the environment with the provided conda environment file:
 
-```python -m venv venv```
+```
+cd conda
+conda env create -f environment.yml
+```
+
+> Note: This relies on some pre-built conda packages for [SoundFile](https://pypi.org/project/SoundFile/) and [python_speech_features](https://pypi.org/project/python_speech_features/). You may have problems with these, so I have included [conda build](https://conda.io/projects/conda-build/en/latest/index.html) recipes for building the packages if you have problems downloading the pre-compiled packages. Soundfile has a dependency on [libsndfile](http://www.mega-nerd.com/libsndfile/) which may give you trouble so I have included a dll file that sometimes fails to install on Windows. You may need to manually install libsndfile on linux/unix based systems.
 
 Then activate the environment with:
 
-```source venv/bin/activate```
+```conda activate heyjetson```
 
-Then you can install all required libraries into the virtual environment with:
+If you would prefer to use pip to install and manage dependencies, you can create a virtual environment and install the dependencies using the provided requirements file.
+Linux/Unix based systems:
 
-```pip install -r server_requirements.txt``` 
+```
+python -m venv venv
+source venv/bin/activate
+pip install -r server_requirements.txt
+```
+
+Or on Windows:
+
+```
+python -m venv venv
+venv/scripts/activate.bat
+pip install -r server_requirements.txt
+``` 
 
 > Note: To take advantage of the GPU compute capabilities within Tensorflow/Keras, you will need to install the required Nvidia dependencies, [CUDA 9.0](https://developer.nvidia.com/cuda-zone) and [cuDNN 7](https://developer.nvidia.com/cudnn).
 
@@ -97,7 +115,7 @@ Now you can run the train_model.py script to train the full RNN:
 Optionally, you can run through the provided notebook in Jupyter for a walk through of the modeling process and an in depth exploration of automatic speech recognition.
 
 #### Preparing the Jetson based production server for deployment
-To prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by downloading and installing [JetPack 3.2](https://developer.nvidia.com/embedded/jetpack) on an Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to pre-install [CUDA 9.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.0.5](https://developer.nvidia.com/cudnn) on to the device. 
+To prepare the Jetson for deployment of the inference engine, you will need to flash it with the latest version of L4T. It is recommended that you do this by downloading and installing [JetPack 4.2](https://developer.nvidia.com/embedded/jetpack) on an Ubuntu server and then following the included instructions for flashing the Jetson. You will need to make sure to select the options to pre-install [CUDA 10.0](https://developer.nvidia.com/cuda-toolkit), and [cuDNN 7.6.0](https://developer.nvidia.com/cudnn) on to the device. 
 
 You will then need to install pip and python-dev with: 
 
