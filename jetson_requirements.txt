@@ -99,7 +99,7 @@ Send2Trash==1.5.0
 sessioninstaller==0.0.0
 simplegeneric==0.8.1
 six==1.10.0
-SoundFile==0.10.1
+SoundFile==0.10.2
 ssh-import-id==5.5
 sympy==0.7.6.1
 system-service==0.3
