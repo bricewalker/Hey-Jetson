@@ -9,7 +9,7 @@ Brlapi==0.6.4
 certifi==2018.1.18
 cffi==1.11.5
 chardet==3.0.4
-checkbox-support==0.22
+checkbox-support==0.39.0
 click==6.7
 command-not-found==0.3
 configparser==3.5.0
