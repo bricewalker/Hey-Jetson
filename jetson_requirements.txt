@@ -133,7 +133,7 @@ Wave==0.0.2
 wavefile==1.5
 wcwidth==0.1.7
 webencodings==0.5.1
-Werkzeug==0.14.1
+Werkzeug==0.15.3
 widgetsnbextension==3.5.1
 WTForms==2.2.1
 xdiagnose==3.8.4.1
