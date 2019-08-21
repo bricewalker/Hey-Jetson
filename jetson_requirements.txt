@@ -69,7 +69,7 @@ pickleshare==0.7.4
 Pillow==3.3.2
 plainbox==0.25
 plotly==2.5.0
-prompt-toolkit==1.0.15
+prompt-toolkit==2.0.9
 protobuf==3.5.2.post1
 ptyprocess==0.5
 pyasn1==0.1.9
