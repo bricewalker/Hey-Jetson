@@ -52,7 +52,7 @@ mkl-service==2.0.2
 mock==3.0.5
 nbconvert==5.5.0
 nbformat==4.4.0
-notebook==5.7.8
+notebook==6.0.0
 numpy==1.16.4
 pandas==0.24.2
 pandocfilters==1.4.2
