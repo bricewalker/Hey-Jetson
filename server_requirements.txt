@@ -69,7 +69,7 @@ Pygments==2.4.2
 pyOpenSSL==19.0.0
 pyparsing==2.4.0
 pyreadline==2.1
-pyrsistent==0.14.11
+pyrsistent==0.15.4
 PySocks==1.7.0
 python-dateutil==2.8.0
 python-speech-features==0.6
