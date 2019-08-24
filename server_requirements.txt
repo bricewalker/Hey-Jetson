@@ -87,7 +87,7 @@ Send2Trash==1.5.0
 six==1.12.0
 SoundFile==0.10.2
 statsmodels==0.9.0
-tensorboard==1.13.1
+tensorboard==1.14.0
 tensorflow==1.13.1
 tensorflow-estimator==1.14.0
 termcolor==1.1.0
