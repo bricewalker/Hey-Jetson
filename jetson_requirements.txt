@@ -13,7 +13,7 @@ checkbox-support==0.39.0
 click==6.7
 command-not-found==0.3
 configparser==3.5.0
-cryptography==2.7
+cryptography==3.2
 cycler==0.10.0
 decorator==4.0.6
 defer==1.0.6

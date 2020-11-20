@@ -10,7 +10,7 @@ cffi==1.12.3
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
-cryptography==2.7
+cryptography==3.2
 cycler==0.10.0
 decorator==4.4.0
 defusedxml==0.6.0
