@@ -45,7 +45,7 @@ jupyter-core==4.4.0
 Keras==2.2.4
 language-selector==0.1
 louis==2.6.4
-lxml==3.5.0
+lxml==4.6.2
 Mako==1.1.0
 Markdown==2.6.11
 MarkupSafe==0.23
