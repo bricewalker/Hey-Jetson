@@ -64,7 +64,7 @@ prometheus-client==0.6.0
 prompt-toolkit==2.0.9
 protobuf==3.9.1
 pycparser==2.19
-Pygments==2.4.2
+Pygments==2.7.4
 pyOpenSSL==19.0.0
 pyparsing==2.4.0
 pyreadline==2.1
