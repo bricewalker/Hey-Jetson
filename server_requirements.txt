@@ -16,7 +16,7 @@ decorator==4.4.0
 defusedxml==0.6.0
 entrypoints==0.3
 Flask==1.1.1
-Flask-Cors==3.0.8
+Flask-Cors==3.0.9
 Flask-RESTful==0.3.6
 Flask-WTF==0.14.2
 gast==0.2.2
