@@ -91,7 +91,7 @@ pyxdg==0.26
 PyYAML==5.4
 pyzmq==18.1.0
 qtconsole==4.3.1
-reportlab==3.3.0
+reportlab==3.5.55
 requests==2.22.0
 scipy==0.17.0
 seaborn==0.8.1
