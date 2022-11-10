@@ -41,7 +41,7 @@ jsonschema==3.0.2
 jupyter==1.0.0
 jupyter-client==5.2.3
 jupyter-console==6.0.0
-jupyter-core==4.4.0
+jupyter-core==4.11.2
 Keras==2.2.4
 language-selector==0.1
 louis==2.6.4
