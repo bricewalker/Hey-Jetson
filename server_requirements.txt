@@ -1,4 +1,4 @@
-﻿absl-py==0.7.1
+absl-py==0.7.1
 aniso8601==6.0.0
 asn1crypto==0.24.0
 astor==0.7.1
@@ -15,7 +15,7 @@ cycler==0.10.0
 decorator==4.4.0
 defusedxml==0.6.0
 entrypoints==0.3
-Flask==1.1.1
+Flask==2.3.2
 Flask-Cors==3.0.9
 Flask-RESTful==0.3.6
 Flask-WTF==0.14.2
