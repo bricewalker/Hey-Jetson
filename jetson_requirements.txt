@@ -77,7 +77,7 @@ pycosat==0.6.3
 pycparser==2.18
 pycups==1.9.73
 pycurl==7.43.0
-Pygments==2.7.4
+Pygments==2.15.0
 pygobject==3.32.2
 PyJWT==2.4.0
 pyparsing==2.0.3
