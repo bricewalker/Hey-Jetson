@@ -93,7 +93,7 @@ termcolor==1.1.0
 terminado==0.8.2
 testpath==0.4.2
 tornado==6.3.3
-tqdm==4.34.0
+tqdm==4.66.3
 traitlets==4.3.2
 urllib3==1.26.5
 wcwidth==0.1.7
